@@ -12,6 +12,7 @@ import { vehicleMakes } from "../src/lib/mock-data/vehicles";
 import { blogPosts } from "../src/lib/mock-data/blogs";
 import { services, stores, mockBookings } from "../src/lib/mock-data/services";
 import { mockOrders, mockReviews, salesData, topProducts } from "../src/lib/mock-data/orders";
+import { DEFAULT_HOME_LAYOUT } from "../src/lib/home-layout/defaults";
 
 const DATA_DIR = join(process.cwd(), "data", "json");
 
@@ -153,6 +154,7 @@ async function main() {
   write("users", users);
   write("coupons", coupons);
   write("banners", banners);
+  write("home-layout", [DEFAULT_HOME_LAYOUT]);
   write("contact-messages", []);
   write("notifications", []);
   write("newsletter-subscribers", []);

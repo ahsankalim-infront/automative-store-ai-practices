@@ -292,15 +292,15 @@ const categoryConfig: Record<string, { color: string; bg: string; icon: React.Re
 
 export function CategoriesGrid({ categories }: { categories: Category[] }) {
   return (
-    <section className="py-16 sm:py-20 bg-background">
-      <div className="max-w-screen-xl mx-auto px-4">
+    <section className="py-10 sm:py-16 md:py-20 bg-background w-full min-w-0 overflow-x-hidden">
+      <div className="max-w-screen-xl mx-auto px-3 sm:px-4">
         <SectionHeader
           badge="Top Categories"
           title="Shop by Category"
           subtitle="Car top covers, floor matting, custom seat covers and more"
           viewAllHref="/products"
         />
-        <div className="grid grid-cols-2 xs:grid-cols-4 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 sm:gap-4">
+        <div className="grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2 xs:gap-2.5 sm:gap-3 md:gap-4">
           {categories.map((cat, i) => {
             const config = categoryConfig[cat.slug];
             const usePhoto = SIGNATURE_SLUG_SET.has(cat.slug) && cat.image;
@@ -314,11 +314,11 @@ export function CategoriesGrid({ categories }: { categories: Category[] }) {
               >
                 <Link
                   href={`/products?category=${cat.slug}`}
-                className="group flex flex-col items-center gap-2.5 p-3 sm:p-4 rounded-2xl bg-card border border-border hover:border-primary/40 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 text-center"
+                className="group flex flex-col items-center gap-1.5 sm:gap-2.5 p-2 xs:p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-card border border-border hover:border-primary/40 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 text-center min-w-0"
               >
                 {/* Icon Container */}
                 <div
-                  className="h-14 w-14 sm:h-16 sm:w-16 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shrink-0 overflow-hidden shadow-sm relative"
+                  className="h-12 w-12 xs:h-14 xs:w-14 sm:h-16 sm:w-16 rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shrink-0 overflow-hidden shadow-sm relative"
                     style={{ backgroundColor: usePhoto ? undefined : (config?.bg ?? "#F3F4F6") }}
                   >
                     {usePhoto ? (

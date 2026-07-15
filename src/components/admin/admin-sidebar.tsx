@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard, ShoppingBag, Users, Package, FolderTree, Tag, Warehouse, Car, Wrench, Calendar, Ticket, Megaphone, Image, Star, FileText, BarChart3, Bell, Shield, Settings, ChevronLeft, ChevronRight, LogOut, Globe, FolderOpen, Mail, Search,
+  LayoutDashboard, ShoppingBag, Users, Package, FolderTree, Tag, Warehouse, Car, Wrench, Calendar, Ticket, Megaphone, Image, Star, FileText, BarChart3, Bell, Shield, Settings, ChevronLeft, ChevronRight, LogOut, Globe, FolderOpen, Mail, Search, LayoutTemplate,
 } from "lucide-react";
 import { LogoMark } from "@/components/brand/logo";
 import { BRAND } from "@/lib/brand/config";
@@ -42,6 +42,7 @@ const navItems = [
   ]},
   { group: "Content", items: [
     { label: "Blog Posts", href: "/admin/blogs", icon: FileText },
+    { label: "Homepage Layout", href: "/admin/home-layout", icon: LayoutTemplate },
     { label: "SEO", href: "/admin/seo", icon: Search },
     { label: "Media Library", href: "/admin/media", icon: FolderOpen },
     { label: "CMS Pages", href: "/admin/cms", icon: Globe },

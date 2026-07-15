@@ -179,13 +179,12 @@ export function ProductCard({ product, view = "grid", onQuickView }: ProductCard
     // h-full: stretches to fill the grid cell so all cards in a row are equal height
     <motion.div
       whileHover={{ y: -3 }}
-      className="group h-full flex flex-col bg-card rounded-2xl border border-border/80 shadow-sm hover:shadow-xl hover:border-primary/20 transition-all duration-300 overflow-hidden"
+      className="group h-full flex flex-col bg-card rounded-xl sm:rounded-2xl border border-border/80 shadow-sm hover:shadow-xl hover:border-primary/20 transition-all duration-300 overflow-hidden min-w-0"
     >
       {/* ── Image — fixed height, NEVER collapses or grows ── */}
       <Link
         href={`/products/${product.slug}`}
-        className="block relative shrink-0"
-        style={{ height: "192px" }}   /* fixed 192px = sm:h-48, consistent on all screens */
+        className="block relative shrink-0 h-36 xs:h-40 sm:h-44 md:h-48"
       >
         {/* Solid background so the card area is always filled even before image loads */}
         <div className="absolute inset-0 bg-gray-100 dark:bg-gray-800" />
@@ -243,7 +242,7 @@ export function ProductCard({ product, view = "grid", onQuickView }: ProductCard
       </Link>
 
       {/* ── Content — flex-1 fills remaining card height ── */}
-      <div className="flex-1 flex flex-col p-3 sm:p-4">
+      <div className="flex-1 flex flex-col p-2.5 sm:p-3 md:p-4">
         {/* Top: brand + name + rating — grows to fill space */}
         <div className="flex-1">
           <p className="text-[10px] sm:text-xs text-gray-400 mb-1 truncate">{product.brand}</p>

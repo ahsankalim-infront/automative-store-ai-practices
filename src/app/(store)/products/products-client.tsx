@@ -516,7 +516,7 @@ export function ProductsClient({ products, categories, brands, initialQuery }: P
               <div
                 className={
                   view === "grid"
-                    ? "grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 items-stretch"
+                    ? "grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-3 md:gap-4 items-stretch"
                     : "flex flex-col gap-3"
                 }
               >

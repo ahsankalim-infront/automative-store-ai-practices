@@ -15,6 +15,8 @@ import type { Brand, Category, Product, User, VehicleMake, ProductSpecification,
 import { ProductSpecificationsEditor } from "@/components/admin/product-specifications-editor";
 import { ProductVehicleFitEditor } from "@/components/admin/product-vehicle-fit-editor";
 import { SearchableSelect } from "@/components/ui/searchable-select";
+import { LucideIconPicker } from "@/components/admin/lucide-icon-picker";
+import { CategoryLucideIcon } from "@/lib/icons/lucide-icon";
 import toast from "react-hot-toast";
 
 type Row = Record<string, unknown> & { id: string };
@@ -391,6 +393,15 @@ export function AdminCrudPanel({ config, filterFn }: AdminCrudPanelProps) {
         </label>
       );
     }
+    if (field.type === "icon") {
+      return (
+        <LucideIconPicker
+          value={String(val ?? "")}
+          onChange={(next) => setField(field.key, next)}
+          disabled={readOnly}
+        />
+      );
+    }
     return (
       <input
         type={field.type === "number" ? "number" : field.type === "date" ? "date" : field.type === "email" ? "email" : "text"}
@@ -465,6 +476,13 @@ export function AdminCrudPanel({ config, filterFn }: AdminCrudPanelProps) {
                           <Badge variant="default">{getCellValue(row, col.key, col.render)}</Badge>
                         ) : col.render === "bool" ? (
                           <Badge variant={row[col.key] ? "success" : "default"}>{getCellValue(row, col.key, col.render)}</Badge>
+                        ) : col.render === "icon" ? (
+                          <span className="inline-flex items-center gap-2">
+                            <span className="h-8 w-8 rounded-lg border border-border bg-surface flex items-center justify-center text-primary">
+                              <CategoryLucideIcon name={String(row[col.key] ?? "")} className="h-4 w-4" />
+                            </span>
+                            <span className="text-xs text-gray-500 truncate">{String(row[col.key] ?? "—")}</span>
+                          </span>
                         ) : (
                           getCellValue(row, col.key, col.render)
                         )}
@@ -530,6 +548,13 @@ export function AdminCrudPanel({ config, filterFn }: AdminCrudPanelProps) {
                         vehicleMakes={vehicleMakes}
                         readOnly
                       />
+                    ) : field.type === "icon" ? (
+                      <div className="flex items-center gap-3 py-2 px-3 bg-surface rounded-lg">
+                        <span className="h-9 w-9 rounded-lg border border-border bg-card flex items-center justify-center text-primary">
+                          <CategoryLucideIcon name={String(form[field.key] ?? "")} className="h-4 w-4" />
+                        </span>
+                        <span className="text-sm text-foreground">{String(form[field.key] ?? "—")}</span>
+                      </div>
                     ) : (
                     <div className={cn(
                       "text-sm text-foreground py-2 px-3 bg-surface rounded-lg break-words",

@@ -11,7 +11,7 @@ export function SignatureShowcase() {
   const [featured, ...rest] = SIGNATURE_CATEGORIES;
 
   return (
-    <section className="py-16 sm:py-24 bg-gradient-to-b from-background via-surface/40 to-background relative overflow-hidden">
+    <section className="py-12 sm:py-16 lg:py-24 bg-gradient-to-b from-background via-surface/40 to-background relative overflow-hidden w-full min-w-0">
       {/* Decorative background */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />

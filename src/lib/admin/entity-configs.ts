@@ -1,5 +1,5 @@
 export type FieldType =
-  | "text" | "number" | "email" | "textarea" | "select" | "checkbox" | "date" | "json"
+  | "text" | "number" | "email" | "textarea" | "select" | "checkbox" | "date" | "json" | "icon"
   | "specList" | "vehicleFitList";
 
 export interface AdminFieldDef {
@@ -26,7 +26,7 @@ export interface AdminFieldDef {
 export interface AdminColumnDef {
   key: string;
   label: string;
-  render?: "price" | "date" | "badge" | "orderStatus" | "bool";
+  render?: "price" | "date" | "badge" | "orderStatus" | "bool" | "icon";
 }
 
 export interface AdminEntityConfig {
@@ -81,6 +81,7 @@ export const ADMIN_ENTITY_CONFIGS: Record<string, AdminEntityConfig> = {
     description: "Manage product categories",
     addLabel: "Add Category",
     columns: [
+      { key: "icon", label: "Icon", render: "icon" },
       { key: "name", label: "Name" },
       { key: "slug", label: "Slug" },
       { key: "productCount", label: "Products" },
@@ -90,7 +91,13 @@ export const ADMIN_ENTITY_CONFIGS: Record<string, AdminEntityConfig> = {
       { key: "name", label: "Name", type: "text", required: true },
       { key: "slug", label: "Slug", type: "text", placeholder: "auto-generated from name" },
       { key: "description", label: "Description", type: "textarea", colSpan: 2 },
-      { key: "icon", label: "Icon", type: "text" },
+      {
+        key: "icon",
+        label: "Category Nav Icon",
+        type: "icon",
+        colSpan: 2,
+        placeholder: "Lucide icon name shown in the category navigation bar",
+      },
       { key: "image", label: "Image URL", type: "text" },
       { key: "productCount", label: "Product Count", type: "number" },
       { key: "sortOrder", label: "Sort Order", type: "number" },

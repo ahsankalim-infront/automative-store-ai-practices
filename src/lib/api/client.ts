@@ -286,6 +286,14 @@ class ApiClient {
     return this.put<import("@/lib/seo/types").SeoConfig>("/admin/seo", data);
   }
 
+  adminGetHomeLayout() {
+    return this.get<import("@/lib/home-layout/types").HomeLayoutConfig>("/admin/home-layout");
+  }
+
+  adminUpdateHomeLayout(data: unknown) {
+    return this.put<import("@/lib/home-layout/types").HomeLayoutConfig>("/admin/home-layout", data);
+  }
+
   // ─── Admin file uploads ────────────────────────────────────────────────────
   adminListFiles() {
     return this.get<import("@/types").UploadedFile[]>("/admin/files");

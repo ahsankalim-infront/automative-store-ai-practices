@@ -1,0 +1,42 @@
+[
+  {
+    "id": "home-layout-1",
+    "desktop": [
+      { "id": "hero", "enabled": true },
+      { "id": "why_choose_us", "enabled": true },
+      { "id": "signature_showcase", "enabled": true },
+      { "id": "vehicle_selector", "enabled": true },
+      { "id": "categories", "enabled": true },
+      { "id": "top_products", "enabled": true },
+      { "id": "shop_by_car", "enabled": true },
+      { "id": "flash_sale", "enabled": true },
+      { "id": "best_sellers", "enabled": true },
+      { "id": "shop_by_brand", "enabled": true },
+      { "id": "bundle_offers", "enabled": true },
+      { "id": "ppf_services", "enabled": true },
+      { "id": "new_arrivals", "enabled": true },
+      { "id": "customer_reviews", "enabled": true },
+      { "id": "blog", "enabled": true },
+      { "id": "newsletter", "enabled": true }
+    ],
+    "mobile": [
+      { "id": "hero", "enabled": true },
+      { "id": "top_products", "enabled": true },
+      { "id": "categories", "enabled": true },
+      { "id": "best_sellers", "enabled": true },
+      { "id": "why_choose_us", "enabled": true },
+      { "id": "signature_showcase", "enabled": true },
+      { "id": "vehicle_selector", "enabled": true },
+      { "id": "flash_sale", "enabled": true },
+      { "id": "shop_by_car", "enabled": true },
+      { "id": "shop_by_brand", "enabled": true },
+      { "id": "bundle_offers", "enabled": true },
+      { "id": "ppf_services", "enabled": true },
+      { "id": "new_arrivals", "enabled": true },
+      { "id": "customer_reviews", "enabled": true },
+      { "id": "blog", "enabled": true },
+      { "id": "newsletter", "enabled": true }
+    ],
+    "updatedAt": "2026-07-15T00:00:00.000Z"
+  }
+]

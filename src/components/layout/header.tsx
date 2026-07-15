@@ -309,32 +309,6 @@ export function Header({ categories = [] }: { categories?: Category[] }) {
           )}
         </AnimatePresence>
       </header>
-
-      {/* Category Bar — desktop */}
-      <div className="bg-card border-b border-border sticky top-16 z-30 hidden lg:block">
-        <div className="max-w-screen-xl mx-auto px-4">
-          <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide py-1">
-            <Link
-              href="/products"
-              className="shrink-0 px-3 py-1.5 text-xs font-medium rounded-lg text-gray-600 dark:text-gray-400 hover:text-primary hover:bg-primary/5 transition-all whitespace-nowrap"
-            >
-              All Products
-            </Link>
-            {categories.map((cat) => (
-              <Link
-                key={cat.id}
-                href={`/products?category=${cat.slug}`}
-                className="shrink-0 px-3 py-1.5 text-xs font-medium rounded-lg text-gray-600 dark:text-gray-400 hover:text-primary hover:bg-primary/5 transition-all whitespace-nowrap"
-              >
-                {cat.name}
-              </Link>
-            ))}
-            <Link href="/services/book" className="shrink-0 ml-auto px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-white hover:bg-primary-dark transition-colors whitespace-nowrap">
-              Book Service
-            </Link>
-          </div>
-        </div>
-      </div>
     </>
   );
 }
