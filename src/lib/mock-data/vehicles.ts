@@ -1,0 +1,76 @@
+import type { VehicleMake } from "@/types";
+
+export const vehicleMakes: VehicleMake[] = [
+  {
+    id: "toyota", slug: "toyota", name: "Toyota", country: "Japan",
+    models: [
+      { id: "corolla", slug: "corolla", name: "Corolla", makeId: "toyota", makeName: "Toyota", years: [2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026], bodyType: "Sedan" },
+      { id: "fortuner", slug: "fortuner", name: "Fortuner", makeId: "toyota", makeName: "Toyota", years: [2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026], bodyType: "SUV" },
+      { id: "prado", slug: "prado", name: "Prado", makeId: "toyota", makeName: "Toyota", years: [2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024], bodyType: "SUV" },
+      { id: "hilux-revo", slug: "hilux-revo", name: "Hilux Revo", makeId: "toyota", makeName: "Toyota", years: [2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026], bodyType: "Pickup Truck" },
+      { id: "yaris", slug: "yaris", name: "Yaris", makeId: "toyota", makeName: "Toyota", years: [2020,2021,2022,2023,2024,2025,2026], bodyType: "Sedan" },
+      { id: "chr", slug: "chr", name: "C-HR", makeId: "toyota", makeName: "Toyota", years: [2017,2018,2019,2020,2021,2022,2023,2024], bodyType: "Crossover" },
+      { id: "land-cruiser", slug: "land-cruiser", name: "Land Cruiser", makeId: "toyota", makeName: "Toyota", years: [2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024], bodyType: "SUV" },
+    ]
+  },
+  {
+    id: "honda", slug: "honda", name: "Honda", country: "Japan",
+    models: [
+      { id: "civic", slug: "civic", name: "Civic", makeId: "honda", makeName: "Honda", years: [2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026], bodyType: "Sedan" },
+      { id: "city", slug: "city", name: "City", makeId: "honda", makeName: "Honda", years: [2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026], bodyType: "Sedan" },
+      { id: "brv", slug: "brv", name: "BR-V", makeId: "honda", makeName: "Honda", years: [2017,2018,2019,2020,2021,2022,2023,2024,2025,2026], bodyType: "SUV" },
+      { id: "hrv", slug: "hrv", name: "HR-V", makeId: "honda", makeName: "Honda", years: [2022,2023,2024,2025,2026], bodyType: "SUV" },
+      { id: "accord", slug: "accord", name: "Accord", makeId: "honda", makeName: "Honda", years: [2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024], bodyType: "Sedan" },
+    ]
+  },
+  {
+    id: "suzuki", slug: "suzuki", name: "Suzuki", country: "Japan",
+    models: [
+      { id: "swift", slug: "swift", name: "Swift", makeId: "suzuki", makeName: "Suzuki", years: [2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026], bodyType: "Hatchback" },
+      { id: "alto", slug: "alto", name: "Alto", makeId: "suzuki", makeName: "Suzuki", years: [2019,2020,2021,2022,2023,2024,2025,2026], bodyType: "Hatchback" },
+      { id: "cultus", slug: "cultus", name: "Cultus", makeId: "suzuki", makeName: "Suzuki", years: [2017,2018,2019,2020,2021,2022,2023,2024,2025,2026], bodyType: "Hatchback" },
+      { id: "wagon-r", slug: "wagon-r", name: "Wagon R", makeId: "suzuki", makeName: "Suzuki", years: [2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026], bodyType: "Hatchback" },
+      { id: "jimny", slug: "jimny", name: "Jimny", makeId: "suzuki", makeName: "Suzuki", years: [2019,2020,2021,2022,2023,2024,2025,2026], bodyType: "SUV" },
+    ]
+  },
+  {
+    id: "hyundai", slug: "hyundai", name: "Hyundai", country: "South Korea",
+    models: [
+      { id: "tucson", slug: "tucson", name: "Tucson", makeId: "hyundai", makeName: "Hyundai", years: [2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026], bodyType: "SUV" },
+      { id: "elantra", slug: "elantra", name: "Elantra", makeId: "hyundai", makeName: "Hyundai", years: [2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026], bodyType: "Sedan" },
+      { id: "sonata", slug: "sonata", name: "Sonata", makeId: "hyundai", makeName: "Hyundai", years: [2015,2016,2017,2018,2019,2020,2021,2022,2023,2024], bodyType: "Sedan" },
+    ]
+  },
+  {
+    id: "kia", slug: "kia", name: "KIA", country: "South Korea",
+    models: [
+      { id: "sportage", slug: "sportage", name: "Sportage", makeId: "kia", makeName: "KIA", years: [2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026], bodyType: "SUV" },
+      { id: "picanto", slug: "picanto", name: "Picanto", makeId: "kia", makeName: "KIA", years: [2017,2018,2019,2020,2021,2022,2023,2024,2025,2026], bodyType: "Hatchback" },
+      { id: "sorento", slug: "sorento", name: "Sorento", makeId: "kia", makeName: "KIA", years: [2021,2022,2023,2024,2025,2026], bodyType: "SUV" },
+    ]
+  },
+  {
+    id: "mg", slug: "mg", name: "MG", country: "UK/China",
+    models: [
+      { id: "hs", slug: "hs", name: "HS", makeId: "mg", makeName: "MG", years: [2020,2021,2022,2023,2024,2025,2026], bodyType: "SUV" },
+      { id: "zs", slug: "zs", name: "ZS", makeId: "mg", makeName: "MG", years: [2021,2022,2023,2024,2025,2026], bodyType: "SUV" },
+    ]
+  },
+  {
+    id: "changan", slug: "changan", name: "Changan", country: "China",
+    models: [
+      { id: "alsvin", slug: "alsvin", name: "Alsvin", makeId: "changan", makeName: "Changan", years: [2021,2022,2023,2024,2025,2026], bodyType: "Sedan" },
+      { id: "oshan-x7", slug: "oshan-x7", name: "Oshan X7", makeId: "changan", makeName: "Changan", years: [2022,2023,2024,2025,2026], bodyType: "SUV" },
+    ]
+  },
+  {
+    id: "byd", slug: "byd", name: "BYD", country: "China",
+    models: [
+      { id: "seal", slug: "seal", name: "Seal", makeId: "byd", makeName: "BYD", years: [2024,2025,2026], bodyType: "Sedan" },
+      { id: "atto3", slug: "atto3", name: "ATTO 3", makeId: "byd", makeName: "BYD", years: [2023,2024,2025,2026], bodyType: "SUV" },
+      { id: "shark", slug: "shark", name: "Shark 6", makeId: "byd", makeName: "BYD", years: [2025,2026], bodyType: "Pickup Truck" },
+    ]
+  },
+];
+
+export const popularMakes = ["Toyota", "Honda", "Suzuki", "Hyundai", "KIA", "MG", "Changan", "BYD"];

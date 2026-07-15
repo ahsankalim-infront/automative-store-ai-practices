@@ -1,0 +1,24 @@
+[
+  {
+    "id": "settings-1",
+    "storeName": "Shahzad Poshish House",
+    "supportEmail": "shahzadahmed6626@gmail.com",
+    "supportPhone": "03224123414",
+    "standardShipping": 100,
+    "expressShipping": 250,
+    "freeShippingThreshold": 1500,
+    "currency": "PKR",
+    "address": "Office # 15, 2nd Floor, Moeen Center, 20 Abbot Road, Lahore",
+    "contactPersons": [
+      { "name": "Shahzad Ahmed", "phones": ["03224123414", "033014140440"] },
+      { "name": "Muhammad Azaan", "phones": ["03259422044"] }
+    ],
+    "cmsPages": [
+      {
+        "slug": "privacy-policy",
+        "title": "Privacy Policy",
+        "content": "Your privacy is important to us..."
+      }
+    ]
+  }
+]

@@ -1,0 +1,76 @@
+{
+  "salesData": [
+    {
+      "date": "Jan",
+      "revenue": 185000,
+      "orders": 89
+    },
+    {
+      "date": "Feb",
+      "revenue": 220000,
+      "orders": 102
+    },
+    {
+      "date": "Mar",
+      "revenue": 195000,
+      "orders": 95
+    },
+    {
+      "date": "Apr",
+      "revenue": 310000,
+      "orders": 145
+    },
+    {
+      "date": "May",
+      "revenue": 285000,
+      "orders": 132
+    },
+    {
+      "date": "Jun",
+      "revenue": 420000,
+      "orders": 198
+    },
+    {
+      "date": "Jul",
+      "revenue": 380000,
+      "orders": 175
+    }
+  ],
+  "topProducts": [
+    {
+      "id": "p-006",
+      "name": "Maximus Microfiber Cloth MFC-1",
+      "image": "",
+      "sales": 450,
+      "revenue": 180000
+    },
+    {
+      "id": "p-005",
+      "name": "Maximus Polishing Compound 200g",
+      "image": "",
+      "sales": 380,
+      "revenue": 133000
+    },
+    {
+      "id": "p-001",
+      "name": "Maximus Sirius LED H4 - 85W",
+      "image": "",
+      "sales": 156,
+      "revenue": 2340000
+    },
+    {
+      "id": "p-003",
+      "name": "Toyota Corolla 5D Floor Mats",
+      "image": "",
+      "sales": 134,
+      "revenue": 1139000
+    },
+    {
+      "id": "p-004",
+      "name": "Universal Seat Covers PU Leather",
+      "image": "",
+      "sales": 98,
+      "revenue": 1176000
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+[
+  {
+    "id": "store-1",
+    "name": "Shahzad Poshish House - Main Office",
+    "city": "Lahore",
+    "address": "Office # 15, 2nd Floor, Moeen Center, 20 Abbot Road, Lahore",
+    "phone": "03224123414",
+    "email": "shahzadahmed6626@gmail.com",
+    "hours": "Mon-Sat: 10AM-8PM",
+    "services": [
+      "Custom Poshish",
+      "Seat Covers",
+      "Upholstery",
+      "Installation"
+    ],
+    "isMainBranch": true
+  }
+]

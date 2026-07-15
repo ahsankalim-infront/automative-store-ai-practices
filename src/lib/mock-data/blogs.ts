@@ -1,0 +1,70 @@
+import type { BlogPost } from "@/types";
+
+const img = (id: string) =>
+  `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=800&h=450&q=80`;
+
+export const blogPosts: BlogPost[] = [
+  {
+    id: "b-001", slug: "ppf-vs-ceramic-coating-2026",
+    title: "PPF vs Ceramic Coating in Pakistan: Which One Protects Your Car?",
+    excerpt: "Every car owner in Pakistan faces the same question: should I get Paint Protection Film (PPF) or ceramic coating? We break down the differences, costs, and which is right for your vehicle.",
+    content: "",
+    coverImage: img("1619767886558-6fe7a3507b2d"),
+    author: "Saad Sehgal", authorAvatar: "",
+    category: "Guides", tags: ["PPF", "Ceramic", "Protection"], readTime: 8, viewCount: 12450,
+    publishedAt: "2026-06-15T00:00:00Z", isFeatured: true,
+  },
+  {
+    id: "b-002", slug: "best-android-panel-pakistan-2026",
+    title: "Best Android Panel in Pakistan 2026 – Smart Infotainment Upgrade Guide",
+    excerpt: "Upgrading your car's infotainment system? Here's our comprehensive guide to the best Android panels available in Pakistan for every budget.",
+    content: "",
+    coverImage: img("1502877338535-766f1f6deb61"),
+    author: "Team AutoZone", authorAvatar: "",
+    category: "Reviews", tags: ["Android Panel", "Multimedia", "Tech"], readTime: 6, viewCount: 8920,
+    publishedAt: "2026-06-10T00:00:00Z", isFeatured: true,
+  },
+  {
+    id: "b-003", slug: "budget-2026-pakistan-auto-sector",
+    title: "Budget 2026-27: What's Changing for Pakistan's Auto Sector",
+    excerpt: "The Budget 2026-27 brings significant changes for car buyers and the auto industry in Pakistan. Here's everything you need to know about the new taxes and duties.",
+    content: "",
+    coverImage: img("1503376780353-7e6692767b70"),
+    author: "Team AutoZone", authorAvatar: "",
+    category: "News", tags: ["Budget", "Pakistan", "Tax"], readTime: 5, viewCount: 6780,
+    publishedAt: "2026-06-13T00:00:00Z", isFeatured: false,
+  },
+  {
+    id: "b-004", slug: "5d-vs-7d-vs-9d-vs-10d-car-mats",
+    title: "5D vs 7D vs 9D vs 10D Car Mats: Which is the Best for You?",
+    excerpt: "Car mats come in 5D, 7D, 9D, and 10D variants. Confused about the difference? Our complete guide explains each type and helps you choose the perfect mat.",
+    content: "",
+    coverImage: img("1449965408869-eefa2d9f0f88"),
+    author: "Team AutoZone", authorAvatar: "",
+    category: "Guides", tags: ["Floor Mats", "Interior", "Guide"], readTime: 4, viewCount: 5430,
+    publishedAt: "2026-05-20T00:00:00Z", isFeatured: false,
+  },
+  {
+    id: "b-005", slug: "best-pressure-washer-pakistan-2026",
+    title: "Best Pressure Washer in Pakistan 2026 — Car Wash Machine Buying Guide",
+    excerpt: "Looking for the best pressure washer for your car in Pakistan? Our buying guide covers top models across all price ranges from Rs.5,000 to Rs.50,000.",
+    content: "",
+    coverImage: img("1607860108855-64acf2078ed9"),
+    author: "Team AutoZone", authorAvatar: "",
+    category: "Guides", tags: ["Car Wash", "Detailing", "Tools"], readTime: 7, viewCount: 4210,
+    publishedAt: "2026-06-10T00:00:00Z", isFeatured: false,
+  },
+  {
+    id: "b-006", slug: "toyota-corolla-ppf-cost-2026",
+    title: "Toyota Corolla PPF Cost in Pakistan 2026 | Full Price Breakdown",
+    excerpt: "Get the full breakdown of PPF installation costs for Toyota Corolla in Pakistan — partial vs full coverage, TPU vs PVC, and which studio to choose.",
+    content: "",
+    coverImage: img("1494976388531-d1058494cdd8"),
+    author: "Saad Sehgal", authorAvatar: "",
+    category: "Guides", tags: ["PPF", "Toyota", "Corolla"], readTime: 6, viewCount: 9870,
+    publishedAt: "2026-06-01T00:00:00Z", isFeatured: true,
+  },
+];
+
+export const featuredPosts = blogPosts.filter(p => p.isFeatured);
+export const getPostBySlug = (slug: string) => blogPosts.find(p => p.slug === slug);

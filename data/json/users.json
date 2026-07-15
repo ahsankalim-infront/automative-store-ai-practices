@@ -1,0 +1,45 @@
+[
+  {
+    "id": "u-admin",
+    "name": "Admin User",
+    "email": "admin@autozone.pk",
+    "phone": "0300-0000001",
+    "role": "admin",
+    "passwordHash": "$2b$10$f2.EkEhTGHG44ENTT74/ReF2j/kPrDERp.Hj5J2HnKREHccLHR5mC",
+    "addresses": [],
+    "createdAt": "2024-01-01T00:00:00Z",
+    "isVerified": true
+  },
+  {
+    "id": "u-001",
+    "name": "Ahmed Khan",
+    "email": "ahmed@email.com",
+    "phone": "0300-1234567",
+    "role": "customer",
+    "passwordHash": "$2b$10$Y3kzWCXX1RatxFPrLbwHN.Qls3NQqfNO1VP43EJNnEXSDLbgwuPj.",
+    "addresses": [
+      {
+        "fullName": "Ahmed Khan",
+        "phone": "0300-1234567",
+        "address": "House 23, Street 5, Gulberg III",
+        "city": "Lahore",
+        "state": "Punjab",
+        "country": "Pakistan"
+      }
+    ],
+    "createdAt": "2025-06-01T00:00:00Z",
+    "isVerified": true,
+    "loyaltyPoints": 450
+  },
+  {
+    "id": "u-002",
+    "name": "Sara Malik",
+    "email": "sara@email.com",
+    "phone": "0321-9876543",
+    "role": "customer",
+    "passwordHash": "$2b$10$Y3kzWCXX1RatxFPrLbwHN.Qls3NQqfNO1VP43EJNnEXSDLbgwuPj.",
+    "addresses": [],
+    "createdAt": "2025-08-15T00:00:00Z",
+    "isVerified": true
+  }
+]

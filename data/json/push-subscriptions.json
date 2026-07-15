@@ -1,0 +1,15 @@
+[
+  {
+    "id": "7f6efcd8-1eac-4d56-9ca3-ca8045e6de6d",
+    "userId": "u-admin",
+    "userEmail": "admin@autozone.pk",
+    "endpoint": "https://fcm.googleapis.com/fcm/send/ffwYF7-ayoM:APA91bEiL4sDGR-ASQDD6-nXoHGKERYneDSQdul0Rqf-PhPWk_1TSwQ6jZvt7tWAnzmx8iZH2omsp0IwNrRYJJEIhX5XWqLAptUWKmGplmYpFHhwjhiW5bxTvyaLRjilmJNxYCyExYo1",
+    "keys": {
+      "p256dh": "BIUmOSXjto2uo3MFziMfgX2WOa5EtZ42fzlMPZ79DxzdpGP0GY1eYcPByoXhvbase30YXCLdFut1kM67XzrYqh0",
+      "auth": "9PN0h__h6IApa9MllfGBLA"
+    },
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "deviceLabel": "My Phone",
+    "createdAt": "2026-07-13T14:29:37.209Z"
+  }
+]

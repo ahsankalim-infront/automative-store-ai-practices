@@ -1,0 +1,196 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Semantic tokens — must live outside @layer so Tailwind + native controls can read them */
+:root {
+  --background: #f8f9fa;
+  --foreground: #111111;
+  --card: #ffffff;
+  --card-foreground: #111111;
+  --popover: #ffffff;
+  --border: #e5e7eb;
+  --input: #e5e7eb;
+  --accent: #374151;
+  --muted: #f3f4f6;
+  --muted-foreground: #6b7280;
+  --surface: #f9fafb;
+  --ring: #d50000;
+  --radius: 0.75rem;
+  --chart-grid: #f0f0f0;
+  --chart-tick: #6b7280;
+  color-scheme: light;
+}
+
+html.dark {
+  --background: #09090b;
+  --foreground: #fafafa;
+  --card: #141414;
+  --card-foreground: #fafafa;
+  --popover: #18181b;
+  --border: #27272a;
+  --input: #27272a;
+  --accent: #d4d4d8;
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa;
+  --surface: #1c1c1e;
+  --chart-grid: #2e2e2e;
+  --chart-tick: #a1a1aa;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-primary: #d50000;
+  --color-primary-dark: #b71c1c;
+  --color-primary-light: #ff5252;
+  --color-brand-dark: #111111;
+  --color-secondary: var(--color-brand-dark);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-accent: var(--accent);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-surface: var(--surface);
+  --color-success: #16a34a;
+  --color-warning: #d97706;
+  --color-info: #2563eb;
+
+  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
+  --breakpoint-xs: 480px;
+
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-card-hover: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+    border-color: var(--border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-sans);
+  }
+
+  /* Native form controls inherit dark styling */
+  html.dark select,
+  html.dark input,
+  html.dark textarea {
+    color-scheme: dark;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Legacy: text-secondary used as body text across the app */
+  html.dark .text-secondary {
+    color: var(--foreground);
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .section-pattern {
+    background-image: radial-gradient(circle at 1px 1px, rgb(0 0 0 / 0.04) 1px, transparent 0);
+    background-size: 24px 24px;
+  }
+
+  html.dark .section-pattern {
+    background-image: radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.04) 1px, transparent 0);
+  }
+
+  .glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .glass-dark {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .text-gradient {
+    background: linear-gradient(135deg, #d50000, #ff5252);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .card-hover {
+    transition: all 0.3s ease;
+  }
+
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  .line-clamp-1 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1; }
+  .line-clamp-2 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+  .line-clamp-3 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+html.dark .skeleton {
+  background: linear-gradient(90deg, #2a2a2a 25%, #333 50%, #2a2a2a 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d50000;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #b71c1c;
+}

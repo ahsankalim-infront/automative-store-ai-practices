@@ -1,0 +1,62 @@
+[
+  {
+    "id": "r-001",
+    "productId": "p-001",
+    "userId": "u-001",
+    "userName": "Ahmed Khan",
+    "rating": 5,
+    "title": "Excellent LED lights!",
+    "body": "Installed on my Toyota Corolla. Massive improvement over stock halogen. Very bright, no flicker issues.",
+    "isVerifiedPurchase": true,
+    "helpfulCount": 12,
+    "createdAt": "2026-07-05T00:00:00Z"
+  },
+  {
+    "id": "r-002",
+    "productId": "p-003",
+    "userId": "u-002",
+    "userName": "Sara Malik",
+    "rating": 5,
+    "title": "Perfect fit for Corolla",
+    "body": "Exactly as described. Custom fit is spot on. Easy installation and looks premium.",
+    "isVerifiedPurchase": true,
+    "helpfulCount": 8,
+    "createdAt": "2026-06-28T00:00:00Z"
+  },
+  {
+    "id": "r-003",
+    "productId": "p-004",
+    "userId": "u-003",
+    "userName": "Usman Raza",
+    "rating": 4,
+    "title": "Good quality seat covers",
+    "body": "Nice material, easy to install. A bit tricky around the headrests but overall very satisfied.",
+    "isVerifiedPurchase": true,
+    "helpfulCount": 5,
+    "createdAt": "2026-06-20T00:00:00Z"
+  },
+  {
+    "id": "8c7ef936-e38f-4469-82f0-64fded1b32c8",
+    "productId": "ce374ab8-701f-4732-a059-8200071acf8b",
+    "userId": "u-001",
+    "userName": "Ahmed Khan",
+    "rating": 2,
+    "title": "Title",
+    "body": "Review Body *",
+    "isVerifiedPurchase": true,
+    "helpfulCount": 1,
+    "createdAt": "2026-07-14T07:57:33.571Z"
+  },
+  {
+    "id": "56b880c4-6c5a-446c-a9fc-95339fb8ebfa",
+    "productId": "ce374ab8-701f-4732-a059-8200071acf8b",
+    "userId": "u-001",
+    "userName": "Ahmed Khan",
+    "rating": 5,
+    "title": "Ahsan kalim",
+    "body": "Review Body  Review Body  Review Body *",
+    "isVerifiedPurchase": true,
+    "helpfulCount": 6,
+    "createdAt": "2026-07-14T08:14:06.662Z"
+  }
+]

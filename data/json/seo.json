@@ -1,0 +1,32 @@
+[
+  {
+    "id": "seo-config-1",
+    "global": {
+      "siteName": "Shahzad Poshish House",
+      "siteTitle": "Shahzad Poshish House — Car Poshish, Seat Covers & Floor Matting Lahore",
+      "titleTemplate": "%s | Shahzad Poshish House",
+      "defaultDescription": "Shahzad Poshish House — custom car seat covers (PU/PVC leather), car top covers, floor matting & interior poshish. Office # 15, Moeen Center, 20 Abbot Road, Lahore. Call 03224123414.",
+      "defaultKeywords": [
+        "car seat covers lahore",
+        "car poshish",
+        "car top cover",
+        "car floor matting",
+        "custom seat covers",
+        "PU leather seat covers",
+        "automotive upholstery lahore",
+        "shahzad poshish house"
+      ],
+      "defaultOgImage": "/images/sph-logo-mark.png",
+      "twitterHandle": "",
+      "googleSiteVerification": "",
+      "bingSiteVerification": "",
+      "robotsAllow": true,
+      "organizationName": "Shahzad Poshish House",
+      "organizationLogo": "/images/sph-logo-mark.png",
+      "locale": "en_PK",
+      "robotsExtra": ""
+    },
+    "pages": {},
+    "updatedAt": "2026-07-14T00:00:00.000Z"
+  }
+]

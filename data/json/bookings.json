@@ -1,0 +1,34 @@
+[
+  {
+    "id": "bk-001",
+    "serviceId": "svc-1",
+    "serviceName": "Paint Protection Film",
+    "userId": "u-001",
+    "userName": "Ahmed Khan",
+    "userPhone": "0300-1234567",
+    "branchId": "store-1",
+    "branchName": "Shahzad Poshish House - Main Office",
+    "date": "2026-07-18",
+    "timeSlot": "10:00 AM",
+    "vehicleInfo": "Toyota Corolla 2022",
+    "status": "confirmed",
+    "price": 45000,
+    "createdAt": "2026-07-13T00:00:00Z"
+  },
+  {
+    "id": "bk-002",
+    "serviceId": "svc-2",
+    "serviceName": "Ceramic Coating",
+    "userId": "u-002",
+    "userName": "Sara Ahmed",
+    "userPhone": "0321-9876543",
+    "branchId": "store-1",
+    "branchName": "Shahzad Poshish House - Main Office",
+    "date": "2026-07-19",
+    "timeSlot": "02:00 PM",
+    "vehicleInfo": "Honda Civic 2024",
+    "status": "pending",
+    "price": 35000,
+    "createdAt": "2026-07-12T00:00:00Z"
+  }
+]

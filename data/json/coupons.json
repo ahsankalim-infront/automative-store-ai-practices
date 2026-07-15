@@ -1,0 +1,41 @@
+[
+  {
+    "id": "cpn-1",
+    "code": "WELCOME500",
+    "description": "Welcome discount for new customers",
+    "type": "fixed",
+    "value": 500,
+    "minOrderAmount": 2000,
+    "usedCount": 45,
+    "validFrom": "2025-01-01T00:00:00Z",
+    "validTo": "2027-12-31T23:59:59Z",
+    "isActive": true
+  },
+  {
+    "id": "cpn-2",
+    "code": "SAVE10",
+    "description": "10% off on orders above Rs. 5000",
+    "type": "percentage",
+    "value": 10,
+    "minOrderAmount": 5000,
+    "maxDiscount": 2000,
+    "usedCount": 120,
+    "validFrom": "2025-01-01T00:00:00Z",
+    "validTo": "2027-12-31T23:59:59Z",
+    "isActive": true
+  },
+  {
+    "id": "cpn-3",
+    "code": "FIRST20",
+    "description": "20% off first order",
+    "type": "percentage",
+    "value": 20,
+    "minOrderAmount": 3000,
+    "maxDiscount": 3000,
+    "usageLimit": 1,
+    "usedCount": 0,
+    "validFrom": "2025-01-01T00:00:00Z",
+    "validTo": "2027-12-31T23:59:59Z",
+    "isActive": true
+  }
+]

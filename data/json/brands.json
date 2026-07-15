@@ -1,0 +1,103 @@
+[
+  {
+    "id": "brand-sph",
+    "slug": "shahzad-poshish",
+    "name": "Shahzad Poshish",
+    "logo": "https://placehold.co/160x80/D50000/ffffff?text=SPH&font=montserrat",
+    "productCount": 48,
+    "isPrivateLabel": true,
+    "country": "Pakistan",
+    "description": "Signature poshish, seat covers, floor matting and car top covers by Shahzad Poshish House"
+  },
+  {
+    "id": "brand-1",
+    "slug": "maximus",
+    "name": "Maximus",
+    "logo": "https://placehold.co/160x80/D50000/ffffff?text=MAXIMUS&font=montserrat",
+    "productCount": 450,
+    "isPrivateLabel": true,
+    "country": "Pakistan",
+    "description": "Premium private label brand by Shahzad Poshish House"
+  },
+  {
+    "id": "brand-2",
+    "slug": "redline",
+    "name": "Redline",
+    "logo": "https://placehold.co/160x80/B91C1C/ffffff?text=REDLINE&font=montserrat",
+    "productCount": 89,
+    "isPrivateLabel": false,
+    "country": "USA"
+  },
+  {
+    "id": "brand-3",
+    "slug": "dlaa",
+    "name": "DLAA",
+    "logo": "https://placehold.co/160x80/1E3A5F/ffffff?text=DLAA&font=montserrat",
+    "productCount": 134,
+    "isPrivateLabel": false,
+    "country": "China"
+  },
+  {
+    "id": "brand-4",
+    "slug": "bosoko",
+    "name": "Bosoko",
+    "logo": "https://placehold.co/160x80/1F2937/ffffff?text=BOSOKO&font=montserrat",
+    "productCount": 67,
+    "isPrivateLabel": false,
+    "country": "China"
+  },
+  {
+    "id": "brand-5",
+    "slug": "vland",
+    "name": "Vland",
+    "logo": "https://placehold.co/160x80/374151/ffffff?text=VLAND&font=montserrat",
+    "productCount": 56,
+    "isPrivateLabel": false,
+    "country": "China"
+  },
+  {
+    "id": "brand-6",
+    "slug": "3m",
+    "name": "3M",
+    "logo": "https://placehold.co/160x80/CC0000/ffffff?text=3M&font=montserrat",
+    "productCount": 45,
+    "isPrivateLabel": false,
+    "country": "USA"
+  },
+  {
+    "id": "brand-7",
+    "slug": "bosch",
+    "name": "Bosch",
+    "logo": "https://placehold.co/160x80/005691/ffffff?text=BOSCH&font=montserrat",
+    "productCount": 78,
+    "isPrivateLabel": false,
+    "country": "Germany"
+  },
+  {
+    "id": "brand-8",
+    "slug": "kenwood",
+    "name": "Kenwood",
+    "logo": "https://placehold.co/160x80/0A2240/ffffff?text=KENWOOD&font=montserrat",
+    "productCount": 34,
+    "isPrivateLabel": false,
+    "country": "Japan"
+  },
+  {
+    "id": "brand-9",
+    "slug": "pioneer",
+    "name": "Pioneer",
+    "logo": "https://placehold.co/160x80/000000/ffffff?text=PIONEER&font=montserrat",
+    "productCount": 28,
+    "isPrivateLabel": false,
+    "country": "Japan"
+  },
+  {
+    "id": "brand-10",
+    "slug": "garmin",
+    "name": "Garmin",
+    "logo": "https://placehold.co/160x80/007DC5/ffffff?text=GARMIN&font=montserrat",
+    "productCount": 22,
+    "isPrivateLabel": false,
+    "country": "USA"
+  }
+]
