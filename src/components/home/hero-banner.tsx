@@ -11,9 +11,11 @@ import { cn } from "@/lib/utils";
 const slides = [
   {
     id: 1,
-    tag: "★ #1 Best Seller",
+    tag: "★ Best Seller",
     title: "Custom Made\nSeat Covers",
-    highlight: "Premium PU/PVC · All Colours",
+    mobileTitle: "Custom Seat Covers",
+    highlight: "Premium PU/PVC",
+    mobileCta: "Shop Now",
     description: "Top premium quality leather PU & PVC fabric seat covers. Custom fit for 200+ models with diamond stitching and expert fitting at our Lahore studio.",
     cta: { label: "Shop Seat Covers", href: "/products?category=custom-seat-covers" },
     secondary: { label: "Get Free Quote", href: "/contact" },
@@ -33,9 +35,11 @@ const slides = [
   },
   {
     id: 2,
-    tag: "🛡️ All Weather Protection",
+    tag: "🛡️ All Weather",
     title: "Car Top\nCover",
-    highlight: "Sun · Dust · Rain Shield",
+    mobileTitle: "Car Top Cover",
+    highlight: "Sun · Dust · Rain",
+    mobileCta: "Shop Covers",
     description: "Heavy-duty waterproof car top covers with UV-resistant coating. Universal and premium fitted options to protect your vehicle outdoors.",
     cta: { label: "Shop Top Covers", href: "/products?category=car-top-cover" },
     secondary: { label: "View Collection", href: "/products?category=car-top-cover" },
@@ -55,9 +59,11 @@ const slides = [
   },
   {
     id: 3,
-    tag: "✨ Custom Fit Mats",
+    tag: "✨ Custom Fit",
     title: "Car Floor\nMatting",
+    mobileTitle: "Floor Matting",
     highlight: "5D · 7D · 9D Sets",
+    mobileCta: "Shop Mats",
     description: "Precision-cut floor matting for every car model. High-wall design traps dirt and spills. Odourless, waterproof and easy to clean.",
     cta: { label: "Shop Floor Matting", href: "/products?category=car-floor-matting" },
     secondary: { label: "Book Fitting", href: "/services/book" },
@@ -77,9 +83,11 @@ const slides = [
   },
   {
     id: 4,
-    tag: `🏆 ${BRAND.shortName} Specialties`,
+    tag: `🏆 ${BRAND.shortName}`,
     title: "Premium\nTop Cover",
+    mobileTitle: "Premium Top Cover",
     highlight: "Paint-Safe · Fitted",
+    mobileCta: "Shop Premium",
     description: "Premium fitted car top covers with soft inner lining, mirror pockets and double-stitched seams. Complete protection without scratching your paint.",
     cta: { label: "Shop Premium Line", href: "/products?category=car-top-cover" },
     secondary: { label: "About Us", href: "/about" },
@@ -109,20 +117,20 @@ function SlideDots({
   accent: string;
 }) {
   return (
-    <div className="flex items-center justify-center gap-1.5">
+    <div className="flex items-center justify-center gap-1">
       {slides.map((s, i) => (
         <button
           key={s.id}
           type="button"
           aria-label={`Go to slide ${i + 1}`}
           onClick={() => onSelect(i)}
-          className="transition-all duration-300 rounded-full p-1"
+          className="p-1"
         >
           <span
             className="block rounded-full transition-all duration-300"
             style={{
-              height: "5px",
-              width: i === current ? "20px" : "5px",
+              height: "4px",
+              width: i === current ? "18px" : "4px",
               backgroundColor: i === current ? accent : "rgba(255,255,255,0.35)",
             }}
           />
@@ -133,7 +141,7 @@ function SlideDots({
 }
 
 const navBtnClass =
-  "rounded-full bg-black/45 md:bg-white/10 hover:bg-black/60 md:hover:bg-white/20 backdrop-blur-sm border border-white/15 flex items-center justify-center text-white transition-all shrink-0";
+  "rounded-full bg-black/50 md:bg-white/10 hover:bg-black/65 md:hover:bg-white/20 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white transition-all shrink-0";
 
 export function HeroBanner() {
   const [current, setCurrent] = useState(0);
@@ -157,7 +165,7 @@ export function HeroBanner() {
   const BadgeIcon = slide.badge.icon;
 
   return (
-    <section className="relative overflow-hidden bg-black w-full min-w-0 max-md:h-[292px] sm:max-md:h-[320px] md:min-h-[640px]">
+    <section className="relative isolate overflow-hidden bg-black w-full min-w-0 h-[268px] xs:h-[284px] sm:h-[320px] md:h-auto md:min-h-[640px]">
       <AnimatePresence mode="wait">
         <motion.div
           key={slide.id}
@@ -165,30 +173,30 @@ export function HeroBanner() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.45 }}
+          transition={{ duration: 0.4 }}
         >
           <div
             className={cn(
-              "relative flex-1 h-full flex flex-col justify-end md:justify-center",
-              "px-3.5 sm:px-6 md:px-10 lg:px-16 pt-9 sm:pt-10 pb-11 sm:pb-12 md:py-10",
+              "relative flex-1 h-full min-h-0 flex flex-col",
+              "px-3 xs:px-4 sm:px-6 md:px-10 lg:px-16",
+              "pt-8 xs:pt-9 sm:pt-10 pb-[2.75rem] sm:pb-12 md:py-10",
               "overflow-hidden bg-gradient-to-br",
               slide.leftBg
             )}
           >
-            {/* Mobile background */}
             <div className="absolute inset-0 md:hidden overflow-hidden">
               <Image
                 src={slide.productImage}
                 alt={slide.productLabel}
                 fill
-                className="object-cover object-center"
+                className="object-cover object-[center_30%]"
                 sizes="100vw"
                 priority={slide.id === 1}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/72 to-black/40" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/75 to-black/35" />
               <div
                 className="absolute inset-0"
-                style={{ background: `linear-gradient(135deg, ${slide.accent}35 0%, transparent 50%)` }}
+                style={{ background: `linear-gradient(135deg, ${slide.accent}30 0%, transparent 45%)` }}
               />
             </div>
 
@@ -207,13 +215,13 @@ export function HeroBanner() {
 
             <motion.div
               key={`text-${slide.id}`}
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.1 }}
-              className="relative z-10 w-full max-w-lg min-w-0 pr-10 sm:pr-12 md:pr-0"
+              transition={{ duration: 0.35, delay: 0.08 }}
+              className="relative z-10 mt-auto w-full max-w-lg min-w-0 md:mt-0 md:my-auto pr-8 sm:pr-10 md:pr-0"
             >
               <span
-                className="inline-flex items-center max-w-full text-[10px] sm:text-xs font-bold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full mb-1.5 sm:mb-4 border truncate"
+                className="inline-flex max-w-[calc(100%-2rem)] items-center text-[9px] xs:text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full mb-1.5 sm:mb-4 border truncate"
                 style={{
                   backgroundColor: `${slide.accent}22`,
                   borderColor: `${slide.accent}44`,
@@ -223,17 +231,25 @@ export function HeroBanner() {
                 {slide.tag}
               </span>
 
-              <h1 className="font-black text-white text-[1.375rem] xs:text-2xl sm:text-4xl md:text-[clamp(2.4rem,5vw,4rem)] leading-[0.98] tracking-tight">
-                {slide.title.split("\n").map((line, i) => (
-                  <span key={i} className="block">
-                    {line}
-                  </span>
-                ))}
+              <h1 className="font-black text-white leading-tight tracking-tight">
+                <span className="block md:hidden text-lg xs:text-xl sm:text-2xl line-clamp-2">
+                  {slide.mobileTitle}
+                </span>
+                <span className="hidden md:block text-[clamp(2.4rem,5vw,4rem)] leading-[0.98]">
+                  {slide.title.split("\n").map((line, i) => (
+                    <span key={i} className="block">
+                      {line}
+                    </span>
+                  ))}
+                </span>
               </h1>
 
-              <div className="flex items-center gap-2 mt-1 mb-2 sm:mb-4 min-w-0">
-                <div className="h-0.5 w-5 sm:w-8 rounded-full shrink-0" style={{ backgroundColor: slide.accent }} />
-                <span className="text-[11px] sm:text-base font-semibold truncate" style={{ color: slide.accentLight }}>
+              <div className="flex items-center gap-1.5 mt-1 mb-2 sm:mb-4 min-w-0 max-w-full">
+                <div className="h-0.5 w-4 sm:w-8 rounded-full shrink-0" style={{ backgroundColor: slide.accent }} />
+                <span
+                  className="text-[10px] xs:text-[11px] sm:text-base font-semibold truncate"
+                  style={{ color: slide.accentLight }}
+                >
                   {slide.highlight}
                 </span>
               </div>
@@ -253,23 +269,23 @@ export function HeroBanner() {
                 ))}
               </div>
 
-              <div className="flex flex-wrap gap-2 sm:gap-3">
-                <Link
-                  href={slide.cta.href}
-                  className="inline-flex items-center justify-center gap-1.5 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-[11px] sm:text-sm font-bold text-white shadow-lg transition-all hover:brightness-110 active:scale-[0.98] max-w-full"
-                  style={{ backgroundColor: slide.accent }}
-                >
-                  <ShoppingBag className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
-                  <span className="truncate">{slide.cta.label}</span>
-                </Link>
-                <Link
-                  href={slide.secondary.href}
-                  className="hidden sm:inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-sm font-semibold text-gray-200 border border-white/15 hover:border-white/30 hover:text-white transition-all"
-                >
-                  <span className="truncate">{slide.secondary.label}</span>
-                  <ArrowRight className="h-3.5 w-3.5 shrink-0" />
-                </Link>
-              </div>
+              <Link
+                href={slide.cta.href}
+                className="inline-flex items-center justify-center gap-1.5 px-3.5 sm:px-5 py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl text-[11px] sm:text-sm font-bold text-white shadow-md transition-all hover:brightness-110 active:scale-[0.98]"
+                style={{ backgroundColor: slide.accent }}
+              >
+                <ShoppingBag className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+                <span className="md:hidden">{slide.mobileCta}</span>
+                <span className="hidden md:inline truncate">{slide.cta.label}</span>
+              </Link>
+
+              <Link
+                href={slide.secondary.href}
+                className="hidden sm:inline-flex items-center justify-center gap-2 ml-2 sm:ml-3 px-4 sm:px-5 py-2.5 rounded-xl text-sm font-semibold text-gray-200 border border-white/15 hover:border-white/30 hover:text-white transition-all align-middle"
+              >
+                <span className="truncate">{slide.secondary.label}</span>
+                <ArrowRight className="h-3.5 w-3.5 shrink-0" />
+              </Link>
 
               <div className="hidden sm:flex md:hidden items-center gap-2.5 mt-4 px-3 py-2.5 rounded-xl bg-white/10 backdrop-blur-sm border border-white/15 w-full max-w-sm">
                 <div className="relative h-9 w-9 rounded-lg overflow-hidden shrink-0 bg-white/10">
@@ -345,13 +361,11 @@ export function HeroBanner() {
         </motion.div>
       </AnimatePresence>
 
-      {/* Slide counter */}
-      <div className="absolute top-2.5 sm:top-3 right-2.5 sm:right-3 md:top-4 md:right-14 z-30 text-[10px] sm:text-xs text-white/60 font-medium tabular-nums bg-black/35 md:bg-transparent px-2 py-0.5 rounded-full md:rounded-none">
-        {String(current + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
+      <div className="absolute top-2 right-2 sm:top-3 sm:right-3 md:top-4 md:right-14 z-30 text-[9px] xs:text-[10px] sm:text-xs text-white/55 font-medium tabular-nums bg-black/40 md:bg-transparent px-1.5 py-0.5 rounded md:rounded-none">
+        {String(current + 1).padStart(2, "0")}/{String(slides.length).padStart(2, "0")}
       </div>
 
-      {/* Mobile controls — single bottom bar, no overlap */}
-      <div className="absolute bottom-0 inset-x-0 z-30 flex items-center justify-between gap-2 px-2.5 py-2 md:hidden bg-gradient-to-t from-black/70 to-transparent pointer-events-none">
+      <div className="absolute bottom-0 inset-x-0 z-30 h-11 sm:h-12 md:hidden flex items-center justify-between px-2 bg-gradient-to-t from-black/85 via-black/50 to-transparent">
         <button
           type="button"
           onClick={() => {
@@ -359,13 +373,11 @@ export function HeroBanner() {
             setAutoPlay(false);
           }}
           aria-label="Previous slide"
-          className={cn(navBtnClass, "h-7 w-7 pointer-events-auto")}
+          className={cn(navBtnClass, "h-7 w-7")}
         >
-          <ChevronLeft className="h-4 w-4" />
+          <ChevronLeft className="h-3.5 w-3.5" />
         </button>
-        <div className="pointer-events-auto">
-          <SlideDots current={current} onSelect={goTo} accent={slide.accent} />
-        </div>
+        <SlideDots current={current} onSelect={goTo} accent={slide.accent} />
         <button
           type="button"
           onClick={() => {
@@ -373,13 +385,12 @@ export function HeroBanner() {
             setAutoPlay(false);
           }}
           aria-label="Next slide"
-          className={cn(navBtnClass, "h-7 w-7 pointer-events-auto")}
+          className={cn(navBtnClass, "h-7 w-7")}
         >
-          <ChevronRight className="h-4 w-4" />
+          <ChevronRight className="h-3.5 w-3.5" />
         </button>
       </div>
 
-      {/* Desktop controls */}
       <button
         type="button"
         onClick={() => {

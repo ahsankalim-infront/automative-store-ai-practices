@@ -47,7 +47,7 @@ function renderSection(key: HomeSectionKey, data: HomePageData) {
   switch (key) {
     case "hero":
       return (
-        <div key={key} className="relative pb-4 sm:pb-8 md:pb-10 w-full min-w-0 overflow-x-hidden">
+        <div key={key} className="relative pb-2 sm:pb-8 md:pb-10 w-full min-w-0 overflow-x-hidden">
           <HeroBanner />
           <PromoBanners />
         </div>
