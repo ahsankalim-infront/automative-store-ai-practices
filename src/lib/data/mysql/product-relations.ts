@@ -1,6 +1,6 @@
 import mysql from "mysql2/promise";
 import { getDataSource } from "../config";
-import type { Product, ProductSpecification, VehicleCompatibility } from "@/types";
+import type { Product, ProductImage, ProductSpecification, VehicleCompatibility } from "@/types";
 
 let pool: mysql.Pool | null = null;
 
@@ -30,6 +30,23 @@ export async function syncProductRelations(product: Product): Promise<void> {
 
     await conn.execute("DELETE FROM product_specifications WHERE product_id = ?", [product.id]);
     await conn.execute("DELETE FROM product_vehicle_fit WHERE product_id = ?", [product.id]);
+    await conn.execute("DELETE FROM product_images WHERE product_id = ?", [product.id]);
+
+    for (let i = 0; i < (product.images?.length ?? 0); i++) {
+      const img = product.images[i];
+      await conn.execute(
+        `INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order)
+         VALUES (?, ?, ?, ?, ?, ?)`,
+        [
+          img.id ?? crypto.randomUUID(),
+          product.id,
+          img.url,
+          img.alt ?? "",
+          img.isPrimary ? 1 : 0,
+          i,
+        ]
+      );
+    }
 
     for (let i = 0; i < (product.specifications?.length ?? 0); i++) {
       const spec = product.specifications[i];
@@ -75,6 +92,7 @@ export async function deleteProductRelations(productId: string): Promise<void> {
   if (!p) return;
   await p.execute("DELETE FROM product_specifications WHERE product_id = ?", [productId]);
   await p.execute("DELETE FROM product_vehicle_fit WHERE product_id = ?", [productId]);
+  await p.execute("DELETE FROM product_images WHERE product_id = ?", [productId]);
 }
 
 export async function loadProductSpecifications(productId: string): Promise<ProductSpecification[]> {
@@ -118,16 +136,34 @@ export async function loadProductVehicleFit(productId: string): Promise<VehicleC
   }));
 }
 
+export async function loadProductImages(productId: string): Promise<ProductImage[]> {
+  const p = poolOrNull();
+  if (!p) return [];
+  const [rows] = await p.execute<mysql.RowDataPacket[]>(
+    `SELECT id, url, alt, is_primary FROM product_images
+     WHERE product_id = ? ORDER BY sort_order ASC`,
+    [productId]
+  );
+  return rows.map((r) => ({
+    id: String(r.id),
+    url: String(r.url),
+    alt: String(r.alt ?? ""),
+    isPrimary: Boolean(r.is_primary),
+  }));
+}
+
 export async function mergeProductRelations(product: Product): Promise<Product> {
   if (getDataSource() !== "mysql") return product;
 
-  const [specs, fit] = await Promise.all([
+  const [specs, fit, images] = await Promise.all([
     loadProductSpecifications(product.id),
     loadProductVehicleFit(product.id),
+    loadProductImages(product.id),
   ]);
 
   return {
     ...product,
+    images: images.length ? images : product.images ?? [],
     specifications: product.specifications?.length ? product.specifications : specs,
     vehicleCompatibility: product.vehicleCompatibility?.length
       ? product.vehicleCompatibility

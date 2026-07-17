@@ -1,5 +1,29 @@
 import type { Product } from "@/types";
 
+/** Match product against free-text query. */
+export function productMatchesSearch(product: Product, rawQuery: string): boolean {
+  const q = rawQuery.trim().toLowerCase();
+  if (!q) return true;
+
+  const haystack = [
+    product.name,
+    product.brand,
+    product.sku,
+    product.category,
+    product.categorySlug,
+    product.brandSlug,
+    product.slug,
+    product.shortDescription,
+    product.description,
+    ...(product.tags ?? []),
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  return haystack.includes(q);
+}
+
 /** Query params supported on /products (from URL or API). */
 export interface CatalogQuery {
   category?: string;
@@ -98,13 +122,7 @@ export function applyCatalogFilters(
     items = items.filter((p) => brands.includes(p.brandSlug));
   }
   if (search) {
-    items = items.filter(
-      (p) =>
-        p.name.toLowerCase().includes(search) ||
-        p.brand.toLowerCase().includes(search) ||
-        p.sku.toLowerCase().includes(search) ||
-        p.category.toLowerCase().includes(search)
-    );
+    items = items.filter((p) => productMatchesSearch(p, search));
   }
   if (query.make || query.model || query.year != null) {
     items = items.filter((p) => matchesVehicleFit(p, query.make, query.model, query.year));

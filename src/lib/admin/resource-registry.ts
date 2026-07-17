@@ -23,6 +23,7 @@ import {
 } from "@/lib/data/repositories";
 import { slugify } from "@/lib/utils";
 import { parseSpecifications, parseVehicleCompatibility } from "@/lib/products/specs-fitment";
+import { parseProductImagesFromForm } from "@/lib/products/product-images";
 import { readAllVehicleMakes } from "@/lib/data/cached-reads";
 import type {
   Category, Brand, Product, Order, Review, Service, ServiceBooking,
@@ -67,8 +68,9 @@ function parseTags(val: unknown): string[] {
 }
 
 function stripProductFormFields(b: Record<string, unknown>): Record<string, unknown> {
-  const { imageUrl, specCount, fitCount, seoMetaTitle, seoMetaDescription, seoOgImage, seoNoindex, ...rest } = b;
+  const { imageUrl, images, specCount, fitCount, seoMetaTitle, seoMetaDescription, seoOgImage, seoNoindex, ...rest } = b;
   void imageUrl;
+  void images;
   void specCount;
   void fitCount;
   void seoMetaTitle;
@@ -170,7 +172,6 @@ export function getAdminResource(name: string): CrudOps | null {
           if (!p) return null;
           return {
             ...p,
-            imageUrl: p.images[0]?.url ?? "",
             seoMetaTitle: p.seo?.metaTitle ?? "",
             seoMetaDescription: p.seo?.metaDescription ?? "",
             seoOgImage: p.seo?.ogImage ?? "",
@@ -179,12 +180,13 @@ export function getAdminResource(name: string): CrudOps | null {
         },
         create: async (b) => {
           const now = new Date().toISOString();
-          const img = (b.imageUrl as string) || "";
+          const productName = String(b.name ?? "");
           const payload = await buildProductPayload(stripProductFormFields(b));
+          const images = parseProductImagesFromForm(b, productName) ?? [];
           return createProduct({
             id: crypto.randomUUID(),
             ...payload,
-            images: img ? [{ id: crypto.randomUUID(), url: img, alt: b.name as string, isPrimary: true }] : [],
+            images,
             rating: Number(b.rating) || 0,
             reviewCount: Number(b.reviewCount) || 0,
             createdAt: now,
@@ -192,13 +194,46 @@ export function getAdminResource(name: string): CrudOps | null {
           } as Product);
         },
         update: async (id, b) => {
-          const patch: Partial<Product> = await buildProductPayload(stripProductFormFields(b));
+          const existing = await getProductById(id);
+          if (!existing) return null;
+
+          const merged: Record<string, unknown> = {
+            name: existing.name,
+            slug: existing.slug,
+            sku: existing.sku,
+            brand: existing.brand,
+            brandSlug: existing.brandSlug,
+            category: existing.category,
+            categorySlug: existing.categorySlug,
+            price: existing.price,
+            originalPrice: existing.originalPrice,
+            stock: existing.stock,
+            inStock: existing.inStock,
+            description: existing.description,
+            shortDescription: existing.shortDescription,
+            specifications: existing.specifications,
+            vehicleCompatibility: existing.vehicleCompatibility,
+            warranty: existing.warranty,
+            tags: existing.tags,
+            installationAvailable: existing.installationAvailable,
+            installationPrice: existing.installationPrice,
+            isFeatured: existing.isFeatured,
+            isNew: existing.isNew,
+            isBestSeller: existing.isBestSeller,
+            isFlashSale: existing.isFlashSale,
+            seoMetaTitle: existing.seo?.metaTitle ?? "",
+            seoMetaDescription: existing.seo?.metaDescription ?? "",
+            seoOgImage: existing.seo?.ogImage ?? "",
+            seoNoindex: existing.seo?.noindex ?? false,
+            ...stripProductFormFields(b),
+          };
+
+          const patch: Partial<Product> = await buildProductPayload(merged);
           if (b.price !== undefined) patch.price = Number(b.price);
           if (b.stock !== undefined) patch.stock = Number(b.stock);
           if (b.inStock !== undefined) patch.inStock = bool(b.inStock);
-          if (b.imageUrl) {
-            patch.images = [{ id: crypto.randomUUID(), url: b.imageUrl as string, alt: (b.name as string) || "", isPrimary: true }];
-          }
+          const images = parseProductImagesFromForm(b, String(merged.name ?? ""));
+          if (images !== undefined) patch.images = images;
           return updateProduct(id, patch);
         },
         delete: deleteProduct,

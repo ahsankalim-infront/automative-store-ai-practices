@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import type { Category } from "@/types";
 
 const pillBase =
-  "shrink-0 inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-2 sm:py-1.5 min-h-11 sm:min-h-0 text-[11px] sm:text-xs font-medium rounded-full border transition-all whitespace-nowrap";
+  "shrink-0 inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-1 min-h-9 sm:min-h-0 text-[11px] sm:text-xs font-medium rounded-full border transition-all whitespace-nowrap";
 
 function pillClass(active: boolean) {
   return cn(
@@ -32,8 +32,8 @@ export function StoreCategoryBar({ categories }: { categories: Category[] }) {
   const allActive = pathname === "/products" && !activeCategory;
 
   return (
-    <div className="bg-gray-50/90 dark:bg-gray-900/90 border-b border-gray-200/80 dark:border-gray-800 sticky top-16 z-30 w-full min-w-0 backdrop-blur-sm">
-      <div className="max-w-screen-xl mx-auto px-3 sm:px-4 py-2">
+    <div className="bg-gray-50/90 dark:bg-gray-900/90 border-y border-gray-200/80 dark:border-gray-800 sticky top-[var(--header-offset,3.5rem)] z-30 w-full min-w-0 backdrop-blur-sm">
+      <div className="max-w-screen-xl mx-auto px-3 sm:px-4 py-1 sm:py-1.5">
         <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-hide -mx-0.5 px-0.5">
           <Link href="/products" className={pillClass(allActive)}>
             <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/90 text-primary shadow-sm dark:bg-gray-900/50">

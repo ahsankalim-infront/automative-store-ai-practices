@@ -2,7 +2,7 @@ import { HERO_BADGE_ICON_OPTIONS } from "@/lib/hero-slides/icons";
 
 export type FieldType =
   | "text" | "number" | "email" | "textarea" | "select" | "checkbox" | "date" | "json" | "icon"
-  | "specList" | "vehicleFitList";
+  | "specList" | "vehicleFitList" | "imageList";
 
 export interface AdminFieldDef {
   key: string;
@@ -155,7 +155,7 @@ export const ADMIN_ENTITY_CONFIGS: Record<string, AdminEntityConfig> = {
       { key: "price", label: "Price (Rs.)", type: "number", required: true },
       { key: "originalPrice", label: "Original Price", type: "number" },
       { key: "stock", label: "Stock", type: "number", required: true },
-      { key: "imageUrl", label: "Primary Image URL", type: "text", colSpan: 2 },
+      { key: "images", label: "Product Images", type: "imageList", colSpan: 2 },
       { key: "shortDescription", label: "Short Description", type: "textarea", colSpan: 2 },
       { key: "description", label: "Full Description", type: "textarea", colSpan: 2 },
       { key: "warranty", label: "Warranty", type: "text", colSpan: 2, placeholder: "e.g. 1 Year Manufacturer Warranty" },
@@ -220,7 +220,7 @@ export const ADMIN_ENTITY_CONFIGS: Record<string, AdminEntityConfig> = {
     ],
     fields: [
       { key: "name", label: "Full Name", type: "text", required: true },
-      { key: "email", label: "Email", type: "email", required: true },
+      { key: "email", label: "Email", type: "email", required: true, readOnly: true },
       { key: "phone", label: "Phone", type: "text" },
       { key: "role", label: "Role", type: "select", options: userRoles },
     ],
@@ -594,7 +594,7 @@ export const ADMIN_ENTITY_CONFIGS: Record<string, AdminEntityConfig> = {
     ],
     fields: [
       { key: "name", label: "Full Name", type: "text", required: true },
-      { key: "email", label: "Email", type: "email", required: true },
+      { key: "email", label: "Email", type: "email", required: true, readOnly: true },
       { key: "phone", label: "Phone", type: "text" },
       { key: "role", label: "Role", type: "select", options: userRoles.filter((r) => r.value !== "customer"), required: true },
     ],

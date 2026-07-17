@@ -170,6 +170,16 @@ function buildNormalizedSql(): string {
         sql += `INSERT INTO product_vehicle_fit (id, product_id, vehicle_make_id, vehicle_model_id, brand, model, year_from, year_to, variants, sort_order) VALUES (${sqlStr(fitId)}, ${sqlStr(String(data.id))}, ${sqlStr(fit.vehicleMakeId as string | undefined)}, ${sqlStr(fit.vehicleModelId as string | undefined)}, ${sqlStr(String(fit.brand ?? fit.make ?? ""))}, ${sqlStr(String(fit.model ?? ""))}, ${sqlNum(Number(fit.yearFrom ?? fit.year ?? 2000))}, ${sqlNum(Number(fit.yearTo ?? fit.year ?? 2026))}, ${fit.variants ? sqlJson(fit.variants) : "NULL"}, ${sqlNum(Number(fit.sortOrder ?? index))});\n`;
       });
     }
+
+    sql += sectionHeader("product_images");
+    sql += "DELETE FROM product_images;\n";
+    for (const { data } of products) {
+      const images = (data.images as Row[] | undefined) ?? [];
+      images.forEach((img, index) => {
+        const imgId = pickId(img, `${String(data.id)}-img-${index + 1}`);
+        sql += `INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES (${sqlStr(imgId)}, ${sqlStr(String(data.id))}, ${sqlStr(String(img.url ?? ""))}, ${sqlStr(String(img.alt ?? data.name ?? ""))}, ${sqlBool(img.isPrimary as boolean | undefined, index === 0 ? 1 : 0)}, ${sqlNum(Number(img.sortOrder ?? index))});\n`;
+      });
+    }
   }
 
   // orders

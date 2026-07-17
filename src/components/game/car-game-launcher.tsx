@@ -34,8 +34,8 @@ export function CarGameLauncher() {
               "fixed z-[55] flex items-center gap-2 rounded-full shadow-xl",
               "bg-primary text-white font-bold text-xs",
               "hover:bg-primary-dark active:scale-95 transition-colors",
-              "bottom-[calc(4.75rem+env(safe-area-inset-bottom,0px))] right-4",
-              "lg:bottom-6 lg:right-6",
+              "bottom-[calc(4.75rem+env(safe-area-inset-bottom,0px))] left-4",
+              "lg:bottom-6 lg:left-6",
               "pl-3 pr-4 py-2.5",
               "ring-2 ring-white/20 ring-offset-2 ring-offset-background"
             )}
@@ -59,8 +59,8 @@ export function CarGameLauncher() {
             transition={{ type: "spring", stiffness: 380, damping: 28 }}
             className={cn(
               "fixed z-[55] w-[min(calc(100vw-1.5rem),320px)]",
-              "bottom-[calc(4.75rem+env(safe-area-inset-bottom,0px))] right-3",
-              "lg:bottom-6 lg:right-6",
+              "bottom-[calc(4.75rem+env(safe-area-inset-bottom,0px))] left-3",
+              "lg:bottom-6 lg:left-6",
               "rounded-2xl border border-border bg-card shadow-2xl overflow-hidden"
             )}
             role="dialog"

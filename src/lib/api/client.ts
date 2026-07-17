@@ -86,6 +86,11 @@ class ApiClient {
     return this.get<import("@/types").Product[]>(`/products${qs}`);
   }
 
+  search(query: string, limit = 8) {
+    const qs = new URLSearchParams({ q: query, limit: String(limit) });
+    return this.get<import("@/lib/search/catalog-search").CatalogSearchResult>(`/search?${qs}`);
+  }
+
   product(slug: string) {
     return this.get<import("@/types").Product>(`/products/${slug}`);
   }

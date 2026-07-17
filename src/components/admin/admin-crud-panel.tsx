@@ -11,9 +11,10 @@ import { api } from "@/lib/api/client";
 import { formatPrice, formatDate } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import type { AdminEntityConfig, AdminFieldDef } from "@/lib/admin/entity-configs";
-import type { Brand, Category, Product, User, VehicleMake, ProductSpecification, VehicleCompatibility } from "@/types";
+import type { Brand, Category, Product, User, VehicleMake, ProductSpecification, VehicleCompatibility, ProductImage } from "@/types";
 import { ProductSpecificationsEditor } from "@/components/admin/product-specifications-editor";
 import { ProductVehicleFitEditor } from "@/components/admin/product-vehicle-fit-editor";
+import { ProductImagesEditor } from "@/components/admin/product-images-editor";
 import { SearchableSelect } from "@/components/ui/searchable-select";
 import { LucideIconPicker } from "@/components/admin/lucide-icon-picker";
 import { CategoryLucideIcon } from "@/lib/icons/lucide-icon";
@@ -47,12 +48,9 @@ function rowToForm(row: Row, fields: AdminFieldDef[]): Record<string, unknown> {
     else if (f.type === "json") form[f.key] = typeof v === "object" ? JSON.stringify(v, null, 2) : v ?? "";
     else if (f.type === "specList") form[f.key] = Array.isArray(v) ? v : [];
     else if (f.type === "vehicleFitList") form[f.key] = Array.isArray(v) ? v : [];
+    else if (f.type === "imageList") form[f.key] = Array.isArray(v) ? v : [];
     else if (f.key === "tags" && Array.isArray(v)) form[f.key] = v.join(", ");
     else form[f.key] = v ?? "";
-  }
-  // Product image helper
-  if (row.images && Array.isArray(row.images) && row.images[0]) {
-    form.imageUrl = (row.images[0] as { url: string }).url;
   }
   return form;
 }
@@ -62,7 +60,7 @@ function emptyForm(fields: AdminFieldDef[]): Record<string, unknown> {
   for (const f of fields) {
     if (f.type === "checkbox") form[f.key] = f.defaultChecked ?? false;
     else if (f.type === "number") form[f.key] = 0;
-    else if (f.type === "specList" || f.type === "vehicleFitList") form[f.key] = [];
+    else if (f.type === "specList" || f.type === "vehicleFitList" || f.type === "imageList") form[f.key] = [];
     else form[f.key] = "";
   }
   return form;
@@ -130,8 +128,8 @@ export function AdminCrudPanel({ config, filterFn }: AdminCrudPanelProps) {
         if (res.success && res.data) setCategoryOptions(res.data as unknown as Category[]);
       }
       if (needsProducts) {
-        const res = await api.products();
-        if (res.success && res.data) setProductOptions(res.data);
+        const res = await api.adminList("products");
+        if (res.success && res.data) setProductOptions(res.data as unknown as Product[]);
       }
       if (needsUsers) {
         const res = await api.adminCustomers();
@@ -308,6 +306,16 @@ export function AdminCrudPanel({ config, filterFn }: AdminCrudPanelProps) {
           value={(val as ProductSpecification[]) ?? []}
           onChange={(next) => setField(field.key, next)}
           readOnly={readOnly}
+        />
+      );
+    }
+    if (field.type === "imageList") {
+      return (
+        <ProductImagesEditor
+          value={(val as ProductImage[]) ?? []}
+          onChange={(next) => setField(field.key, next)}
+          readOnly={readOnly}
+          productName={String(form.name ?? "")}
         />
       );
     }
@@ -516,7 +524,7 @@ export function AdminCrudPanel({ config, filterFn }: AdminCrudPanelProps) {
       )}
 
       <Dialog open={modal !== null} onOpenChange={(o) => !o && closeModal()}>
-        <DialogContent className={config.fields.some((f) => f.type === "specList" || f.type === "vehicleFitList") ? "sm:max-w-3xl" : "sm:max-w-2xl"}>
+        <DialogContent className={config.fields.some((f) => f.type === "specList" || f.type === "vehicleFitList" || f.type === "imageList") ? "sm:max-w-3xl" : "sm:max-w-2xl"}>
           <DialogHeader>
             <DialogTitle>
               {modal === "view" && "View Details"}
@@ -540,6 +548,13 @@ export function AdminCrudPanel({ config, filterFn }: AdminCrudPanelProps) {
                         value={(form[field.key] as ProductSpecification[]) ?? []}
                         onChange={() => {}}
                         readOnly
+                      />
+                    ) : field.type === "imageList" ? (
+                      <ProductImagesEditor
+                        value={(form[field.key] as ProductImage[]) ?? []}
+                        onChange={() => {}}
+                        readOnly
+                        productName={String(form.name ?? "")}
                       />
                     ) : field.type === "vehicleFitList" ? (
                       <ProductVehicleFitEditor

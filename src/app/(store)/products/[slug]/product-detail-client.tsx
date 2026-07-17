@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ProductCard } from "@/components/product/product-card";
+import { ProductImageZoom } from "@/components/product/product-image-zoom";
 import { useCartStore } from "@/store/cart-store";
 import { useWishlistStore } from "@/store/wishlist-store";
 import { formatPrice, calculateDiscount, formatDate } from "@/lib/utils";
@@ -78,25 +79,26 @@ export default function ProductDetailClient({ product, reviews, related }: Produ
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 mb-12">
           {/* ΓöÇΓöÇ Image Gallery ΓöÇΓöÇ */}
           <div className="space-y-3">
-            <div className="relative aspect-square bg-gray-100 dark:bg-gray-800 rounded-2xl overflow-hidden">
-              <Image
-                src={primaryImage}
-                alt={product.images[activeImage]?.alt || product.name}
-                fill
-                className="object-cover"
-                priority
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                onError={() => setImgError(true)}
-              />
-              {discount > 0 && (
-                <Badge variant="danger" className="absolute top-3 left-3 sm:top-4 sm:left-4 text-xs sm:text-sm px-2 sm:px-3 py-0.5 sm:py-1">
-                  {discount}% OFF
-                </Badge>
-              )}
-              {product.isNew && (
-                <Badge variant="success" className="absolute top-3 right-3 sm:top-4 sm:right-4 text-xs">New</Badge>
-              )}
-            </div>
+            <ProductImageZoom
+              src={primaryImage}
+              alt={product.images[activeImage]?.alt || product.name}
+              priority
+              onError={() => setImgError(true)}
+              overlay={
+                <>
+                  {discount > 0 && (
+                    <Badge variant="danger" className="absolute top-3 left-3 sm:top-4 sm:left-4 text-xs sm:text-sm px-2 sm:px-3 py-0.5 sm:py-1 z-10 pointer-events-none">
+                      {discount}% OFF
+                    </Badge>
+                  )}
+                  {product.isNew && (
+                    <Badge variant="success" className="absolute top-3 right-3 sm:top-4 sm:right-4 text-xs z-10 pointer-events-none">
+                      New
+                    </Badge>
+                  )}
+                </>
+              }
+            />
             {product.images.length > 1 && (
               <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
                 {product.images.map((img, i) => (

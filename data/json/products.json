@@ -17,7 +17,7 @@
       },
       {
         "id": "i2",
-        "url": "https://images.unsplash.com/photo-1604999974288-6e3329448cc1?auto=format&fit=crop&w=600&h=600&q=80",
+        "url": "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=600&h=600&q=80",
         "alt": "LED Headlight side view",
         "isPrimary": false
       },
@@ -33,66 +33,94 @@
     "discount": 17,
     "stock": 45,
     "inStock": true,
-    "rating": 4.7,
-    "reviewCount": 23,
+    "rating": 5,
+    "reviewCount": 1,
     "description": "Maximus Sirius series ultra-bright LED headlights deliver 8500 lumens per pair. Compatible with projector and reflector housings. CANBUS compatible with anti-flicker design. Easy plug-and-play installation for most vehicles.",
     "shortDescription": "85W ultra-bright LED headlight pair, H4 base, 8500 lumens, CANBUS compatible",
     "specifications": [
       {
+        "id": "359e9783-7920-4446-b423-e77c1fb980c5",
         "label": "Wattage",
         "value": "85W"
       },
       {
+        "id": "efc03c7d-a842-47ce-a7bd-fd2606e80fd4",
         "label": "Lumens",
         "value": "8500 lm/pair"
       },
       {
+        "id": "713f61de-418a-4c6c-b361-04639817eb7e",
         "label": "Color Temp",
         "value": "6500K White"
       },
       {
+        "id": "d56ba760-7c4d-4f9f-bb71-5d2108143172",
         "label": "Base",
         "value": "H4"
       },
       {
+        "id": "03dc4c6f-c963-4744-9b0a-f529c13dced0",
         "label": "Cooling",
         "value": "Turbo Fan + Heatsink"
       },
       {
+        "id": "6547f535-7bd1-4506-978d-3d0cead906cf",
         "label": "Warranty",
         "value": "1 Year"
       },
       {
+        "id": "ba163077-f219-4f94-b585-ed3d72978b41",
         "label": "CANBUS",
         "value": "Compatible"
       },
       {
+        "id": "e1f5adc7-1d9f-4daa-9f48-e483c8ab19c9",
         "label": "IP Rating",
         "value": "IP67 Waterproof"
       }
     ],
     "vehicleCompatibility": [
       {
+        "id": "496a59a1-1183-44fe-8420-5ba67c65da5a",
         "brand": "Toyota",
         "model": "Corolla",
+        "makeSlug": "toyota",
+        "modelSlug": "corolla",
+        "vehicleMakeId": "toyota",
+        "vehicleModelId": "corolla",
         "yearFrom": 2014,
         "yearTo": 2026
       },
       {
+        "id": "3ba11c45-00e5-4a17-bfaf-6c3544562a0d",
         "brand": "Honda",
         "model": "Civic",
+        "makeSlug": "honda",
+        "modelSlug": "civic",
+        "vehicleMakeId": "honda",
+        "vehicleModelId": "civic",
         "yearFrom": 2016,
         "yearTo": 2022
       },
       {
+        "id": "997284b5-0189-4d01-85a1-4deb8000cafc",
         "brand": "Suzuki",
         "model": "Swift",
+        "makeSlug": "suzuki",
+        "modelSlug": "swift",
+        "vehicleMakeId": "suzuki",
+        "vehicleModelId": "swift",
         "yearFrom": 2010,
         "yearTo": 2024
       },
       {
+        "id": "4baced7f-7c3b-4bad-8e53-428632519ff6",
         "brand": "Hyundai",
         "model": "Elantra",
+        "makeSlug": "hyundai",
+        "modelSlug": "elantra",
+        "vehicleMakeId": "hyundai",
+        "vehicleModelId": "elantra",
         "yearFrom": 2013,
         "yearTo": 2022
       }
@@ -112,7 +140,7 @@
     "isBestSeller": true,
     "isFlashSale": false,
     "createdAt": "2024-01-15T00:00:00Z",
-    "updatedAt": "2026-06-01T00:00:00Z"
+    "updatedAt": "2026-07-17T16:57:59.230Z"
   },
   {
     "id": "p-002",
@@ -1218,14 +1246,34 @@
     "description": "Heavy-duty waterproof car top cover with UV-resistant coating. Protects from sun, dust, rain and bird droppings. Elastic hem with buckle straps for a secure fit. Fits sedans and hatchbacks.",
     "shortDescription": "All-weather waterproof car top cover, UV resistant, elastic hem, universal fit",
     "specifications": [
-      { "label": "Material", "value": "Multi-layer PEVA + Polyester" },
-      { "label": "Protection", "value": "UV, Rain, Dust, Bird Droppings" },
-      { "label": "Fit", "value": "Universal Sedan / Hatchback" },
-      { "label": "Colour", "value": "Silver Grey" },
-      { "label": "Warranty", "value": "6 Months" }
+      {
+        "label": "Material",
+        "value": "Multi-layer PEVA + Polyester"
+      },
+      {
+        "label": "Protection",
+        "value": "UV, Rain, Dust, Bird Droppings"
+      },
+      {
+        "label": "Fit",
+        "value": "Universal Sedan / Hatchback"
+      },
+      {
+        "label": "Colour",
+        "value": "Silver Grey"
+      },
+      {
+        "label": "Warranty",
+        "value": "6 Months"
+      }
     ],
     "installationAvailable": false,
-    "tags": ["car top cover", "waterproof", "uv protection", "poshish"],
+    "tags": [
+      "car top cover",
+      "waterproof",
+      "uv protection",
+      "poshish"
+    ],
     "isFeatured": true,
     "isNew": true,
     "isBestSeller": true,
@@ -1260,13 +1308,30 @@
     "description": "Premium fitted car top cover with soft cotton inner lining to protect paint. Mirror pockets, double-stitched seams, reflective strip and storage bag included.",
     "shortDescription": "Premium fitted top cover with paint-safe lining, mirror pockets & storage bag",
     "specifications": [
-      { "label": "Inner Lining", "value": "Soft Cotton (Paint Safe)" },
-      { "label": "Seams", "value": "Double Stitched" },
-      { "label": "Extras", "value": "Mirror Pockets + Storage Bag" },
-      { "label": "Warranty", "value": "1 Year" }
+      {
+        "label": "Inner Lining",
+        "value": "Soft Cotton (Paint Safe)"
+      },
+      {
+        "label": "Seams",
+        "value": "Double Stitched"
+      },
+      {
+        "label": "Extras",
+        "value": "Mirror Pockets + Storage Bag"
+      },
+      {
+        "label": "Warranty",
+        "value": "1 Year"
+      }
     ],
     "installationAvailable": false,
-    "tags": ["car top cover", "premium", "fitted", "poshish"],
+    "tags": [
+      "car top cover",
+      "premium",
+      "fitted",
+      "poshish"
+    ],
     "isFeatured": true,
     "isNew": false,
     "isBestSeller": true,
@@ -1307,14 +1372,31 @@
     "description": "Custom-made 7D full-surround car floor matting. High-wall design traps dirt, sand and spills. Odourless eco-leather, waterproof and anti-slip. Custom cut for your exact car model.",
     "shortDescription": "Custom 7D full-surround floor matting — waterproof, anti-slip, model-specific fit",
     "specifications": [
-      { "label": "Type", "value": "7D Full Surround" },
-      { "label": "Material", "value": "Eco-Leather + XPE Foam" },
-      { "label": "Fit", "value": "Custom per vehicle model" },
-      { "label": "Pieces", "value": "5-Piece Set" }
+      {
+        "label": "Type",
+        "value": "7D Full Surround"
+      },
+      {
+        "label": "Material",
+        "value": "Eco-Leather + XPE Foam"
+      },
+      {
+        "label": "Fit",
+        "value": "Custom per vehicle model"
+      },
+      {
+        "label": "Pieces",
+        "value": "5-Piece Set"
+      }
     ],
     "installationAvailable": true,
     "installationPrice": 1500,
-    "tags": ["floor matting", "7d mats", "custom fit", "poshish"],
+    "tags": [
+      "floor matting",
+      "7d mats",
+      "custom fit",
+      "poshish"
+    ],
     "isFeatured": true,
     "isNew": true,
     "isBestSeller": true,
@@ -1351,55 +1433,5 @@
     "originalPrice": "8900",
     "imageUrl": "",
     "installationPrice": ""
-  },
-  {
-    "id": "ce374ab8-701f-4732-a059-8200071acf8b",
-    "slug": "sanity",
-    "name": "Sanity 33",
-    "sku": "455",
-    "brand": "Redline",
-    "brandSlug": "redline",
-    "category": "Bike Accessories",
-    "categorySlug": "bike-accessories",
-    "images": [
-      {
-        "id": "e2cc3385-802c-4a50-8576-d92b02c7170a",
-        "url": "http://localhost:3000/uploads/ERD-Image-Apr-21-2026-02_05_33-PM-3160033e.webp",
-        "alt": "Sanity 33",
-        "isPrimary": true
-      }
-    ],
-    "price": 50000,
-    "originalPrice": 80000,
-    "stock": -10,
-    "inStock": true,
-    "rating": 3.5,
-    "reviewCount": 2,
-    "description": "Maximus Sirius series ultra-bright LED headlights deliver 8500 lumens per pair. Compatible with projector and reflector housings. CANBUS compatible with anti-flicker design. Easy plug-and-play installation for most vehicles.",
-    "shortDescription": "Maximus Sirius series ultra-bright LED headlights deliver 8500 lumens per pair. Compatible with projector and reflector housings. CANBUS compatible with anti-flicker design. Easy plug-and-play installation for most vehicles.",
-    "specifications": [
-      {
-        "id": "c9d271b8-72f3-4738-b801-4aeb7d469a27",
-        "label": "Weight",
-        "value": "234"
-      },
-      {
-        "id": "e596e8be-7d0d-4cbd-9fdb-a4e998276f56",
-        "label": "color",
-        "value": "Red"
-      }
-    ],
-    "installationAvailable": true,
-    "installationPrice": 2000,
-    "tags": [],
-    "isFeatured": false,
-    "isNew": true,
-    "isBestSeller": false,
-    "isFlashSale": false,
-    "createdAt": "2026-07-14T07:46:41.431Z",
-    "updatedAt": "2026-07-14T08:14:06.670Z",
-    "imageUrl": "http://localhost:3000/uploads/ERD-Image-Apr-21-2026-02_05_33-PM-3160033e.webp",
-    "vehicleCompatibility": [],
-    "warranty": "1 year"
   }
 ]

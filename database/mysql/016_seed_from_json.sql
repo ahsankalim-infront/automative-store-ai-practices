@@ -1,6 +1,6 @@
 -- =============================================================================
 -- Seed data generated from data/json/*.json
--- Generated: 2026-07-17T10:47:48.073Z
+-- Generated: 2026-07-17T16:10:09.842Z
 -- Regenerate: npm run mysql:seed-sql
 --
 -- Run AFTER schema migrations (000–017):
@@ -307,6 +307,45 @@ INSERT INTO product_vehicle_fit (id, product_id, vehicle_make_id, vehicle_model_
 INSERT INTO product_vehicle_fit (id, product_id, vehicle_make_id, vehicle_model_id, brand, model, year_from, year_to, variants, sort_order) VALUES ('p-013-fit-1', 'p-013', NULL, NULL, 'Toyota', 'Hilux Revo', 2022, 2025, NULL, 0);
 INSERT INTO product_vehicle_fit (id, product_id, vehicle_make_id, vehicle_model_id, brand, model, year_from, year_to, variants, sort_order) VALUES ('p-014-fit-1', 'p-014', NULL, NULL, 'KIA', 'Sorento', 2025, 2026, NULL, 0);
 INSERT INTO product_vehicle_fit (id, product_id, vehicle_make_id, vehicle_model_id, brand, model, year_from, year_to, variants, sort_order) VALUES ('p-016-fit-1', 'p-016', NULL, NULL, 'Honda', 'Civic', 2022, 2025, NULL, 0);
+
+-- ─── product_images ──────────────────────────────────────────────
+DELETE FROM product_images;
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i1', 'p-001', 'https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=600&h=600&q=80', 'LED H4 Headlight', 1, 0);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i2', 'p-001', 'https://images.unsplash.com/photo-1604999974288-6e3329448cc1?auto=format&fit=crop&w=600&h=600&q=80', 'LED Headlight side view', 0, 1);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i3', 'p-001', 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=600&h=600&q=80', 'LED installed on car', 0, 2);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i1', 'p-002', 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=600&h=600&q=80', 'LED H4 30W bulb', 1, 0);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i2', 'p-002', 'https://images.unsplash.com/photo-1558981359-219d6364c9c8?auto=format&fit=crop&w=600&h=600&q=80', 'LED light installed', 0, 1);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i1', 'p-003', 'https://images.unsplash.com/photo-1761846786526-706cf7015afb?auto=format&fit=crop&w=600&h=600&q=80', 'Custom 7D car floor matting close-up', 1, 0);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i2', 'p-003', 'https://images.unsplash.com/photo-1605437241278-c806d14a4d9?auto=format&fit=crop&w=600&h=600&q=80', 'Car interior with floor matting', 0, 1);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i1', 'p-004', 'https://images.unsplash.com/photo-1760161339261-56487b766a17?auto=format&fit=crop&w=600&h=600&q=80', 'Premium quilted leather car seat covers', 1, 0);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i2', 'p-004', 'https://images.unsplash.com/photo-1605437241278-c806d14a4d9?auto=format&fit=crop&w=600&h=600&q=80', 'Luxury car interior leather seats', 0, 1);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i1', 'p-005', 'https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&w=600&h=600&q=80', 'Polishing compound', 1, 0);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i2', 'p-005', 'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?auto=format&fit=crop&w=600&h=600&q=80', 'Car polishing', 0, 1);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i1', 'p-006', 'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?auto=format&fit=crop&w=600&h=600&q=80', 'Microfiber detailing cloth', 1, 0);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i2', 'p-006', 'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=600&h=600&q=80', 'Car cleaning cloth', 0, 1);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i1', 'p-007', 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=600&h=600&q=80', 'Android multimedia panel', 1, 0);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i2', 'p-007', 'https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=600&h=600&q=80', 'Car infotainment screen', 0, 1);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i3', 'p-007', 'https://images.unsplash.com/photo-1491895200222-0fc4a4c35e18?auto=format&fit=crop&w=600&h=600&q=80', 'Android panel installed', 0, 2);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i1', 'p-008', 'https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=600&h=600&q=80', 'Dash camera 4K', 1, 0);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i2', 'p-008', 'https://images.unsplash.com/photo-1555215695-3004980ad54d?auto=format&fit=crop&w=600&h=600&q=80', 'Dash cam installed', 0, 1);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i1', 'p-009', 'https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&w=600&h=600&q=80', 'PPF paint protection film', 1, 0);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i2', 'p-009', 'https://images.unsplash.com/photo-1541038880942-4c8b74b2b6fb?auto=format&fit=crop&w=600&h=600&q=80', 'PPF applied on car hood', 0, 1);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i1', 'p-010', 'https://images.unsplash.com/photo-1544636331-9849c66b2a09?auto=format&fit=crop&w=600&h=600&q=80', 'Honda Civic fog lamps', 1, 0);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i2', 'p-010', 'https://images.unsplash.com/photo-1549317661-cf369843efab?auto=format&fit=crop&w=600&h=600&q=80', 'Fog lamp close up', 0, 1);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i1', 'p-011', 'https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=600&h=600&q=80', 'BMW sports horn', 1, 0);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i1', 'p-012', 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=600&h=600&q=80', 'Alloy rim 16 inch', 1, 0);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i2', 'p-012', 'https://images.unsplash.com/photo-1558981403-b6bb3f3bb15a?auto=format&fit=crop&w=600&h=600&q=80', 'Car alloy wheel close up', 0, 1);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i1', 'p-013', 'https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=600&h=600&q=80', 'Dashboard velvet carpet', 1, 0);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i1', 'p-014', 'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?auto=format&fit=crop&w=600&h=600&q=80', 'KIA key cover TPU', 1, 0);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i1', 'p-015', 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&h=600&q=80', 'Engine coolant 1L green', 1, 0);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i1', 'p-016', 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=600&h=600&q=80', 'Honda Civic body kit', 1, 0);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i2', 'p-016', 'https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?auto=format&fit=crop&w=600&h=600&q=80', 'Car front lip spoiler', 0, 1);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i1', 'p-017', 'https://images.unsplash.com/photo-1542317048-7a6ce1a438c8?auto=format&fit=crop&w=600&h=600&q=80', 'Car covered with protective top cover outdoors', 1, 0);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i2', 'p-017', 'https://images.unsplash.com/photo-1759822601895-0448963d699f?auto=format&fit=crop&w=600&h=600&q=80', 'Vehicle protected with car top cover sheet', 0, 1);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i1', 'p-018', 'https://images.unsplash.com/photo-1546411649-b27262a68b4e?auto=format&fit=crop&w=600&h=600&q=80', 'Premium fitted car top covers on parked vehicles', 1, 0);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i1', 'p-019', 'https://images.unsplash.com/photo-1761846786526-706cf7015afb?auto=format&fit=crop&w=600&h=600&q=80', 'Custom 7D car floor matting texture close-up', 1, 0);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('i2', 'p-019', 'https://images.unsplash.com/photo-1605437241278-c806d14a4d9?auto=format&fit=crop&w=600&h=600&q=80', 'Car interior with custom floor matting', 0, 1);
+INSERT INTO product_images (id, product_id, url, alt, is_primary, sort_order) VALUES ('e2cc3385-802c-4a50-8576-d92b02c7170a', 'ce374ab8-701f-4732-a059-8200071acf8b', 'http://localhost:3000/uploads/ERD-Image-Apr-21-2026-02_05_33-PM-3160033e.webp', 'Sanity 33', 1, 0);
 
 -- ─── orders ──────────────────────────────────────────────────────
 DELETE FROM orders;
