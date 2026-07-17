@@ -1,17 +1,11 @@
 import Link from "next/link";
 import { Phone, Mail, MapPin, MessageCircle, ArrowRight, Truck, RotateCcw, CreditCard, Headphones, Share2, Heart, Video, Play } from "lucide-react";
 import { BrandLogo } from "@/components/brand/logo";
-import { BRAND, formatPhoneDisplay, phoneTelHref, whatsappHref } from "@/lib/brand/config";
+import { getBrandConfig } from "@/lib/brand/get-brand-config";
+import { getCategories } from "@/lib/data/repositories";
+import { formatPhoneDisplay, phoneTelHref, whatsappHref } from "@/lib/brand/config";
 
 const footerLinks = {
-  shop: [
-    { label: "Custom Seat Covers", href: "/products?category=custom-seat-covers" },
-    { label: "Car Top Cover", href: "/products?category=car-top-cover" },
-    { label: "Car Floor Matting", href: "/products?category=car-floor-matting" },
-    { label: "Interior Accessories", href: "/products?category=interior" },
-    { label: "LED & Lighting", href: "/products?category=led-lighting" },
-    { label: "All Products", href: "/products" },
-  ],
   services: [
     { label: "Custom Poshish", href: "/services" },
     { label: "Seat Cover Fitting", href: "/services#installation" },
@@ -33,20 +27,30 @@ const footerLinks = {
   ],
 };
 
-const trustBadges = [
-  { icon: Truck, label: "Nationwide Delivery", sub: "Lahore & across Pakistan" },
+const trustBadges = (city: string, country: string) => [
+  { icon: Truck, label: "Nationwide Delivery", sub: `${city} & across ${country}` },
   { icon: RotateCcw, label: "Quality Guarantee", sub: "Premium poshish materials" },
   { icon: CreditCard, label: "Secure Payment", sub: "COD · Card · Transfer" },
   { icon: Headphones, label: "Expert Support", sub: "Call · WhatsApp · Email" },
 ];
 
-export function Footer() {
+export async function Footer() {
+  const [brand, categories] = await Promise.all([getBrandConfig(), getCategories()]);
+  const shopLinks = [
+    ...categories.slice(0, 5).map((cat) => ({
+      label: cat.name,
+      href: `/products?category=${cat.slug}`,
+    })),
+    { label: "All Products", href: "/products" },
+  ];
+  const badges = trustBadges(brand.address.city, brand.address.country);
+
   return (
-    <footer className="bg-secondary text-white mt-20">
+    <footer className="bg-secondary text-white mt-10 sm:mt-20">
       <div className="border-b border-white/10">
         <div className="max-w-screen-xl mx-auto px-4 py-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-            {trustBadges.map(({ icon: Icon, label, sub }) => (
+            {badges.map(({ icon: Icon, label, sub }) => (
               <div key={label} className="flex items-center gap-3 min-w-0">
                 <div className="h-10 w-10 rounded-xl bg-primary/20 flex items-center justify-center shrink-0">
                   <Icon className="h-5 w-5 text-primary" />
@@ -68,10 +72,10 @@ export function Footer() {
               <BrandLogo size="lg" textClassName="[&_p:first-child]:text-white" />
             </Link>
             <p className="text-sm text-gray-400 leading-relaxed mb-4 max-w-sm">
-              {BRAND.description}
+              {brand.description}
             </p>
             <div className="space-y-2.5 text-sm text-gray-400">
-              {BRAND.contacts.map((person) => (
+              {brand.contacts.map((person) => (
                 <div key={person.name}>
                   <p className="text-white font-medium text-xs mb-0.5">{person.name}</p>
                   {person.phones.map((phone) => (
@@ -86,12 +90,12 @@ export function Footer() {
                   ))}
                 </div>
               ))}
-              <a href={`mailto:${BRAND.email}`} className="flex items-center gap-2 hover:text-primary transition-colors pt-1">
-                <Mail className="h-4 w-4 shrink-0" /> {BRAND.email}
+              <a href={`mailto:${brand.email}`} className="flex items-center gap-2 hover:text-primary transition-colors pt-1">
+                <Mail className="h-4 w-4 shrink-0" /> {brand.email}
               </a>
               <span className="flex items-start gap-2 pt-1">
                 <MapPin className="h-4 w-4 shrink-0 mt-0.5" />
-                <span className="leading-snug">{BRAND.address.full}</span>
+                <span className="leading-snug break-words">{brand.address.full}</span>
               </span>
             </div>
             <div className="flex items-center gap-3 mt-4">
@@ -99,7 +103,7 @@ export function Footer() {
                 { icon: Share2, href: "#", label: "Facebook" },
                 { icon: Heart, href: "#", label: "Instagram" },
                 { icon: Play, href: "#", label: "YouTube" },
-                { icon: MessageCircle, href: whatsappHref(), label: "WhatsApp" },
+                { icon: MessageCircle, href: whatsappHref(brand.whatsapp), label: "WhatsApp" },
               ].map(({ icon: Icon, href, label }) => (
                 <a
                   key={label}
@@ -107,7 +111,7 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="h-8 w-8 rounded-lg bg-white/10 flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white transition-all"
+                  className="h-10 w-10 sm:h-8 sm:w-8 rounded-lg bg-white/10 flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white transition-all"
                 >
                   <Icon className="h-4 w-4" />
                 </a>
@@ -116,7 +120,7 @@ export function Footer() {
           </div>
 
           {[
-            { title: "Shop", links: footerLinks.shop },
+            { title: "Shop", links: shopLinks },
             { title: "Services", links: footerLinks.services },
             { title: "Company", links: footerLinks.company },
             { title: "Help", links: footerLinks.help },
@@ -159,8 +163,8 @@ export function Footer() {
 
       <div className="border-t border-white/10">
         <div className="max-w-screen-xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-gray-500">
-          <p>© {new Date().getFullYear()} {BRAND.name}. All rights reserved.</p>
-          <p className="text-center">{BRAND.address.city} · {BRAND.businessHours}</p>
+          <p>© {new Date().getFullYear()} {brand.name}. All rights reserved.</p>
+          <p className="text-center">{brand.address.city} · {brand.businessHours}</p>
         </div>
       </div>
     </footer>

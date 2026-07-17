@@ -5,9 +5,10 @@ import { AppImage as Image } from "@/components/ui/app-image";
 import { motion } from "framer-motion";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { SIGNATURE_CATEGORIES } from "@/lib/brand/signature-categories";
-import { BRAND } from "@/lib/brand/config";
+import { useBrand } from "@/lib/brand/brand-context";
 
 export function SignatureShowcase() {
+  const brand = useBrand();
   const [featured, ...rest] = SIGNATURE_CATEGORIES;
 
   return (
@@ -32,7 +33,7 @@ export function SignatureShowcase() {
             <span className="h-px w-8 bg-primary/50" />
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-foreground tracking-tight leading-tight">
-            {BRAND.shortName} Signature Collection
+            {brand.shortName} Signature Collection
           </h2>
           <p className="mt-4 text-sm sm:text-base text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
             Discover our four most popular product lines — premium car poshish, seat covers,
@@ -64,7 +65,7 @@ export function SignatureShowcase() {
         >
           <p className="text-sm text-gray-500 text-center sm:text-left">
             <span className="font-bold text-foreground">Need a custom quote?</span>{" "}
-            Visit us at {BRAND.address.full} or call {BRAND.primaryPhone}
+            Visit us at {brand.address.full} or call {brand.primaryPhone}
           </p>
           <Link
             href="/contact"

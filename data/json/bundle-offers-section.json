@@ -1,0 +1,11 @@
+[
+  {
+    "id": "bundle-section-1",
+    "badge": "Save More",
+    "title": "Bundle Offers",
+    "subtitle": "Curated product bundles with exclusive savings",
+    "viewAllHref": "/products",
+    "isEnabled": true,
+    "updatedAt": "2026-07-17T00:00:00.000Z"
+  }
+]

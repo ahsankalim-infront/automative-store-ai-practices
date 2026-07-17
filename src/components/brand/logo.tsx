@@ -1,6 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { BRAND_LOGO_SRC } from "@/lib/brand/assets";
+import { useBrand } from "@/lib/brand/brand-context";
 
 interface LogoMarkProps {
   size?: "sm" | "md" | "lg" | "xl";
@@ -40,6 +43,19 @@ interface BrandLogoProps {
   priority?: boolean;
 }
 
+function renderStoreName(name: string) {
+  const marker = "Poshish";
+  const idx = name.indexOf(marker);
+  if (idx === -1) return name;
+  return (
+    <>
+      {name.slice(0, idx)}
+      <span className="text-primary">{marker}</span>
+      {name.slice(idx + marker.length)}
+    </>
+  );
+}
+
 export function BrandLogo({
   size = "md",
   showText = true,
@@ -47,16 +63,18 @@ export function BrandLogo({
   textClassName,
   priority = false,
 }: BrandLogoProps) {
+  const brand = useBrand();
+
   return (
     <div className={cn("flex items-center gap-2.5 min-w-0", className)}>
       <LogoMark size={size} priority={priority} />
       {showText && (
         <div className={cn("min-w-0", textClassName)}>
           <p className="text-sm sm:text-base font-black text-foreground leading-tight truncate">
-            Shahzad <span className="text-primary">Poshish</span> House
+            {renderStoreName(brand.name)}
           </p>
           <p className="text-[10px] sm:text-xs text-gray-400 leading-none truncate">
-            Premium car poshish & upholstery
+            {brand.tagline}
           </p>
         </div>
       )}

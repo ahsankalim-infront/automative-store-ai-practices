@@ -29,6 +29,9 @@ export interface ReportResult {
     dateTo: string;
     statusFilter?: string;
     rowCount: number;
+    storeName: string;
+    storeEmail: string;
+    orderPrefix: string;
   };
   summary: ReportSummaryItem[];
   columns: ReportColumn[];

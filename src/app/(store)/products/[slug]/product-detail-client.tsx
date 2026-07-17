@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { ShoppingCart, Heart, Package, Shield, Truck, Star, CheckCircle, ChevronRight, Share2, Minus, Plus, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
@@ -11,20 +11,20 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ProductCard } from "@/components/product/product-card";
-import { products, getProductBySlug } from "@/lib/mock-data/products";
-import { mockReviews } from "@/lib/mock-data/orders";
 import { useCartStore } from "@/store/cart-store";
 import { useWishlistStore } from "@/store/wishlist-store";
 import { formatPrice, calculateDiscount, formatDate } from "@/lib/utils";
+import type { Product, Review } from "@/types";
 import toast from "react-hot-toast";
 
-export default function ProductDetailPage() {
-  const params = useParams();
+interface ProductDetailClientProps {
+  product: Product;
+  reviews: Review[];
+  related: Product[];
+}
+
+export default function ProductDetailClient({ product, reviews, related }: ProductDetailClientProps) {
   const router = useRouter();
-  const slug = typeof params.slug === "string" ? params.slug : Array.isArray(params.slug) ? params.slug[0] : "";
-  const product = getProductBySlug(slug) || products[0];
-  const reviews = mockReviews.filter(r => r.productId === product.id);
-  const related = products.filter(p => p.categorySlug === product.categorySlug && p.id !== product.id).slice(0, 4);
 
   const [activeImage, setActiveImage] = useState(0);
   const [quantity, setQuantity] = useState(1);

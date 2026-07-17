@@ -6,7 +6,7 @@ import { useOrders, useBookings } from "@/hooks/use-api-data";
 import { useAuthStore } from "@/store/auth-store";
 import { useWishlistStore } from "@/store/wishlist-store";
 import { formatPrice, formatDate } from "@/lib/utils";
-import { BRAND } from "@/lib/brand/config";
+import { useBrand } from "@/lib/brand/brand-context";
 import { OrderStatusBadge } from "@/components/shared/order-status-badge";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/shared/empty-state";
@@ -19,6 +19,7 @@ const quickActions = [
 ];
 
 export default function DashboardPage() {
+  const brand = useBrand();
   const { data: orders = [], loading: ordersLoading } = useOrders();
   const { data: bookings = [] } = useBookings();
   const { items: wishItems } = useWishlistStore();
@@ -47,7 +48,7 @@ export default function DashboardPage() {
             <p className="text-gray-400 text-sm mb-1">Welcome back</p>
             <h1 className="text-xl sm:text-2xl font-black text-white">{user?.name || "Customer"}</h1>
             <p className="text-gray-400 text-sm mt-1">
-              {memberSince ? `Member since ${memberSince}` : `${BRAND.name} customer`}
+              {memberSince ? `Member since ${memberSince}` : `${brand.name} customer`}
               {user?.phone ? ` · ${user.phone}` : ""}
             </p>
           </div>

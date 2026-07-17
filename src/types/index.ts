@@ -91,6 +91,7 @@ export interface Category {
   parentId?: string;
   subcategories?: Category[];
   sortOrder: number;
+  isActive: boolean;
 }
 
 // ─── Brand Types ──────────────────────────────────────────────────────────────
@@ -357,6 +358,102 @@ export interface Banner {
   position: "hero" | "middle" | "bottom" | "sidebar";
   isActive: boolean;
   sortOrder: number;
+}
+
+// ─── Hero Carousel Slides ─────────────────────────────────────────────────────
+
+export interface HeroSlide {
+  id: string;
+  tag: string;
+  title: string;
+  mobileTitle: string;
+  highlight: string;
+  mobileCta: string;
+  description: string;
+  ctaLabel: string;
+  ctaHref: string;
+  secondaryLabel: string;
+  secondaryHref: string;
+  productImage: string;
+  productLabel: string;
+  productPrice: string;
+  badgeIcon: string;
+  badgeText: string;
+  stat1Value: string;
+  stat1Label: string;
+  stat2Value: string;
+  stat2Label: string;
+  stat3Value: string;
+  stat3Label: string;
+  leftBg: string;
+  rightBg: string;
+  accent: string;
+  accentLight: string;
+  sortOrder: number;
+  isActive: boolean;
+}
+
+// ─── Bundle Offers ────────────────────────────────────────────────────────────
+
+export interface BundleOffer {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  originalPrice: number;
+  image: string;
+  href: string;
+  tag?: string;
+  productIds?: string[];
+  sortOrder: number;
+  isActive: boolean;
+}
+
+export interface BundleOffersSectionConfig {
+  id: string;
+  badge: string;
+  title: string;
+  subtitle: string;
+  viewAllHref: string;
+  isEnabled: boolean;
+  updatedAt: string;
+}
+
+// ─── About Page Content ───────────────────────────────────────────────────────
+
+export interface AboutSectionConfig {
+  id: string;
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  isEnabled: boolean;
+  updatedAt: string;
+}
+
+export interface AboutTeamMember {
+  id: string;
+  name: string;
+  role: string;
+  bio: string;
+  image: string;
+  sortOrder: number;
+  isActive: boolean;
+}
+
+export interface AboutMilestone {
+  id: string;
+  year: string;
+  title: string;
+  description: string;
+  sortOrder: number;
+  isActive: boolean;
+}
+
+export interface AboutPageContent {
+  journeySection: AboutSectionConfig;
+  leadershipSection: AboutSectionConfig;
+  team: AboutTeamMember[];
+  milestones: AboutMilestone[];
 }
 
 // ─── Admin Dashboard Types ────────────────────────────────────────────────────

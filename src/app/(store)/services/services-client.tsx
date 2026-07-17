@@ -4,9 +4,10 @@ import { Shield, Clock, MapPin, CheckCircle, ArrowRight, Star } from "lucide-rea
 import { Button } from "@/components/ui/button";
 import { useServices, useStores } from "@/hooks/use-api-data";
 import { formatPrice } from "@/lib/utils";
-import { BRAND } from "@/lib/brand/config";
+import { useBrand } from "@/lib/brand/brand-context";
 
 export default function ServicesPage() {
+  const brand = useBrand();
   const { data: services = [] } = useServices();
   const { data: stores = [] } = useStores();
   return (
@@ -76,7 +77,7 @@ export default function ServicesPage() {
       {/* Why Choose Us */}
       <section className="py-16 bg-gray-50 dark:bg-gray-900">
         <div className="max-w-screen-xl mx-auto px-4">
-          <h2 className="text-3xl font-black text-foreground text-center mb-10">Why Choose {BRAND.name} Services?</h2>
+          <h2 className="text-3xl font-black text-foreground text-center mb-10">Why Choose {brand.name} Services?</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             {[
               { value: "18+", label: "Dustfree Studios" },

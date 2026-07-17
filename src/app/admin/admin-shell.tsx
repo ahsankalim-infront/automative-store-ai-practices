@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { AdminSidebar } from "@/components/admin/admin-sidebar";
 import { AdminHeader } from "@/components/admin/admin-header";
@@ -8,6 +8,15 @@ import { AnimatePresence, motion } from "framer-motion";
 export default function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [mobileSidebar, setMobileSidebar] = useState(false);
+
+  useEffect(() => {
+    if (!mobileSidebar) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [mobileSidebar]);
 
   if (pathname === "/admin/login") {
     return <>{children}</>;

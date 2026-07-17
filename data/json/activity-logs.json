@@ -1,0 +1,36 @@
+[
+  {
+    "id": "6063ded5-f0a7-45d4-b31e-cc28b679eaf2",
+    "status": "success",
+    "createdAt": "2026-07-17T06:19:42.383Z",
+    "action": "categories.update",
+    "category": "admin",
+    "message": "Updated categories #cat-top-1",
+    "actorId": "u-admin",
+    "actorEmail": "admin@autozone.pk",
+    "actorName": "Admin User",
+    "actorRole": "admin",
+    "entityType": "categories",
+    "entityId": "cat-top-1",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "path": "/api/admin/resources/categories/cat-top-1"
+  },
+  {
+    "id": "8b155214-6b55-4a77-8333-729ff05b0d65",
+    "status": "success",
+    "createdAt": "2026-07-17T06:19:52.801Z",
+    "action": "categories.update",
+    "category": "admin",
+    "message": "Updated categories #cat-16",
+    "actorId": "u-admin",
+    "actorEmail": "admin@autozone.pk",
+    "actorName": "Admin User",
+    "actorRole": "admin",
+    "entityType": "categories",
+    "entityId": "cat-16",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "path": "/api/admin/resources/categories/cat-16"
+  }
+]

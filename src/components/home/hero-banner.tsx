@@ -1,120 +1,24 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import Link from "next/link";
 import { AppImage as Image } from "@/components/ui/app-image";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, ShoppingBag, ArrowRight, Star, Sparkles, LayoutGrid, Umbrella } from "lucide-react";
-import { BRAND } from "@/lib/brand/config";
-import { SIGNATURE_IMAGES_HERO } from "@/lib/brand/signature-images";
+import { ChevronLeft, ChevronRight, ShoppingBag, ArrowRight } from "lucide-react";
+import { useBrand } from "@/lib/brand/brand-context";
+import { mapHeroSlides, type HeroSlideView } from "@/lib/hero-slides/map-slide";
 import { cn } from "@/lib/utils";
-
-const slides = [
-  {
-    id: 1,
-    tag: "★ Best Seller",
-    title: "Custom Made\nSeat Covers",
-    mobileTitle: "Custom Seat Covers",
-    highlight: "Premium PU/PVC",
-    mobileCta: "Shop Now",
-    description: "Top premium quality leather PU & PVC fabric seat covers. Custom fit for 200+ models with diamond stitching and expert fitting at our Lahore studio.",
-    cta: { label: "Shop Seat Covers", href: "/products?category=custom-seat-covers" },
-    secondary: { label: "Get Free Quote", href: "/contact" },
-    productImage: SIGNATURE_IMAGES_HERO.seatCovers,
-    productLabel: "Custom PU/PVC Leather",
-    productPrice: "From Rs. 12,000",
-    badge: { icon: Star, text: "Most Popular" },
-    stats: [
-      { value: "200+", label: "Car Models" },
-      { value: "All", label: "Colours" },
-      { value: "1 Yr", label: "Warranty" },
-    ],
-    leftBg: "from-[#0d0d0d] via-[#1a0a00] to-[#0d0d0d]",
-    rightBg: "from-[#f5f0eb] to-[#ede8e0]",
-    accent: "#D50000",
-    accentLight: "#ff5252",
-  },
-  {
-    id: 2,
-    tag: "🛡️ All Weather",
-    title: "Car Top\nCover",
-    mobileTitle: "Car Top Cover",
-    highlight: "Sun · Dust · Rain",
-    mobileCta: "Shop Covers",
-    description: "Heavy-duty waterproof car top covers with UV-resistant coating. Universal and premium fitted options to protect your vehicle outdoors.",
-    cta: { label: "Shop Top Covers", href: "/products?category=car-top-cover" },
-    secondary: { label: "View Collection", href: "/products?category=car-top-cover" },
-    productImage: SIGNATURE_IMAGES_HERO.topCover,
-    productLabel: "Waterproof Top Cover",
-    productPrice: "From Rs. 6,500",
-    badge: { icon: Umbrella, text: "UV Protected" },
-    stats: [
-      { value: "100%", label: "Waterproof" },
-      { value: "UV", label: "Resistant" },
-      { value: "6 Mo", label: "Warranty" },
-    ],
-    leftBg: "from-[#0d0d18] via-[#060618] to-[#0d0d18]",
-    rightBg: "from-[#e8eaf6] to-[#dde0f5]",
-    accent: "#2563EB",
-    accentLight: "#93C5FD",
-  },
-  {
-    id: 3,
-    tag: "✨ Custom Fit",
-    title: "Car Floor\nMatting",
-    mobileTitle: "Floor Matting",
-    highlight: "5D · 7D · 9D Sets",
-    mobileCta: "Shop Mats",
-    description: "Precision-cut floor matting for every car model. High-wall design traps dirt and spills. Odourless, waterproof and easy to clean.",
-    cta: { label: "Shop Floor Matting", href: "/products?category=car-floor-matting" },
-    secondary: { label: "Book Fitting", href: "/services/book" },
-    productImage: SIGNATURE_IMAGES_HERO.floorMatting,
-    productLabel: "Custom 7D Mat Set",
-    productPrice: "From Rs. 8,500",
-    badge: { icon: LayoutGrid, text: "Custom Fit" },
-    stats: [
-      { value: "5D/7D", label: "Options" },
-      { value: "Anti", label: "Slip Base" },
-      { value: "Easy", label: "Clean" },
-    ],
-    leftBg: "from-[#0d1a0d] via-[#061006] to-[#0d1a0d]",
-    rightBg: "from-[#e8f5e9] to-[#dcedc8]",
-    accent: "#059669",
-    accentLight: "#6EE7B7",
-  },
-  {
-    id: 4,
-    tag: `🏆 ${BRAND.shortName}`,
-    title: "Premium\nTop Cover",
-    mobileTitle: "Premium Top Cover",
-    highlight: "Paint-Safe · Fitted",
-    mobileCta: "Shop Premium",
-    description: "Premium fitted car top covers with soft inner lining, mirror pockets and double-stitched seams. Complete protection without scratching your paint.",
-    cta: { label: "Shop Premium Line", href: "/products?category=car-top-cover" },
-    secondary: { label: "About Us", href: "/about" },
-    productImage: SIGNATURE_IMAGES_HERO.topCoverPremium,
-    productLabel: "Premium Fitted Cover",
-    productPrice: "From Rs. 9,500",
-    badge: { icon: Sparkles, text: "Premium Line" },
-    stats: [
-      { value: "Soft", label: "Lining" },
-      { value: "Mirror", label: "Pockets" },
-      { value: "1 Yr", label: "Warranty" },
-    ],
-    leftBg: "from-[#120d18] via-[#0a0610] to-[#120d18]",
-    rightBg: "from-[#f3e8ff] to-[#e9d5ff]",
-    accent: "#7C3AED",
-    accentLight: "#C4B5FD",
-  },
-];
+import type { HeroSlide } from "@/types";
 
 function SlideDots({
   current,
   onSelect,
   accent,
+  slides,
 }: {
   current: number;
   onSelect: (index: number) => void;
   accent: string;
+  slides: HeroSlideView[];
 }) {
   return (
     <div className="flex items-center justify-center gap-1">
@@ -143,12 +47,27 @@ function SlideDots({
 const navBtnClass =
   "rounded-full bg-black/50 md:bg-white/10 hover:bg-black/65 md:hover:bg-white/20 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white transition-all shrink-0";
 
-export function HeroBanner() {
+export function HeroBanner({ slides: slideData }: { slides: HeroSlide[] }) {
+  const brand = useBrand();
+  const slides = useMemo(
+    () => mapHeroSlides(slideData, brand.shortName),
+    [slideData, brand.shortName]
+  );
   const [current, setCurrent] = useState(0);
   const [autoPlay, setAutoPlay] = useState(true);
 
-  const next = useCallback(() => setCurrent((c) => (c + 1) % slides.length), []);
-  const prev = useCallback(() => setCurrent((c) => (c - 1 + slides.length) % slides.length), []);
+  useEffect(() => {
+    if (current >= slides.length) setCurrent(0);
+  }, [current, slides.length]);
+
+  const next = useCallback(() => {
+    if (slides.length === 0) return;
+    setCurrent((c) => (c + 1) % slides.length);
+  }, [slides.length]);
+  const prev = useCallback(() => {
+    if (slides.length === 0) return;
+    setCurrent((c) => (c - 1 + slides.length) % slides.length);
+  }, [slides.length]);
 
   const goTo = (index: number) => {
     setCurrent(index);
@@ -156,13 +75,16 @@ export function HeroBanner() {
   };
 
   useEffect(() => {
-    if (!autoPlay) return;
+    if (!autoPlay || slides.length <= 1) return;
     const t = setInterval(next, 6000);
     return () => clearInterval(t);
-  }, [autoPlay, next]);
+  }, [autoPlay, next, slides.length]);
+
+  if (slides.length === 0) return null;
 
   const slide = slides[current];
   const BadgeIcon = slide.badge.icon;
+  const isFirstSlide = current === 0;
 
   return (
     <section className="relative isolate overflow-hidden bg-black w-full min-w-0 h-[268px] xs:h-[284px] sm:h-[320px] md:h-auto md:min-h-[640px]">
@@ -191,7 +113,7 @@ export function HeroBanner() {
                 fill
                 className="object-cover object-[center_30%]"
                 sizes="100vw"
-                priority={slide.id === 1}
+                priority={isFirstSlide}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/75 to-black/35" />
               <div
@@ -334,7 +256,7 @@ export function HeroBanner() {
                   fill
                   className="object-cover rounded-2xl"
                   sizes="(max-width: 1024px) 40vw, 320px"
-                  priority={slide.id === 1}
+                  priority={isFirstSlide}
                 />
               </div>
 
@@ -365,57 +287,61 @@ export function HeroBanner() {
         {String(current + 1).padStart(2, "0")}/{String(slides.length).padStart(2, "0")}
       </div>
 
-      <div className="absolute bottom-0 inset-x-0 z-30 h-11 sm:h-12 md:hidden flex items-center justify-between px-2 bg-gradient-to-t from-black/85 via-black/50 to-transparent">
-        <button
-          type="button"
-          onClick={() => {
-            prev();
-            setAutoPlay(false);
-          }}
-          aria-label="Previous slide"
-          className={cn(navBtnClass, "h-7 w-7")}
-        >
-          <ChevronLeft className="h-3.5 w-3.5" />
-        </button>
-        <SlideDots current={current} onSelect={goTo} accent={slide.accent} />
-        <button
-          type="button"
-          onClick={() => {
-            next();
-            setAutoPlay(false);
-          }}
-          aria-label="Next slide"
-          className={cn(navBtnClass, "h-7 w-7")}
-        >
-          <ChevronRight className="h-3.5 w-3.5" />
-        </button>
-      </div>
+      {slides.length > 1 && (
+        <>
+          <div className="absolute bottom-0 inset-x-0 z-30 h-11 sm:h-12 md:hidden flex items-center justify-between px-2 bg-gradient-to-t from-black/85 via-black/50 to-transparent">
+            <button
+              type="button"
+              onClick={() => {
+                prev();
+                setAutoPlay(false);
+              }}
+              aria-label="Previous slide"
+              className={cn(navBtnClass, "h-10 w-10 sm:h-7 sm:w-7")}
+            >
+              <ChevronLeft className="h-3.5 w-3.5" />
+            </button>
+            <SlideDots current={current} onSelect={goTo} accent={slide.accent} slides={slides} />
+            <button
+              type="button"
+              onClick={() => {
+                next();
+                setAutoPlay(false);
+              }}
+              aria-label="Next slide"
+              className={cn(navBtnClass, "h-10 w-10 sm:h-7 sm:w-7")}
+            >
+              <ChevronRight className="h-3.5 w-3.5" />
+            </button>
+          </div>
 
-      <button
-        type="button"
-        onClick={() => {
-          prev();
-          setAutoPlay(false);
-        }}
-        aria-label="Previous slide"
-        className={cn(navBtnClass, "absolute left-3 top-1/2 -translate-y-1/2 z-20 h-9 w-9 hidden md:flex")}
-      >
-        <ChevronLeft className="h-5 w-5" />
-      </button>
-      <button
-        type="button"
-        onClick={() => {
-          next();
-          setAutoPlay(false);
-        }}
-        aria-label="Next slide"
-        className={cn(navBtnClass, "absolute right-3 top-1/2 -translate-y-1/2 z-20 h-9 w-9 hidden md:flex")}
-      >
-        <ChevronRight className="h-5 w-5" />
-      </button>
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 hidden md:flex">
-        <SlideDots current={current} onSelect={goTo} accent={slide.accent} />
-      </div>
+          <button
+            type="button"
+            onClick={() => {
+              prev();
+              setAutoPlay(false);
+            }}
+            aria-label="Previous slide"
+            className={cn(navBtnClass, "absolute left-3 top-1/2 -translate-y-1/2 z-20 h-9 w-9 hidden md:flex")}
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              next();
+              setAutoPlay(false);
+            }}
+            aria-label="Next slide"
+            className={cn(navBtnClass, "absolute right-3 top-1/2 -translate-y-1/2 z-20 h-9 w-9 hidden md:flex")}
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 hidden md:flex">
+            <SlideDots current={current} onSelect={goTo} accent={slide.accent} slides={slides} />
+          </div>
+        </>
+      )}
     </section>
   );
 }

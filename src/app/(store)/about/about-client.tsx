@@ -9,7 +9,9 @@ import {
 } from "lucide-react";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { Button } from "@/components/ui/button";
-import { BRAND, formatPhoneDisplay } from "@/lib/brand/config";
+import { useBrand } from "@/lib/brand/brand-context";
+import { formatPhoneDisplay } from "@/lib/brand/config";
+import type { AboutPageContent } from "@/types";
 
 const stats = [
   { icon: Package,   value: "500+",    label: "Poshish Designs",     color: "bg-blue-50 text-blue-600 dark:bg-blue-900/30" },
@@ -53,19 +55,6 @@ const values = [
   },
 ];
 
-const milestones = [
-  { year: "2014", title: "Founded in Lahore", desc: "Shahzad Poshish House began as a specialist car poshish and seat cover workshop on Abbot Road, Lahore." },
-  { year: "2017", title: "Moeen Center Office", desc: "Moved to Office # 15, 2nd Floor, Moeen Center — a dedicated space for consultations, fittings, and customer service." },
-  { year: "2020", title: "Online Catalog", desc: "Launched our product catalog online so customers can browse seat covers, poshish materials, and place orders from home." },
-  { year: "2024", title: "Expanded Range", desc: "Added interior accessories, custom upholstery options, and professional fitting services under one roof." },
-  { year: "2026", title: "Growing with Trust", desc: "Serving thousands of customers across Lahore and Pakistan with premium poshish, honest pricing, and expert fitting." },
-];
-
-const team = [
-  { name: "Shahzad Ahmed", role: "Founder & Director", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&h=200&q=80", bio: "Poshish & upholstery specialist" },
-  { name: "Muhammad Azaan", role: "Operations Manager", image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&h=200&q=80", bio: "Customer orders & fittings" },
-];
-
 const branches = [
   { city: "Lahore", branches: 1, flagship: true },
 ];
@@ -84,7 +73,9 @@ function FadeIn({ children, delay = 0, className = "" }: { children: React.React
   );
 }
 
-export default function AboutPage() {
+export default function AboutPage({ content }: { content: AboutPageContent }) {
+  const brand = useBrand();
+  const { journeySection, leadershipSection, team, milestones } = content;
   return (
     <div className="min-h-screen bg-background">
 
@@ -94,7 +85,7 @@ export default function AboutPage() {
         <div className="absolute inset-0">
           <Image
             src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=1600&h=700&q=80"
-            alt={BRAND.name}
+            alt={brand.name}
             fill
             className="object-cover opacity-10"
             sizes="100vw"
@@ -128,7 +119,7 @@ export default function AboutPage() {
               transition={{ delay: 0.2 }}
               className="text-gray-300 text-base sm:text-lg leading-relaxed mb-8 max-w-xl"
             >
-              {BRAND.name} specializes in premium car poshish, custom seat covers, and interior upholstery.
+              {brand.name} specializes in premium car poshish, custom seat covers, and interior upholstery.
               Visit us at Moeen Center, Abbot Road — or shop online with delivery across Pakistan.
             </motion.p>
             <motion.div
@@ -180,7 +171,7 @@ export default function AboutPage() {
               </h2>
               <div className="space-y-4 text-gray-600 dark:text-gray-300 text-sm sm:text-base leading-relaxed">
                 <p>
-                  {BRAND.name} started as a dedicated car poshish workshop in Lahore. Founder Shahzad Ahmed built the business on quality materials, expert fitting, and honest customer service.
+                  {brand.name} started as a dedicated car poshish workshop in Lahore. Founder Shahzad Ahmed built the business on quality materials, expert fitting, and honest customer service.
                 </p>
                 <p>
                   From custom seat covers to full interior poshish, we help customers choose the right fabrics, colors, and designs for their vehicles — with professional fitting at our Abbot Road office.
@@ -202,7 +193,7 @@ export default function AboutPage() {
             <FadeIn delay={0.15} className="grid grid-cols-2 gap-3">
               <div className="space-y-3">
                 <div className="relative h-48 rounded-2xl overflow-hidden">
-                  <Image src="https://images.unsplash.com/photo-1596838132731-3301c3fd4317?auto=format&fit=crop&w=400&h=300&q=80" alt={`${BRAND.name} showroom`} fill className="object-cover" sizes="200px" />
+                  <Image src="https://images.unsplash.com/photo-1596838132731-3301c3fd4317?auto=format&fit=crop&w=400&h=300&q=80" alt={`${brand.name} showroom`} fill className="object-cover" sizes="200px" />
                 </div>
                 <div className="relative h-32 rounded-2xl overflow-hidden">
                   <Image src="https://images.unsplash.com/photo-1596838132731-3301c3fd4317?auto=format&fit=crop&w=400&h=250&q=80" alt="Car detailing" fill className="object-cover" sizes="200px" />
@@ -251,14 +242,15 @@ export default function AboutPage() {
       </section>
 
       {/* ── TIMELINE ── */}
+      {journeySection.isEnabled && milestones.length > 0 && (
       <section className="py-16 sm:py-20 bg-secondary relative overflow-hidden">
         <div className="absolute inset-0 opacity-[0.03]"
           style={{ backgroundImage: "radial-gradient(circle, #D50000 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
         <div className="relative max-w-screen-xl mx-auto px-4">
           <FadeIn className="text-center mb-12">
-            <span className="inline-block text-xs font-bold text-primary uppercase tracking-widest mb-3">Our Journey</span>
-            <h2 className="text-3xl sm:text-4xl font-black text-white mb-3">Our Journey</h2>
-            <p className="text-gray-400 max-w-xl mx-auto text-sm sm:text-base">Growing with trust — premium poshish and seat covers in Lahore.</p>
+            <span className="inline-block text-xs font-bold text-primary uppercase tracking-widest mb-3">{journeySection.eyebrow}</span>
+            <h2 className="text-3xl sm:text-4xl font-black text-white mb-3">{journeySection.title}</h2>
+            <p className="text-gray-400 max-w-xl mx-auto text-sm sm:text-base">{journeySection.subtitle}</p>
           </FadeIn>
 
           <div className="relative">
@@ -267,14 +259,14 @@ export default function AboutPage() {
 
             <div className="space-y-8">
               {milestones.map((m, i) => (
-                <FadeIn key={m.year} delay={i * 0.1}>
+                <FadeIn key={m.id} delay={i * 0.1}>
                   <div className={`flex gap-6 md:gap-0 items-start ${i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"}`}>
                     {/* Content */}
                     <div className={`flex-1 ${i % 2 === 0 ? "md:pr-12 md:text-right" : "md:pl-12"}`}>
                       <div className={`bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-5 hover:border-primary/30 transition-colors ${i % 2 === 0 ? "md:ml-auto" : ""} max-w-md`}>
                         <span className="inline-block px-2.5 py-0.5 rounded-full bg-primary/20 text-primary text-xs font-black mb-2">{m.year}</span>
                         <h3 className="font-bold text-white mb-1.5">{m.title}</h3>
-                        <p className="text-sm text-gray-400 leading-relaxed">{m.desc}</p>
+                        <p className="text-sm text-gray-400 leading-relaxed">{m.description}</p>
                       </div>
                     </div>
 
@@ -292,20 +284,28 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* ── TEAM ── */}
+      {leadershipSection.isEnabled && team.length > 0 && (
       <section className="py-16 sm:py-20 bg-card">
         <div className="max-w-screen-xl mx-auto px-4">
           <FadeIn className="text-center mb-12">
-            <span className="inline-block text-xs font-bold text-primary uppercase tracking-widest mb-3">The People</span>
-            <h2 className="text-3xl sm:text-4xl font-black text-foreground mb-3">Meet Our Leadership</h2>
+            <span className="inline-block text-xs font-bold text-primary uppercase tracking-widest mb-3">{leadershipSection.eyebrow}</span>
+            <h2 className="text-3xl sm:text-4xl font-black text-foreground mb-3">{leadershipSection.title}</h2>
             <p className="text-gray-500 max-w-xl mx-auto text-sm sm:text-base">
-              A dedicated team focused on poshish quality, customer care, and expert vehicle interior work.
+              {leadershipSection.subtitle}
             </p>
           </FadeIn>
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+          <div className={`grid gap-5 sm:gap-6 ${
+            team.length === 1
+              ? "grid-cols-1 max-w-xs mx-auto"
+              : team.length === 2
+                ? "grid-cols-2 max-w-lg mx-auto"
+                : "grid-cols-2 sm:grid-cols-2 lg:grid-cols-4"
+          }`}>
             {team.map((member, i) => (
-              <FadeIn key={member.name} delay={i * 0.08}>
+              <FadeIn key={member.id} delay={i * 0.08}>
                 <div className="group text-center">
                   <div className="relative h-28 w-28 sm:h-36 sm:w-36 mx-auto mb-4 rounded-2xl overflow-hidden border-4 border-border group-hover:border-primary/40 transition-all duration-300">
                     <Image
@@ -325,6 +325,7 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* ── BRANCHES MAP ── */}
       <section className="py-16 sm:py-20 bg-background">
@@ -390,8 +391,8 @@ export default function AboutPage() {
             </div>
 
             <div className="mt-10 flex flex-wrap items-center justify-center gap-6 text-white/60 text-xs">
-              <span className="flex items-center gap-1.5"><Phone className="h-3.5 w-3.5" /> {formatPhoneDisplay(BRAND.primaryPhone)}</span>
-              <span className="flex items-center gap-1.5"><Mail className="h-3.5 w-3.5" /> {BRAND.email}</span>
+              <span className="flex items-center gap-1.5"><Phone className="h-3.5 w-3.5" /> {formatPhoneDisplay(brand.primaryPhone)}</span>
+              <span className="flex items-center gap-1.5"><Mail className="h-3.5 w-3.5" /> {brand.email}</span>
               <span className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" /> Abbot Road, Lahore</span>
             </div>
           </FadeIn>

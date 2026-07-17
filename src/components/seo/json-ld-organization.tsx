@@ -1,9 +1,9 @@
 import { getSeoConfig } from "@/lib/seo/config";
 import { absUrl } from "@/lib/seo/metadata";
-import { BRAND } from "@/lib/brand/config";
+import { getBrandConfig } from "@/lib/brand/get-brand-config";
 
 export async function JsonLdOrganization() {
-  const config = await getSeoConfig();
+  const [config, brand] = await Promise.all([getSeoConfig(), getBrandConfig()]);
   const g = config.global;
 
   const schema = {
@@ -12,14 +12,14 @@ export async function JsonLdOrganization() {
     name: g.organizationName || g.siteName,
     description: g.defaultDescription,
     url: absUrl("/"),
-    telephone: BRAND.primaryPhone,
-    email: BRAND.email,
+    telephone: brand.primaryPhone,
+    email: brand.email,
     address: {
       "@type": "PostalAddress",
-      streetAddress: BRAND.address.full,
-      addressLocality: BRAND.address.city,
-      addressRegion: BRAND.address.province,
-      addressCountry: BRAND.address.country,
+      streetAddress: brand.address.full,
+      addressLocality: brand.address.city,
+      addressRegion: brand.address.province,
+      addressCountry: brand.address.country,
     },
     ...(g.organizationLogo ? { logo: absUrl(g.organizationLogo) } : {}),
   };

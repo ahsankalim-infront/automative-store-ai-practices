@@ -8,10 +8,11 @@ import { Input } from "@/components/ui/input";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth-store";
-import { BRAND } from "@/lib/brand/config";
+import { useBrand } from "@/lib/brand/brand-context";
 import { BrandLogo } from "@/components/brand/logo";
 
 export default function RegisterPage() {
+  const brand = useBrand();
   const router = useRouter();
   const register = useAuthStore((s) => s.register);
   const isLoading = useAuthStore((s) => s.isLoading);
@@ -29,7 +30,7 @@ export default function RegisterPage() {
       password: form.password,
     });
     if (result.ok) {
-      toast.success(`Account created! Welcome to ${BRAND.name}`);
+      toast.success(`Account created! Welcome to ${brand.name}`);
       router.push("/dashboard");
     } else {
       toast.error(result.error || "Registration failed");

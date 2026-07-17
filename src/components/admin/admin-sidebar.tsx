@@ -3,10 +3,10 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard, ShoppingBag, Users, Package, FolderTree, Tag, Warehouse, Car, Wrench, Calendar, Ticket, Megaphone, Image, Star, FileText, BarChart3, Bell, Shield, Settings, ChevronLeft, ChevronRight, LogOut, Globe, FolderOpen, Mail, Search, LayoutTemplate,
+  LayoutDashboard, ShoppingBag, Users, Package, FolderTree, Tag, Warehouse, Car, Wrench, Calendar, Ticket, Megaphone, Image, Star, FileText, BarChart3, Bell, Shield, Settings, ChevronLeft, ChevronRight, LogOut, Globe, FolderOpen, Mail, Search, LayoutTemplate, Milestone, Presentation, ScrollText,
 } from "lucide-react";
 import { LogoMark } from "@/components/brand/logo";
-import { BRAND } from "@/lib/brand/config";
+import { useBrand } from "@/lib/brand/brand-context";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/auth-store";
 import { api } from "@/lib/api/client";
@@ -39,15 +39,19 @@ const navItems = [
     { label: "Coupons", href: "/admin/coupons", icon: Ticket },
     { label: "Promotions", href: "/admin/promotions", icon: Megaphone },
     { label: "Banners", href: "/admin/banners", icon: Image },
+    { label: "Hero Slides", href: "/admin/hero-slides", icon: Presentation },
+    { label: "Bundle Offers", href: "/admin/bundle-offers", icon: Package },
   ]},
   { group: "Content", items: [
     { label: "Blog Posts", href: "/admin/blogs", icon: FileText },
+    { label: "About Page", href: "/admin/about-content", icon: Milestone },
     { label: "Homepage Layout", href: "/admin/home-layout", icon: LayoutTemplate },
     { label: "SEO", href: "/admin/seo", icon: Search },
     { label: "Media Library", href: "/admin/media", icon: FolderOpen },
     { label: "CMS Pages", href: "/admin/cms", icon: Globe },
   ]},
   { group: "System", items: [
+    { label: "Activity Logs", href: "/admin/activity-logs", icon: ScrollText },
     { label: "Reports", href: "/admin/reports", icon: BarChart3 },
     { label: "Notifications", href: "/admin/notifications", icon: Bell },
     { label: "Roles & Permissions", href: "/admin/roles", icon: Shield },
@@ -61,6 +65,7 @@ interface AdminSidebarProps {
 }
 
 export function AdminSidebar({ mobile = false, onNavigate }: AdminSidebarProps) {
+  const brand = useBrand();
   const pathname = usePathname();
   const user = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
@@ -89,7 +94,7 @@ export function AdminSidebar({ mobile = false, onNavigate }: AdminSidebarProps) 
           <Link href="/admin" className="flex items-center gap-2 min-w-0">
             <LogoMark size="sm" />
             <div className="min-w-0">
-              <p className="text-white font-black text-xs leading-tight truncate">{BRAND.name}</p>
+              <p className="text-white font-black text-xs leading-tight truncate">{brand.name}</p>
               <p className="text-gray-400 text-[10px] leading-tight">Admin Panel</p>
             </div>
           </Link>

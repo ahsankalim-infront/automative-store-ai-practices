@@ -1,7 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import { ChevronRight, Phone, Mail, MessageCircle } from "lucide-react";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
-import { BRAND, formatPhoneDisplay, phoneTelHref, whatsappHref } from "@/lib/brand/config";
+import { useBrand } from "@/lib/brand/brand-context";
+import { formatPhoneDisplay, phoneTelHref, whatsappHref } from "@/lib/brand/config";
 import { HELP_LINKS } from "@/lib/help/content";
 import type { LucideIcon } from "lucide-react";
 
@@ -38,6 +41,8 @@ export function HelpPageHero({ icon: Icon, title, description, breadcrumb, updat
 }
 
 export function HelpSidebar({ activeHref }: { activeHref: string }) {
+  const brand = useBrand();
+
   return (
     <aside className="space-y-4 lg:sticky lg:top-28">
       <div className="bg-card rounded-2xl border border-border overflow-hidden shadow-sm">
@@ -66,14 +71,14 @@ export function HelpSidebar({ activeHref }: { activeHref: string }) {
         <p className="text-sm font-bold text-foreground">Need personal help?</p>
         <p className="text-xs text-gray-500">Our poshish experts are available during business hours.</p>
         <a
-          href={phoneTelHref(BRAND.primaryPhone)}
+          href={phoneTelHref(brand.primaryPhone)}
           className="flex items-center gap-2 text-sm text-primary font-semibold hover:underline"
         >
           <Phone className="h-4 w-4" />
-          {formatPhoneDisplay(BRAND.primaryPhone)}
+          {formatPhoneDisplay(brand.primaryPhone)}
         </a>
         <a
-          href={whatsappHref()}
+          href={whatsappHref(brand.whatsapp)}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-2 text-sm text-green-600 font-semibold hover:underline"
@@ -82,11 +87,11 @@ export function HelpSidebar({ activeHref }: { activeHref: string }) {
           WhatsApp us
         </a>
         <a
-          href={`mailto:${BRAND.email}`}
+          href={`mailto:${brand.email}`}
           className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:text-primary"
         >
           <Mail className="h-4 w-4" />
-          {BRAND.email}
+          {brand.email}
         </a>
         <Link href="/contact" className="inline-flex items-center gap-1 text-xs text-primary font-semibold hover:underline">
           Contact form <ChevronRight className="h-3 w-3" />

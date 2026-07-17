@@ -4,6 +4,8 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { FileText, ChevronRight, ArrowUp, Shield, Phone, Mail } from "lucide-react";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
+import { useBrand } from "@/lib/brand/brand-context";
+import { formatPhoneDisplay, phoneTelHref } from "@/lib/brand/config";
 
 const sections = [
   { id: "acceptance",      title: "1. Acceptance of Terms" },
@@ -24,6 +26,7 @@ const sections = [
 ];
 
 export default function TermsPage() {
+  const brand = useBrand();
   const [activeSection, setActiveSection] = useState("acceptance");
   const [showTop, setShowTop] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -358,8 +361,8 @@ export default function TermsPage() {
                     <p>If you have any questions, concerns, or complaints regarding these Terms and Conditions, please contact us through any of the following channels:</p>
                     <div className="grid sm:grid-cols-2 gap-4 mt-4">
                       {[
-                        { icon: Phone, label: "Phone / WhatsApp", value: "0322-4123414", href: "tel:+923224123414" },
-                        { icon: Mail, label: "Email", value: "shahzadahmed6626@gmail.com", href: "mailto:shahzadahmed6626@gmail.com" },
+                        { icon: Phone, label: "Phone / WhatsApp", value: formatPhoneDisplay(brand.primaryPhone), href: phoneTelHref(brand.primaryPhone) },
+                        { icon: Mail, label: "Email", value: brand.email, href: `mailto:${brand.email}` },
                       ].map(({ icon: Icon, label, value, href }) => (
                         <a key={label} href={href} className="flex items-center gap-3 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-border hover:border-primary/40 transition-colors group">
                           <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
@@ -372,7 +375,7 @@ export default function TermsPage() {
                         </a>
                       ))}
                     </div>
-                    <p className="mt-4 text-sm text-gray-500">Our customer service team is available Monday to Saturday, 10:00 AM – 8:00 PM PKT.</p>
+                    <p className="mt-4 text-sm text-gray-500">Our customer service team is available {brand.businessHours || "Monday to Saturday, 10:00 AM – 8:00 PM PKT"}.</p>
                   </>
                 ),
               },

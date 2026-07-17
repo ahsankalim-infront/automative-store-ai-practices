@@ -7,11 +7,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Breadcrumb } from "@/components/shared/breadcrumb";
 import { BrandLogo } from "@/components/brand/logo";
-import { BRAND, formatPhoneDisplay, phoneTelHref, whatsappHref } from "@/lib/brand/config";
+import { useBrand } from "@/lib/brand/brand-context";
+import { formatPhoneDisplay, phoneTelHref, whatsappHref } from "@/lib/brand/config";
 import toast from "react-hot-toast";
 import { api } from "@/lib/api/client";
 
 export default function ContactPage() {
+  const brand = useBrand();
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -52,7 +54,7 @@ export default function ContactPage() {
         <div className="text-center mb-8 sm:mb-10">
           <BrandLogo size="lg" className="justify-center mb-4 max-w-full mx-auto" />
           <h1 className="text-3xl sm:text-4xl font-black text-foreground mb-2">
-            Contact {BRAND.name}
+            Contact {brand.name}
           </h1>
           <p className="text-gray-500 max-w-xl mx-auto text-sm sm:text-base">
             Visit our Lahore office, call us directly, or send a message — we&apos;re happy to help with poshish, seat covers, and orders.
@@ -67,12 +69,12 @@ export default function ContactPage() {
                 <MapPin className="h-5 w-5 text-primary" /> Our Office
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-                {BRAND.address.full}
+                {brand.address.full}
               </p>
-              <p className="text-xs text-gray-400 mt-2">{BRAND.address.city}, {BRAND.address.country}</p>
+              <p className="text-xs text-gray-400 mt-2">{brand.address.city}, {brand.address.country}</p>
             </div>
 
-            {BRAND.contacts.map((person, i) => (
+            {brand.contacts.map((person, i) => (
               <motion.div
                 key={person.name}
                 initial={{ opacity: 0, y: 12 }}
@@ -106,7 +108,7 @@ export default function ContactPage() {
             ))}
 
             <motion.a
-              href={`mailto:${BRAND.email}`}
+              href={`mailto:${brand.email}`}
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -117,7 +119,7 @@ export default function ContactPage() {
               </div>
               <div>
                 <p className="text-xs text-gray-400">Email</p>
-                <p className="font-semibold text-foreground text-sm break-all">{BRAND.email}</p>
+                <p className="font-semibold text-foreground text-sm break-all">{brand.email}</p>
               </div>
             </motion.a>
 
@@ -133,7 +135,7 @@ export default function ContactPage() {
               <div>
                 <p className="text-xs text-green-700 dark:text-green-400">WhatsApp</p>
                 <p className="font-semibold text-foreground text-sm">
-                  Chat on {formatPhoneDisplay(BRAND.primaryPhone)}
+                  Chat on {formatPhoneDisplay(brand.primaryPhone)}
                 </p>
               </div>
             </motion.a>
@@ -143,7 +145,7 @@ export default function ContactPage() {
                 <Clock className="h-4 w-4 text-primary" />
                 <p className="text-sm font-bold text-foreground">Business Hours</p>
               </div>
-              <p className="text-xs text-gray-500">{BRAND.businessHours}</p>
+              <p className="text-xs text-gray-500">{brand.businessHours}</p>
             </div>
           </div>
 
@@ -154,7 +156,7 @@ export default function ContactPage() {
               <p className="text-sm text-gray-500 -mt-2">We usually reply within a few hours during business days.</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Input label="Your Name *" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Your name" />
-                <Input label="Phone *" type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="0322 4123414" />
+                <Input label="Phone *" type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder={formatPhoneDisplay(brand.primaryPhone)} />
                 <Input label="Email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="your@email.com" />
                 <div className="sm:col-span-2 lg:col-span-1">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Subject</label>

@@ -39,6 +39,11 @@ function maxProductPrice(products: Product[]) {
   return products.reduce((max, p) => Math.max(max, p.price), 200000);
 }
 
+function filterActiveCategorySlugs(categories: Category[], slugs: string[]) {
+  const active = new Set(categories.map((cat) => cat.slug));
+  return slugs.filter((slug) => active.has(slug));
+}
+
 export function ProductsClient({ products, categories, brands, initialQuery }: ProductsClientProps) {
   const router = useRouter();
   const priceMax = useMemo(() => maxProductPrice(products), [products]);
@@ -49,7 +54,7 @@ export function ProductsClient({ products, categories, brands, initialQuery }: P
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [search, setSearch] = useState(initialQuery.q ?? "");
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
-    categoriesFromQuery(initialQuery.category)
+    filterActiveCategorySlugs(categories, categoriesFromQuery(initialQuery.category))
   );
   const [selectedBrands, setSelectedBrands] = useState<string[]>(
     initialQuery.brand ? [initialQuery.brand] : []
@@ -65,7 +70,9 @@ export function ProductsClient({ products, categories, brands, initialQuery }: P
 
   useEffect(() => {
     setSearch(initialQuery.q ?? "");
-    setSelectedCategories(categoriesFromQuery(initialQuery.category));
+    setSelectedCategories(
+      filterActiveCategorySlugs(categories, categoriesFromQuery(initialQuery.category))
+    );
     setSelectedBrands(initialQuery.brand ? [initialQuery.brand] : []);
     setVehicleQuery({
       make: initialQuery.make,
@@ -73,7 +80,7 @@ export function ProductsClient({ products, categories, brands, initialQuery }: P
       year: initialQuery.year,
     });
     setPage(1);
-  }, [initialQuery]);
+  }, [initialQuery, categories]);
 
   useEffect(() => {
     setPriceRange(([min]) => [min, priceMax]);

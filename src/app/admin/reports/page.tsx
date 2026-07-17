@@ -9,7 +9,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api/client";
 import { cn, formatPrice } from "@/lib/utils";
-import { BRAND } from "@/lib/brand/config";
+import { useBrand } from "@/lib/brand/brand-context";
 import {
   REPORT_TYPE_OPTIONS,
   ORDER_STATUS_OPTIONS,
@@ -53,6 +53,7 @@ function formatCellValue(value: string | number | undefined, key: string): strin
 }
 
 export default function AdminReportsPage() {
+  const brand = useBrand();
   const defaultRange = useMemo(() => presetRange(30), []);
   const [reportType, setReportType] = useState<ReportType>("sales_summary");
   const [dateFrom, setDateFrom] = useState(defaultRange.from);
@@ -131,7 +132,7 @@ export default function AdminReportsPage() {
             </div>
             <h1 className="text-xl sm:text-2xl font-black">Reports</h1>
             <p className="text-sm text-gray-400 mt-1">
-              {BRAND.name} — filter by date, type & status, then download Excel or PDF
+              {brand.name} — filter by date, type & status, then download Excel or PDF
             </p>
           </div>
           <div className="flex flex-wrap gap-2 shrink-0">

@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import type { Category } from "@/types";
 
 const pillBase =
-  "shrink-0 inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-medium rounded-full border transition-all whitespace-nowrap";
+  "shrink-0 inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-2 sm:py-1.5 min-h-11 sm:min-h-0 text-[11px] sm:text-xs font-medium rounded-full border transition-all whitespace-nowrap";
 
 function pillClass(active: boolean) {
   return cn(
@@ -49,6 +49,7 @@ export function StoreCategoryBar({ categories }: { categories: Category[] }) {
                 key={cat.id}
                 href={`/products?category=${cat.slug}`}
                 className={pillClass(active)}
+                title={cat.name}
               >
                 <span
                   className={cn(

@@ -1,5 +1,5 @@
 import type { Order } from "@/types";
-import { BRAND } from "@/lib/brand/config";
+import { getBrandConfig } from "@/lib/brand/get-brand-config";
 import { formatPrice } from "@/lib/utils";
 import {
   getUsers,
@@ -25,13 +25,13 @@ export interface OrderNotifyResult {
   pushSent: boolean;
 }
 
-async function getAdminRecipientEmails(): Promise<string[]> {
+async function getAdminRecipientEmails(storeEmail: string): Promise<string[]> {
   const users = await getUsers();
   const adminUsers = users.filter((u) =>
     ["admin", "manager", "staff"].includes(u.role)
   );
   const emails = new Set<string>([
-    BRAND.email,
+    storeEmail,
     ...adminUsers.map((u) => u.email).filter(Boolean),
   ]);
   return Array.from(emails);
@@ -41,6 +41,7 @@ export async function notifyOrderPlaced(
   order: Order,
   customerEmail: string
 ): Promise<OrderNotifyResult> {
+  const brand = await getBrandConfig();
   const result: OrderNotifyResult = {
     customerEmailSent: false,
     adminEmailsSent: 0,
@@ -48,13 +49,13 @@ export async function notifyOrderPlaced(
     pushSent: false,
   };
 
-  const adminEmails = await getAdminRecipientEmails();
+  const adminEmails = await getAdminRecipientEmails(brand.email);
   const adminUsers = (await getUsers()).filter((u) =>
     ["admin", "manager", "staff"].includes(u.role)
   );
 
-  const customerSubject = `Order Confirmed — ${order.orderNumber} | ${BRAND.name}`;
-  const adminSubject = `New Order ${order.orderNumber} — ${formatPrice(order.total)} | ${BRAND.name}`;
+  const customerSubject = `Order Confirmed — ${order.orderNumber} | ${brand.name}`;
+  const adminSubject = `New Order ${order.orderNumber} — ${formatPrice(order.total)} | ${brand.name}`;
 
   const pdfBuffer = await buildOrderSummaryPdfBuffer(order);
   const pdfAttachment = {
@@ -68,16 +69,16 @@ export async function notifyOrderPlaced(
       ? sendEmail({
           to: customerEmail,
           subject: customerSubject,
-          html: buildOrderSummaryEmailHtml(order, { customerEmail }),
-          text: buildOrderSummaryEmailText(order),
+          html: buildOrderSummaryEmailHtml(order, { customerEmail, brand }),
+          text: buildOrderSummaryEmailText(order, { brand }),
           attachments: [pdfAttachment],
         })
       : Promise.resolve(false),
     sendEmail({
       to: adminEmails,
       subject: adminSubject,
-      html: buildOrderSummaryEmailHtml(order, { forAdmin: true, customerEmail }),
-      text: buildOrderSummaryEmailText(order, { forAdmin: true }),
+      html: buildOrderSummaryEmailHtml(order, { forAdmin: true, customerEmail, brand }),
+      text: buildOrderSummaryEmailText(order, { forAdmin: true, brand }),
       attachments: [pdfAttachment],
     }),
   ]);

@@ -2,6 +2,8 @@ import { JsonLdOrganization } from "@/components/seo/json-ld-organization";
 import { HomePageContent } from "@/components/home/home-page-content";
 import { SIGNATURE_CATEGORY_SLUGS } from "@/lib/brand/signature-categories";
 import { getHomeLayout } from "@/lib/home-layout/config";
+import { getHomeBundleOffersData } from "@/lib/bundles";
+import { getHeroSlides } from "@/lib/hero-slides";
 import {
   getProducts,
   getCategories,
@@ -19,13 +21,15 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const [layout, allProducts, categories, brands, vehicleMakes, blogPosts] = await Promise.all([
+  const [layout, allProducts, categories, brands, vehicleMakes, blogPosts, bundleData, heroSlides] = await Promise.all([
     getHomeLayout(),
     getProducts(),
     getCategories(),
     getBrands(),
     getVehicleMakes(),
     getBlogPosts(),
+    getHomeBundleOffersData(),
+    getHeroSlides(),
   ]);
 
   const signatureProducts = allProducts.filter((p) =>
@@ -55,6 +59,9 @@ export default async function HomePage() {
           brands,
           vehicleMakes,
           blogPosts,
+          bundleSection: bundleData.section,
+          bundleOffers: bundleData.offers,
+          heroSlides,
         }}
       />
     </>

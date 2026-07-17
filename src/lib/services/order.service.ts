@@ -1,4 +1,4 @@
-import { createOrder as saveOrder, getCouponByCode, updateCoupon } from "@/lib/data/repositories";
+import { createOrder as saveOrder, getCouponByCode, updateCoupon, getStoreSettings } from "@/lib/data/repositories";
 import type { CartItem } from "@/types";
 import type { Order, OrderItem, ShippingAddress } from "@/types";
 
@@ -51,12 +51,15 @@ export async function createOrderFromCart(input: CreateOrderInput): Promise<Orde
     }
   }
 
-  const shippingCost = input.shippingCost ?? (subtotal >= 1500 ? 0 : 100);
+  const settings = await getStoreSettings();
+  const shippingCost =
+    input.shippingCost ??
+    (subtotal >= settings.freeShippingThreshold ? 0 : settings.standardShipping);
   const total = Math.max(0, subtotal + shippingCost - discount);
 
   const order: Order = {
     id: crypto.randomUUID(),
-    orderNumber: `${process.env.NEXT_PUBLIC_ORDER_PREFIX || "SHP"}-${new Date().getFullYear()}-${String(Date.now()).slice(-6)}`,
+    orderNumber: `${settings.orderPrefix}-${new Date().getFullYear()}-${String(Date.now()).slice(-6)}`,
     userId: input.userId,
     items: orderItems,
     subtotal,

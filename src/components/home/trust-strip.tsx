@@ -1,17 +1,18 @@
 "use client";
 import { Truck, RefreshCw, ShieldCheck, CreditCard, PhoneCall, BadgeCheck } from "lucide-react";
-import { BRAND, formatPhoneDisplay } from "@/lib/brand/config";
+import { useBrand } from "@/lib/brand/brand-context";
+import { formatPhoneDisplay } from "@/lib/brand/config";
 
-const items = [
+export function TrustStrip() {
+  const brand = useBrand();
+  const items = [
   { icon: Truck,       label: "Free Delivery",       sub: "Orders above Rs. 1,500" },
   { icon: ShieldCheck, label: "Premium Quality",      sub: "Fine poshish materials" },
   { icon: RefreshCw,   label: "7-Day Easy Returns",   sub: "Hassle-free return policy" },
   { icon: CreditCard,  label: "Cash on Delivery",     sub: "Pay when you receive" },
   { icon: BadgeCheck,  label: "Expert Fitting",       sub: "At our Lahore office" },
-  { icon: PhoneCall,   label: "Call & WhatsApp",      sub: `Call ${formatPhoneDisplay(BRAND.primaryPhone)}` },
+  { icon: PhoneCall,   label: "Call & WhatsApp",      sub: `Call ${formatPhoneDisplay(brand.primaryPhone)}` },
 ];
-
-export function TrustStrip() {
   return (
     <div className="bg-white dark:bg-gray-950 border-b border-border shadow-sm">
       <div className="max-w-screen-xl mx-auto px-4">

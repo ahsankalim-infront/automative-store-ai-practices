@@ -15,7 +15,7 @@ import { NewsletterSection } from "@/components/home/newsletter-section";
 import { SignatureShowcase } from "@/components/home/signature-showcase";
 import { resolveActiveSections } from "@/lib/home-layout/defaults";
 import type { HomeLayoutConfig, HomeSectionKey } from "@/lib/home-layout/types";
-import type { BlogPost, Brand, Category, Product, VehicleMake } from "@/types";
+import type { BlogPost, Brand, Category, Product, VehicleMake, BundleOffer, BundleOffersSectionConfig, HeroSlide } from "@/types";
 
 export interface HomePageData {
   featuredProducts: Product[];
@@ -26,6 +26,9 @@ export interface HomePageData {
   brands: Brand[];
   vehicleMakes: VehicleMake[];
   blogPosts: BlogPost[];
+  bundleSection: BundleOffersSectionConfig;
+  bundleOffers: BundleOffer[];
+  heroSlides: HeroSlide[];
 }
 
 function SectionShell({
@@ -48,7 +51,7 @@ function renderSection(key: HomeSectionKey, data: HomePageData) {
     case "hero":
       return (
         <div key={key} className="relative pb-2 sm:pb-8 md:pb-10 w-full min-w-0 overflow-x-hidden">
-          <HeroBanner />
+          <HeroBanner slides={data.heroSlides} />
           <PromoBanners />
         </div>
       );
@@ -92,7 +95,13 @@ function renderSection(key: HomeSectionKey, data: HomePageData) {
     case "shop_by_brand":
       return <ShopByBrand key={key} brands={data.brands} />;
     case "bundle_offers":
-      return <BundleOffers key={key} />;
+      return (
+        <BundleOffers
+          key={key}
+          section={data.bundleSection}
+          offers={data.bundleOffers}
+        />
+      );
     case "ppf_services":
       return <PPFServicesBanner key={key} />;
     case "new_arrivals":

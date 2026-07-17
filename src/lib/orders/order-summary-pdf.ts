@@ -1,5 +1,7 @@
 import type { Order } from "@/types";
-import { BRAND } from "@/lib/brand/config";
+import type { BrandConfig } from "@/lib/brand/types";
+import { DEFAULT_BRAND } from "@/lib/brand/config";
+import { getBrandConfig } from "@/lib/brand/get-brand-config";
 import { formatPrice, formatDate } from "@/lib/utils";
 import {
   LEGAL_META,
@@ -27,11 +29,11 @@ function statusLabel(status: string): string {
   return status.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
-function addPageFooter(doc: import("jspdf").jsPDF, pageNum: number) {
+function addPageFooter(doc: import("jspdf").jsPDF, pageNum: number, brand: BrandConfig) {
   doc.setFontSize(8);
   doc.setTextColor(130, 130, 130);
   doc.text(
-    `${BRAND.name} · ${BRAND.address.full} · ${BRAND.email}`,
+    `${brand.name} · ${brand.address.full} · ${brand.email}`,
     MARGIN,
     FOOTER_Y
   );
@@ -42,10 +44,11 @@ function ensureSpace(
   doc: import("jspdf").jsPDF,
   y: number,
   needed: number,
-  pageNum: { current: number }
+  pageNum: { current: number },
+  brand: BrandConfig
 ): number {
   if (y + needed > FOOTER_Y - 20) {
-    addPageFooter(doc, pageNum.current);
+    addPageFooter(doc, pageNum.current, brand);
     doc.addPage();
     pageNum.current += 1;
     return MARGIN + 10;
@@ -57,9 +60,10 @@ function writeSectionBlock(
   doc: import("jspdf").jsPDF,
   section: PolicySection,
   startY: number,
-  pageNum: { current: number }
+  pageNum: { current: number },
+  brand: BrandConfig
 ): number {
-  let y = ensureSpace(doc, startY, 24, pageNum);
+  let y = ensureSpace(doc, startY, 24, pageNum, brand);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(10);
   doc.setTextColor(17, 17, 17);
@@ -72,7 +76,7 @@ function writeSectionBlock(
 
   for (const paragraph of section.paragraphs) {
     const lines = doc.splitTextToSize(paragraph, CONTENT_WIDTH);
-    y = ensureSpace(doc, y, lines.length * 12 + 4, pageNum);
+    y = ensureSpace(doc, y, lines.length * 12 + 4, pageNum, brand);
     doc.text(lines, MARGIN, y);
     y += lines.length * 12 + 4;
   }
@@ -80,7 +84,7 @@ function writeSectionBlock(
   if (section.bullets?.length) {
     for (const bullet of section.bullets) {
       const lines = doc.splitTextToSize(`• ${bullet}`, CONTENT_WIDTH - 8);
-      y = ensureSpace(doc, y, lines.length * 11 + 2, pageNum);
+      y = ensureSpace(doc, y, lines.length * 11 + 2, pageNum, brand);
       doc.text(lines, MARGIN + 4, y);
       y += lines.length * 11 + 2;
     }
@@ -89,7 +93,7 @@ function writeSectionBlock(
   return y + 8;
 }
 
-export async function buildOrderSummaryPdf(order: Order): Promise<ArrayBuffer> {
+export async function buildOrderSummaryPdf(order: Order, brand: BrandConfig = DEFAULT_BRAND): Promise<ArrayBuffer> {
   const { jsPDF } = await import("jspdf");
   const autoTable = (await import("jspdf-autotable")).default;
 
@@ -102,7 +106,7 @@ export async function buildOrderSummaryPdf(order: Order): Promise<ArrayBuffer> {
   doc.setTextColor(213, 0, 0);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
-  doc.text(BRAND.name.toUpperCase(), MARGIN, 28);
+  doc.text(brand.name.toUpperCase(), MARGIN, 28);
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(18);
   doc.text("Order Summary", MARGIN, 52);
@@ -194,7 +198,7 @@ export async function buildOrderSummaryPdf(order: Order): Promise<ArrayBuffer> {
   y = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 24;
 
   // Acknowledgement
-  y = ensureSpace(doc, y, 40, pageNum);
+  y = ensureSpace(doc, y, 40, pageNum, brand);
   doc.setFillColor(255, 245, 245);
   doc.roundedRect(MARGIN, y - 8, CONTENT_WIDTH, 36, 4, 4, "F");
   doc.setFont("helvetica", "bold");
@@ -211,7 +215,7 @@ export async function buildOrderSummaryPdf(order: Order): Promise<ArrayBuffer> {
   doc.text(ack, MARGIN + 10, y + 18);
   y += 52;
 
-  addPageFooter(doc, pageNum.current);
+  addPageFooter(doc, pageNum.current, brand);
 
   // Terms page
   doc.addPage();
@@ -229,11 +233,11 @@ export async function buildOrderSummaryPdf(order: Order): Promise<ArrayBuffer> {
   y += 24;
 
   for (const section of ORDER_SUMMARY_TERMS) {
-    y = writeSectionBlock(doc, section, y, pageNum);
+    y = writeSectionBlock(doc, section, y, pageNum, brand);
   }
 
   // Policies page
-  y = ensureSpace(doc, y, 40, pageNum);
+  y = ensureSpace(doc, y, 40, pageNum, brand);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(14);
   doc.setTextColor(213, 0, 0);
@@ -241,11 +245,11 @@ export async function buildOrderSummaryPdf(order: Order): Promise<ArrayBuffer> {
   y += 22;
 
   for (const section of ORDER_SUMMARY_POLICIES) {
-    y = writeSectionBlock(doc, section, y, pageNum);
+    y = writeSectionBlock(doc, section, y, pageNum, brand);
   }
 
   // Contact footer block
-  y = ensureSpace(doc, y, 60, pageNum);
+  y = ensureSpace(doc, y, 60, pageNum, brand);
   doc.setDrawColor(213, 0, 0);
   doc.setLineWidth(0.5);
   doc.line(MARGIN, y, PAGE_WIDTH - MARGIN, y);
@@ -253,18 +257,18 @@ export async function buildOrderSummaryPdf(order: Order): Promise<ArrayBuffer> {
   doc.setFont("helvetica", "bold");
   doc.setFontSize(9);
   doc.setTextColor(17, 17, 17);
-  doc.text("Contact Shahzad Poshish House", MARGIN, y);
+  doc.text(`Contact ${brand.name}`, MARGIN, y);
   y += 12;
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
   doc.setTextColor(70, 70, 70);
-  doc.text(`Phone: ${BRAND.primaryPhone} · Email: ${BRAND.email}`, MARGIN, y);
+  doc.text(`Phone: ${brand.primaryPhone} · Email: ${brand.email}`, MARGIN, y);
   y += 10;
-  doc.text(BRAND.address.full, MARGIN, y);
+  doc.text(brand.address.full, MARGIN, y);
   y += 10;
-  doc.text(BRAND.businessHours, MARGIN, y);
+  doc.text(brand.businessHours, MARGIN, y);
 
-  addPageFooter(doc, pageNum.current);
+  addPageFooter(doc, pageNum.current, brand);
 
   return doc.output("arraybuffer");
 }
@@ -274,6 +278,7 @@ export function orderSummaryPdfFilename(order: Order): string {
 }
 
 export async function buildOrderSummaryPdfBuffer(order: Order): Promise<Buffer> {
-  const arrayBuffer = await buildOrderSummaryPdf(order);
+  const brand = await getBrandConfig();
+  const arrayBuffer = await buildOrderSummaryPdf(order, brand);
   return Buffer.from(arrayBuffer);
 }

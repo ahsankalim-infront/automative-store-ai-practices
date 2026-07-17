@@ -12,10 +12,12 @@ import { cn } from "@/lib/utils";
 import { formatPrice } from "@/lib/utils";
 import { BrandLogo } from "@/components/brand/logo";
 import { useMobileStoreNav } from "@/components/layout/mobile-store-nav";
-import { BRAND, formatPhoneDisplay, phoneTelHref } from "@/lib/brand/config";
+import { useBrand } from "@/lib/brand/brand-context";
+import { formatPhoneDisplay, phoneTelHref } from "@/lib/brand/config";
 import type { Product, Category } from "@/types";
 
 export function Header({ categories = [] }: { categories?: Category[] }) {
+  const brand = useBrand();
   const mobileNav = useMobileStoreNav();
   const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -160,11 +162,11 @@ export function Header({ categories = [] }: { categories?: Category[] }) {
 
             {/* Phone — desktop */}
             <a
-              href={phoneTelHref(BRAND.primaryPhone)}
+              href={phoneTelHref(brand.primaryPhone)}
               className="hidden xl:flex items-center gap-1.5 text-xs font-semibold text-gray-600 dark:text-gray-400 hover:text-primary transition-colors shrink-0"
             >
               <Phone className="h-4 w-4 text-primary" />
-              {formatPhoneDisplay(BRAND.primaryPhone)}
+              {formatPhoneDisplay(brand.primaryPhone)}
             </a>
 
             {/* Icons */}

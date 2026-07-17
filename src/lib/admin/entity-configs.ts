@@ -1,3 +1,5 @@
+import { HERO_BADGE_ICON_OPTIONS } from "@/lib/hero-slides/icons";
+
 export type FieldType =
   | "text" | "number" | "email" | "textarea" | "select" | "checkbox" | "date" | "json" | "icon"
   | "specList" | "vehicleFitList";
@@ -17,6 +19,8 @@ export interface AdminFieldDef {
   linkedKey?: string;
   /** Display-only field (e.g. auto-filled slug) */
   readOnly?: boolean;
+  /** Default for checkbox fields on create */
+  defaultChecked?: boolean;
   /** Searchable dropdown for large option lists */
   searchable?: boolean;
   colSpan?: 1 | 2;
@@ -85,6 +89,7 @@ export const ADMIN_ENTITY_CONFIGS: Record<string, AdminEntityConfig> = {
       { key: "name", label: "Name" },
       { key: "slug", label: "Slug" },
       { key: "productCount", label: "Products" },
+      { key: "isActive", label: "Active", render: "bool" },
       { key: "sortOrder", label: "Order" },
     ],
     fields: [
@@ -101,6 +106,7 @@ export const ADMIN_ENTITY_CONFIGS: Record<string, AdminEntityConfig> = {
       { key: "image", label: "Image URL", type: "text" },
       { key: "productCount", label: "Product Count", type: "number" },
       { key: "sortOrder", label: "Sort Order", type: "number" },
+      { key: "isActive", label: "Active (visible on storefront)", type: "checkbox", defaultChecked: true },
     ],
   },
   brands: {
@@ -360,6 +366,113 @@ export const ADMIN_ENTITY_CONFIGS: Record<string, AdminEntityConfig> = {
       { key: "ctaText", label: "Button Text", type: "text" },
       { key: "ctaLink", label: "Button Link", type: "text" },
       { key: "position", label: "Position", type: "select", options: bannerPositions, required: true },
+      { key: "sortOrder", label: "Sort Order", type: "number" },
+      { key: "isActive", label: "Active", type: "checkbox" },
+    ],
+  },
+  heroSlides: {
+    resource: "heroSlides",
+    title: "Hero Carousel Slides",
+    description: "Homepage hero banner slides (split layout with product image)",
+    addLabel: "Add Slide",
+    columns: [
+      { key: "mobileTitle", label: "Title" },
+      { key: "tag", label: "Tag" },
+      { key: "productPrice", label: "Price" },
+      { key: "sortOrder", label: "Order" },
+      { key: "isActive", label: "Active", render: "bool" },
+    ],
+    fields: [
+      { key: "tag", label: "Tag Badge", type: "text", colSpan: 2, placeholder: "🏆 {shortName} or ★ Best Seller" },
+      { key: "title", label: "Title (desktop, use \\n for line break)", type: "textarea", colSpan: 2, required: true },
+      { key: "mobileTitle", label: "Mobile Title", type: "text", required: true, colSpan: 2 },
+      { key: "highlight", label: "Highlight Line", type: "text", required: true, colSpan: 2 },
+      { key: "description", label: "Description", type: "textarea", colSpan: 2, required: true },
+      { key: "mobileCta", label: "Mobile CTA Label", type: "text", required: true },
+      { key: "ctaLabel", label: "Primary Button Label", type: "text", required: true },
+      { key: "ctaHref", label: "Primary Button Link", type: "text", required: true, colSpan: 2 },
+      { key: "secondaryLabel", label: "Secondary Button Label", type: "text", required: true },
+      { key: "secondaryHref", label: "Secondary Button Link", type: "text", required: true, colSpan: 2 },
+      { key: "productImage", label: "Product Image URL", type: "text", required: true, colSpan: 2 },
+      { key: "productLabel", label: "Product Label", type: "text", required: true },
+      { key: "productPrice", label: "Product Price Text", type: "text", required: true, placeholder: "From Rs. 9,500" },
+      { key: "badgeIcon", label: "Badge Icon", type: "select", options: [...HERO_BADGE_ICON_OPTIONS], required: true },
+      { key: "badgeText", label: "Badge Text", type: "text", required: true },
+      { key: "stat1Value", label: "Stat 1 Value", type: "text", required: true },
+      { key: "stat1Label", label: "Stat 1 Label", type: "text", required: true },
+      { key: "stat2Value", label: "Stat 2 Value", type: "text", required: true },
+      { key: "stat2Label", label: "Stat 2 Label", type: "text", required: true },
+      { key: "stat3Value", label: "Stat 3 Value", type: "text", required: true },
+      { key: "stat3Label", label: "Stat 3 Label", type: "text", required: true },
+      { key: "leftBg", label: "Left Gradient Classes", type: "text", colSpan: 2, placeholder: "from-[#120d18] via-[#0a0610] to-[#120d18]" },
+      { key: "rightBg", label: "Right Gradient Classes", type: "text", colSpan: 2, placeholder: "from-[#f3e8ff] to-[#e9d5ff]" },
+      { key: "accent", label: "Accent Color (hex)", type: "text", placeholder: "#7C3AED" },
+      { key: "accentLight", label: "Accent Light (hex)", type: "text", placeholder: "#C4B5FD" },
+      { key: "sortOrder", label: "Sort Order", type: "number" },
+      { key: "isActive", label: "Active", type: "checkbox" },
+    ],
+  },
+  bundleOffers: {
+    resource: "bundleOffers",
+    title: "Bundle Offers",
+    description: "Manage homepage bundle cards",
+    addLabel: "Add Bundle",
+    columns: [
+      { key: "title", label: "Title" },
+      { key: "price", label: "Price", render: "price" },
+      { key: "originalPrice", label: "Was", render: "price" },
+      { key: "tag", label: "Tag" },
+      { key: "sortOrder", label: "Order" },
+      { key: "isActive", label: "Active", render: "bool" },
+    ],
+    fields: [
+      { key: "title", label: "Title", type: "text", required: true, colSpan: 2 },
+      { key: "description", label: "Description", type: "textarea", colSpan: 2, required: true },
+      { key: "price", label: "Bundle Price (Rs.)", type: "number", required: true },
+      { key: "originalPrice", label: "Original Price (Rs.)", type: "number", required: true },
+      { key: "image", label: "Image URL", type: "text", required: true, colSpan: 2 },
+      { key: "href", label: "Link URL", type: "text", colSpan: 2, placeholder: "/products?category=interior" },
+      { key: "tag", label: "Badge Tag", type: "text", placeholder: "Leave empty to auto-calculate Save %" },
+      { key: "productIds", label: "Linked Product IDs (JSON array)", type: "json", colSpan: 2, placeholder: '["prod-id-1","prod-id-2"]', hideInTable: true },
+      { key: "sortOrder", label: "Sort Order", type: "number" },
+      { key: "isActive", label: "Active", type: "checkbox" },
+    ],
+  },
+  aboutTeam: {
+    resource: "aboutTeam",
+    title: "Leadership Team",
+    description: "Team members shown on the About page",
+    addLabel: "Add Team Member",
+    columns: [
+      { key: "name", label: "Name" },
+      { key: "role", label: "Role" },
+      { key: "sortOrder", label: "Order" },
+      { key: "isActive", label: "Active", render: "bool" },
+    ],
+    fields: [
+      { key: "name", label: "Name", type: "text", required: true, colSpan: 2 },
+      { key: "role", label: "Role / Title", type: "text", required: true, colSpan: 2 },
+      { key: "bio", label: "Short Bio", type: "text", colSpan: 2, required: true },
+      { key: "image", label: "Photo URL", type: "text", required: true, colSpan: 2, placeholder: "https://... or upload via Media Library" },
+      { key: "sortOrder", label: "Sort Order", type: "number" },
+      { key: "isActive", label: "Active", type: "checkbox" },
+    ],
+  },
+  aboutMilestones: {
+    resource: "aboutMilestones",
+    title: "Journey Milestones",
+    description: "Timeline entries for the Our Journey section",
+    addLabel: "Add Milestone",
+    columns: [
+      { key: "year", label: "Year" },
+      { key: "title", label: "Title" },
+      { key: "sortOrder", label: "Order" },
+      { key: "isActive", label: "Active", render: "bool" },
+    ],
+    fields: [
+      { key: "year", label: "Year", type: "text", required: true, placeholder: "2026" },
+      { key: "title", label: "Title", type: "text", required: true, colSpan: 2 },
+      { key: "description", label: "Description", type: "textarea", colSpan: 2, required: true },
       { key: "sortOrder", label: "Sort Order", type: "number" },
       { key: "isActive", label: "Active", type: "checkbox" },
     ],

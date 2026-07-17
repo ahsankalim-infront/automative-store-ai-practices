@@ -152,6 +152,39 @@ html.dark {
   .line-clamp-1 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1; }
   .line-clamp-2 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
   .line-clamp-3 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+
+  .announcement-marquee {
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, black 1.5rem, black calc(100% - 1.5rem), transparent);
+  }
+
+  .announcement-marquee-track {
+    display: flex;
+    width: max-content;
+    animation: announcement-marquee 28s linear infinite;
+  }
+
+  .announcement-marquee:hover .announcement-marquee-track {
+    animation-play-state: paused;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .announcement-marquee-track {
+      animation: none;
+      width: auto;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .announcement-marquee-track > :last-child {
+      display: none;
+    }
+  }
+}
+
+@keyframes announcement-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 
 @keyframes shimmer {

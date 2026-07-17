@@ -4,10 +4,11 @@
     "slug": "car-top-cover",
     "name": "Car Top Cover",
     "icon": "Umbrella",
-    "productCount": 18,
+    "productCount": 2,
     "sortOrder": 0,
     "description": "Premium waterproof car top covers for sun, dust and rain protection",
-    "image": "https://images.unsplash.com/photo-1542317048-7a6ce1a438c8?auto=format&fit=crop&w=300&h=200&q=80"
+    "image": "https://images.unsplash.com/photo-1542317048-7a6ce1a438c8?auto=format&fit=crop&w=300&h=200&q=80",
+    "isActive": false
   },
   {
     "id": "cat-top-2",
@@ -17,7 +18,8 @@
     "productCount": 86,
     "sortOrder": 1,
     "description": "Custom-fit 5D, 7D and 9D car floor matting for all models",
-    "image": "https://images.unsplash.com/photo-1761846786526-706cf7015afb?auto=format&fit=crop&w=300&h=200&q=80"
+    "image": "https://images.unsplash.com/photo-1761846786526-706cf7015afb?auto=format&fit=crop&w=300&h=200&q=80",
+    "isActive": true
   },
   {
     "id": "cat-top-3",
@@ -27,7 +29,8 @@
     "productCount": 124,
     "sortOrder": 2,
     "description": "Custom made premium PU/PVC leather seat covers in all colours",
-    "image": "https://images.unsplash.com/photo-1760161339261-56487b766a17?auto=format&fit=crop&w=300&h=200&q=80"
+    "image": "https://images.unsplash.com/photo-1760161339261-56487b766a17?auto=format&fit=crop&w=300&h=200&q=80",
+    "isActive": true
   },
   {
     "id": "cat-1",
@@ -36,7 +39,8 @@
     "icon": "Lightbulb",
     "productCount": 245,
     "sortOrder": 3,
-    "image": "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=300&h=200&q=80"
+    "image": "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=300&h=200&q=80",
+    "isActive": true
   },
   {
     "id": "cat-2",
@@ -45,7 +49,8 @@
     "icon": "Car",
     "productCount": 312,
     "sortOrder": 4,
-    "image": "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=300&h=200&q=80"
+    "image": "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=300&h=200&q=80",
+    "isActive": true
   },
   {
     "id": "cat-3",
@@ -54,7 +59,8 @@
     "icon": "Armchair",
     "productCount": 289,
     "sortOrder": 5,
-    "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=300&h=200&q=80"
+    "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=300&h=200&q=80",
+    "isActive": true
   },
   {
     "id": "cat-4",
@@ -63,7 +69,8 @@
     "icon": "Sparkles",
     "productCount": 198,
     "sortOrder": 6,
-    "image": "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&w=300&h=200&q=80"
+    "image": "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&w=300&h=200&q=80",
+    "isActive": true
   },
   {
     "id": "cat-5",
@@ -72,7 +79,8 @@
     "icon": "Wrench",
     "productCount": 167,
     "sortOrder": 7,
-    "image": "https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?auto=format&fit=crop&w=300&h=200&q=80"
+    "image": "https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?auto=format&fit=crop&w=300&h=200&q=80",
+    "isActive": true
   },
   {
     "id": "cat-6",
@@ -81,7 +89,8 @@
     "icon": "Smartphone",
     "productCount": 203,
     "sortOrder": 8,
-    "image": "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=300&h=200&q=80"
+    "image": "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=300&h=200&q=80",
+    "isActive": true
   },
   {
     "id": "cat-7",
@@ -90,7 +99,8 @@
     "icon": "Shield",
     "productCount": 78,
     "sortOrder": 9,
-    "image": "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&w=300&h=200&q=80"
+    "image": "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&w=300&h=200&q=80",
+    "isActive": true
   },
   {
     "id": "cat-8",
@@ -99,7 +109,8 @@
     "icon": "Zap",
     "productCount": 94,
     "sortOrder": 10,
-    "image": "https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=300&h=200&q=80"
+    "image": "https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=300&h=200&q=80",
+    "isActive": true
   },
   {
     "id": "cat-9",
@@ -108,7 +119,8 @@
     "icon": "Package",
     "productCount": 145,
     "sortOrder": 11,
-    "image": "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=300&h=200&q=80"
+    "image": "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=300&h=200&q=80",
+    "isActive": true
   },
   {
     "id": "cat-10",
@@ -117,7 +129,8 @@
     "icon": "Circle",
     "productCount": 89,
     "sortOrder": 12,
-    "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=300&h=200&q=80"
+    "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=300&h=200&q=80",
+    "isActive": true
   },
   {
     "id": "cat-11",
@@ -126,7 +139,8 @@
     "icon": "Wind",
     "productCount": 67,
     "sortOrder": 13,
-    "image": "https://images.unsplash.com/photo-1541038880942-4c8b74b2b6fb?auto=format&fit=crop&w=300&h=200&q=80"
+    "image": "https://images.unsplash.com/photo-1541038880942-4c8b74b2b6fb?auto=format&fit=crop&w=300&h=200&q=80",
+    "isActive": true
   },
   {
     "id": "cat-13",
@@ -135,7 +149,8 @@
     "icon": "Music",
     "productCount": 88,
     "sortOrder": 14,
-    "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=300&h=200&q=80"
+    "image": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=300&h=200&q=80",
+    "isActive": true
   },
   {
     "id": "cat-14",
@@ -144,7 +159,8 @@
     "icon": "Lock",
     "productCount": 56,
     "sortOrder": 15,
-    "image": "https://images.unsplash.com/photo-1544636331-9849c66b2a09?auto=format&fit=crop&w=300&h=200&q=80"
+    "image": "https://images.unsplash.com/photo-1544636331-9849c66b2a09?auto=format&fit=crop&w=300&h=200&q=80",
+    "isActive": true
   },
   {
     "id": "cat-15",
@@ -153,15 +169,18 @@
     "icon": "Bike",
     "productCount": 73,
     "sortOrder": 16,
-    "image": "https://images.unsplash.com/photo-1596838132731-3301c3fd4317?auto=format&fit=crop&w=300&h=200&q=80"
+    "image": "https://images.unsplash.com/photo-1596838132731-3301c3fd4317?auto=format&fit=crop&w=300&h=200&q=80",
+    "isActive": true
   },
   {
     "id": "cat-16",
     "slug": "spare-parts",
     "name": "Spare Parts",
     "icon": "Settings",
-    "productCount": 134,
+    "productCount": 1,
     "sortOrder": 17,
-    "image": "https://images.unsplash.com/photo-1596838132731-3301c3fd4317?auto=format&fit=crop&w=300&h=200&q=80"
+    "image": "https://images.unsplash.com/photo-1596838132731-3301c3fd4317?auto=format&fit=crop&w=300&h=200&q=80",
+    "isActive": false,
+    "description": ""
   }
 ]

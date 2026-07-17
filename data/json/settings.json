@@ -2,17 +2,27 @@
   {
     "id": "settings-1",
     "storeName": "Shahzad Poshish House",
+    "shortName": "SPH",
+    "tagline": "Premium car poshish & upholstery",
+    "description": "Shahzad Poshish House offers premium car poshish, seat covers, interior upholstery and automotive accessories in Lahore.",
     "supportEmail": "shahzadahmed6626@gmail.com",
     "supportPhone": "03224123414",
-    "standardShipping": 100,
-    "expressShipping": 250,
-    "freeShippingThreshold": 1500,
-    "currency": "PKR",
+    "whatsapp": "923224123414",
+    "orderPrefix": "SHP",
+    "businessHours": "Monday – Saturday: 10:00 AM – 8:00 PM",
+    "announcementText": "Premium poshish & seat covers",
     "address": "Office # 15, 2nd Floor, Moeen Center, 20 Abbot Road, Lahore",
+    "addressCity": "Lahore",
+    "addressProvince": "Punjab",
+    "addressCountry": "Pakistan",
     "contactPersons": [
       { "name": "Shahzad Ahmed", "phones": ["03224123414", "033014140440"] },
       { "name": "Muhammad Azaan", "phones": ["03259422044"] }
     ],
+    "standardShipping": 100,
+    "expressShipping": 250,
+    "freeShippingThreshold": 1500,
+    "currency": "PKR",
     "cmsPages": [
       {
         "slug": "privacy-policy",

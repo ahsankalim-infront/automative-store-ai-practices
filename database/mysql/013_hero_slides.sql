@@ -1,0 +1,37 @@
+-- Homepage hero carousel slides (runtime uses collections/hero-slides.json via MysqlStore)
+USE autozone_store;
+
+CREATE TABLE IF NOT EXISTS hero_slides (
+  id              VARCHAR(36)   NOT NULL PRIMARY KEY,
+  tag             VARCHAR(128)  NOT NULL DEFAULT '',
+  title           TEXT          NOT NULL,
+  mobile_title    VARCHAR(255)  NOT NULL,
+  highlight       VARCHAR(255)  NOT NULL DEFAULT '',
+  mobile_cta      VARCHAR(128)  NOT NULL DEFAULT '',
+  description     TEXT          NOT NULL,
+  cta_label       VARCHAR(128)  NOT NULL DEFAULT '',
+  cta_href        VARCHAR(512)  NOT NULL DEFAULT '/products',
+  secondary_label VARCHAR(128)  NOT NULL DEFAULT '',
+  secondary_href  VARCHAR(512)  NOT NULL DEFAULT '/about',
+  product_image   VARCHAR(512)  NOT NULL,
+  product_label   VARCHAR(255)  NOT NULL DEFAULT '',
+  product_price   VARCHAR(64)   NOT NULL DEFAULT '',
+  badge_icon      VARCHAR(32)   NOT NULL DEFAULT 'Star',
+  badge_text      VARCHAR(128)  NOT NULL DEFAULT '',
+  stat1_value     VARCHAR(32)   NOT NULL DEFAULT '',
+  stat1_label     VARCHAR(64)   NOT NULL DEFAULT '',
+  stat2_value     VARCHAR(32)   NOT NULL DEFAULT '',
+  stat2_label     VARCHAR(64)   NOT NULL DEFAULT '',
+  stat3_value     VARCHAR(32)   NOT NULL DEFAULT '',
+  stat3_label     VARCHAR(64)   NOT NULL DEFAULT '',
+  left_bg         VARCHAR(255)  NOT NULL DEFAULT '',
+  right_bg        VARCHAR(255)  NOT NULL DEFAULT '',
+  accent          VARCHAR(16)   NOT NULL DEFAULT '#D50000',
+  accent_light    VARCHAR(16)   NOT NULL DEFAULT '#ff5252',
+  sort_order      INT           NOT NULL DEFAULT 0,
+  is_active       TINYINT(1)    NOT NULL DEFAULT 1,
+  data            JSON          NOT NULL,
+  created_at      DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at      DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_hero_slides_sort (sort_order, is_active)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

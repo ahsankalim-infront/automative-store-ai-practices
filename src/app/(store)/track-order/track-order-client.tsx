@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { OrderStatusBadge } from "@/components/shared/order-status-badge";
 import { formatPrice, formatDate } from "@/lib/utils";
-import { BRAND } from "@/lib/brand/config";
+import { useBrand } from "@/lib/brand/brand-context";
+import { formatPhoneDisplay } from "@/lib/brand/config";
 import { TRACK_ORDER_STEPS } from "@/lib/help/content";
 import type { PublicOrderTracking } from "@/lib/help/order-tracking";
 
@@ -95,6 +96,7 @@ function OrderTrackingCard({ result }: { result: PublicOrderTracking }) {
 }
 
 export default function TrackOrderClient() {
+  const brand = useBrand();
   const [orderNumber, setOrderNumber] = useState("");
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
@@ -142,7 +144,7 @@ export default function TrackOrderClient() {
       <HelpPageHero
         icon={Package}
         title="Track Your Order"
-        description={`Enter your order number or phone number to see order status from ${BRAND.name}.`}
+        description={`Enter your order number or phone number to see order status from ${brand.name}.`}
         breadcrumb="Track Order"
       />
 
@@ -178,13 +180,13 @@ export default function TrackOrderClient() {
               <div className="grid sm:grid-cols-2 gap-4">
                 <Input
                   label="Order Number"
-                  placeholder={`e.g. ${BRAND.orderPrefix}-2026-001234 or AZ-2026-001235`}
+                  placeholder={`e.g. ${brand.orderPrefix}-2026-001234 or AZ-2026-001235`}
                   value={orderNumber}
                   onChange={(e) => setOrderNumber(e.target.value)}
                 />
                 <Input
                   label="Phone Number (optional)"
-                  placeholder="e.g. 0322-4123414"
+                  placeholder={`e.g. ${formatPhoneDisplay(brand.primaryPhone)}`}
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                 />

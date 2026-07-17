@@ -1,5 +1,6 @@
 import { listUploadedFiles, uploadFile } from "@/lib/uploads/storage";
 import { ok, fail, requireAdmin } from "@/lib/api/helpers";
+import { logActivityFromRequest, actorFromJwt } from "@/lib/activity-log";
 
 export const runtime = "nodejs";
 
@@ -33,8 +34,30 @@ export async function POST(request: Request) {
       quality,
     });
 
+    await logActivityFromRequest(request, {
+      action: "media.upload",
+      category: "media",
+      message: `Uploaded file: ${record.originalName}`,
+      ...actorFromJwt(auth),
+      entityType: "file",
+      entityId: record.id,
+      metadata: {
+        fileName: record.originalName,
+        mimeType: record.mimeType,
+        size: record.size,
+      },
+    });
+
     return ok(record, 201, 0);
   } catch (e) {
+    await logActivityFromRequest(request, {
+      action: "media.upload",
+      category: "media",
+      status: "failure",
+      message: "File upload failed",
+      ...actorFromJwt(auth),
+      entityType: "file",
+    });
     return fail(e instanceof Error ? e.message : "Upload failed", 400);
   }
 }

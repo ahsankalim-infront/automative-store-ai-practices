@@ -1,6 +1,7 @@
 import type { Order } from "@/types";
 import { formatPrice } from "@/lib/utils";
-import { BRAND } from "@/lib/brand/config";
+import type { BrandConfig } from "@/lib/brand/types";
+import { DEFAULT_BRAND } from "@/lib/brand/config";
 
 function itemRows(order: Order): string {
   return order.items
@@ -17,13 +18,13 @@ function itemRows(order: Order): string {
 
 export function buildOrderSummaryEmailHtml(
   order: Order,
-  options: { forAdmin?: boolean; customerEmail?: string } = {}
+  options: { forAdmin?: boolean; customerEmail?: string; brand?: BrandConfig } = {}
 ): string {
-  const { forAdmin = false, customerEmail } = options;
+  const { forAdmin = false, customerEmail, brand = DEFAULT_BRAND } = options;
   const title = forAdmin ? "New Order Received" : "Your Order Confirmation";
   const intro = forAdmin
-    ? `A new order has been placed on ${BRAND.name}.`
-    : `Thank you for shopping with ${BRAND.name}! Here is your order summary.`;
+    ? `A new order has been placed on ${brand.name}.`
+    : `Thank you for shopping with ${brand.name}! Here is your order summary.`;
 
   return `<!DOCTYPE html>
 <html>
@@ -34,7 +35,7 @@ export function buildOrderSummaryEmailHtml(
       <table width="600" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:12px;overflow:hidden;max-width:600px;">
         <tr>
           <td style="background:#111;padding:24px 28px;">
-            <p style="margin:0;color:#D50000;font-size:12px;font-weight:bold;letter-spacing:1px;">${BRAND.name.toUpperCase()}</p>
+            <p style="margin:0;color:#D50000;font-size:12px;font-weight:bold;letter-spacing:1px;">${brand.name.toUpperCase()}</p>
             <h1 style="margin:8px 0 0;color:#fff;font-size:22px;">${title}</h1>
           </td>
         </tr>
@@ -75,12 +76,12 @@ export function buildOrderSummaryEmailHtml(
               <tr><td style="padding:8px 0;font-weight:bold;color:#111;">Total</td><td style="text-align:right;font-weight:bold;color:#D50000;">${formatPrice(order.total)}</td></tr>
             </table>
             <p style="margin:20px 0 0;font-size:12px;color:#888;">Payment: ${order.paymentMethod.toUpperCase()} · Status: ${order.status.replace(/_/g, " ")}</p>
-            ${forAdmin ? `<p style="margin:16px 0 0;"><a href="${process.env.NEXT_PUBLIC_APP_URL || ""}/admin/orders" style="display:inline-block;background:#D50000;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:14px;">View in Admin</a></p>` : `<p style="margin:16px 0 0;font-size:13px;color:#666;">Your order summary PDF (with terms & policies) is attached to this email.</p><p style="margin:8px 0 0;font-size:13px;color:#666;">Questions? Call ${BRAND.primaryPhone} or email ${BRAND.email}</p>`}
+            ${forAdmin ? `<p style="margin:16px 0 0;"><a href="${process.env.NEXT_PUBLIC_APP_URL || ""}/admin/orders" style="display:inline-block;background:#D50000;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:14px;">View in Admin</a></p>` : `<p style="margin:16px 0 0;font-size:13px;color:#666;">Your order summary PDF (with terms & policies) is attached to this email.</p><p style="margin:8px 0 0;font-size:13px;color:#666;">Questions? Call ${brand.primaryPhone} or email ${brand.email}</p>`}
           </td>
         </tr>
         <tr>
           <td style="padding:16px 28px;background:#fafafa;border-top:1px solid #eee;">
-            <p style="margin:0;font-size:11px;color:#999;text-align:center;">${BRAND.name} · ${BRAND.address.full}</p>
+            <p style="margin:0;font-size:11px;color:#999;text-align:center;">${brand.name} · ${brand.address.full}</p>
           </td>
         </tr>
       </table>
@@ -92,11 +93,11 @@ export function buildOrderSummaryEmailHtml(
 
 export function buildOrderSummaryEmailText(
   order: Order,
-  options: { forAdmin?: boolean } = {}
+  options: { forAdmin?: boolean; brand?: BrandConfig } = {}
 ): string {
-  const { forAdmin = false } = options;
+  const { forAdmin = false, brand = DEFAULT_BRAND } = options;
   const lines = [
-    forAdmin ? `New order — ${BRAND.name}` : `Order confirmation — ${BRAND.name}`,
+    forAdmin ? `New order — ${brand.name}` : `Order confirmation — ${brand.name}`,
     "",
     `Order: ${order.orderNumber}`,
     `Customer: ${order.shippingAddress.fullName}`,

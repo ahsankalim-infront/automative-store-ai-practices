@@ -1,7 +1,6 @@
 "use client";
 
 import type { ReportResult } from "./types";
-import { BRAND } from "@/lib/brand/config";
 
 function slugify(name: string): string {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -9,7 +8,7 @@ function slugify(name: string): string {
 
 function fileBase(report: ReportResult): string {
   const date = new Date().toISOString().slice(0, 10);
-  return `${BRAND.orderPrefix}-${slugify(report.meta.type)}-${date}`;
+  return `${report.meta.orderPrefix}-${slugify(report.meta.type)}-${date}`;
 }
 
 function formatCell(value: string | number, key: string): string | number {
@@ -24,7 +23,7 @@ export async function downloadReportExcel(report: ReportResult): Promise<void> {
 
   const headerRows: string[][] = [
     [report.meta.title],
-    [BRAND.name],
+    [report.meta.storeName],
     [`Period: ${report.meta.dateFrom} → ${report.meta.dateTo}`],
     [`Generated: ${new Date(report.meta.generatedAt).toLocaleString("en-PK")}`],
   ];
@@ -68,7 +67,7 @@ export async function downloadReportPdf(report: ReportResult): Promise<void> {
 
   doc.setFontSize(10);
   doc.setTextColor(60, 60, 60);
-  doc.text(BRAND.name, 40, 58);
+  doc.text(report.meta.storeName, 40, 58);
   doc.text(`Period: ${report.meta.dateFrom} → ${report.meta.dateTo}`, 40, 72);
   doc.text(`Generated: ${new Date(report.meta.generatedAt).toLocaleString("en-PK")}`, 40, 86);
   if (report.meta.statusFilter) {
@@ -105,7 +104,7 @@ export async function downloadReportPdf(report: ReportResult): Promise<void> {
       doc.setFontSize(8);
       doc.setTextColor(150, 150, 150);
       doc.text(
-        `Page ${data.pageNumber} · ${report.meta.rowCount} records · ${BRAND.name}`,
+        `Page ${data.pageNumber} · ${report.meta.rowCount} records · ${report.meta.storeName}`,
         40,
         doc.internal.pageSize.getHeight() - 20
       );

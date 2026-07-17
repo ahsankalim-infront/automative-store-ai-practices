@@ -1,7 +1,7 @@
 import { cache } from "react";
 import { unstable_cache, revalidateTag } from "next/cache";
 import { getStore } from "./store";
-import type { Product, Category, Brand, VehicleMake, BlogPost, Service, Store, Banner } from "@/types";
+import type { Product, Category, Brand, VehicleMake, BlogPost, Service, Store, Banner, BundleOffer, AboutTeamMember, AboutMilestone, HeroSlide } from "@/types";
 
 const REVALIDATE_SECONDS = 60;
 
@@ -23,6 +23,10 @@ export const readAllBlogPosts = cachedRead<BlogPost>("blogs", "blogs");
 export const readAllServices = cachedRead<Service>("services", "services");
 export const readAllStores = cachedRead<Store>("stores", "stores");
 export const readAllBanners = cachedRead<Banner>("banners", "banners");
+export const readAllBundleOffers = cachedRead<BundleOffer>("bundle-offers", "bundle-offers");
+export const readAllAboutTeam = cachedRead<AboutTeamMember>("about-team", "about-team");
+export const readAllAboutMilestones = cachedRead<AboutMilestone>("about-milestones", "about-milestones");
+export const readAllHeroSlides = cachedRead<HeroSlide>("hero-slides", "hero-slides");
 
 export function revalidateCatalogTag(resource: string) {
   const tags: Record<string, string> = {
@@ -35,6 +39,14 @@ export function revalidateCatalogTag(resource: string) {
     services: "services",
     stores: "stores",
     banners: "banners",
+    bundleOffers: "bundle-offers",
+    "bundle-offers": "bundle-offers",
+    aboutTeam: "about-team",
+    "about-team": "about-team",
+    aboutMilestones: "about-milestones",
+    "about-milestones": "about-milestones",
+    heroSlides: "hero-slides",
+    "hero-slides": "hero-slides",
     reviews: "products",
   };
   const tag = tags[resource];

@@ -13,6 +13,10 @@ import type {
   ServiceBooking,
   User,
   UserRole,
+  BundleOffer,
+  AboutTeamMember,
+  AboutMilestone,
+  HeroSlide,
   OrderStatusBreakdown,
   TopProduct,
   SalesDataPoint,
@@ -31,6 +35,10 @@ import {
   readAllServices,
   readAllStores,
   readAllBanners,
+  readAllBundleOffers,
+  readAllAboutTeam,
+  readAllAboutMilestones,
+  readAllHeroSlides,
 } from "../cached-reads";
 import { ORDER_STATUS_CHART_COLORS } from "@/lib/order-status";
 import {
@@ -44,6 +52,12 @@ import {
 } from "@/lib/products/review-stats";
 import { applyCatalogFilters } from "@/lib/products/catalog-filters";
 import { phonesMatch, isUndeliveredOrderStatus } from "@/lib/help/order-tracking";
+import type {
+  ActivityLog,
+  ActivityLogQuery,
+  ActivityLogPage,
+} from "@/lib/activity-log/types";
+import { MAX_ACTIVITY_LOGS } from "@/lib/activity-log/types";
 
 export type { CatalogQuery } from "@/lib/products/catalog-filters";
 
@@ -60,12 +74,17 @@ const COL = {
   users: "users",
   coupons: "coupons",
   banners: "banners",
+  bundleOffers: "bundle-offers",
+  aboutTeam: "about-team",
+  aboutMilestones: "about-milestones",
+  heroSlides: "hero-slides",
   bookings: "bookings",
   contactMessages: "contact-messages",
   newsletter: "newsletter-subscribers",
   analytics: "analytics",
   pushSubscriptions: "push-subscriptions",
   notifications: "notifications",
+  activityLogs: "activity-logs",
 } as const;
 
 export interface PushSubscriptionRecord {
@@ -110,6 +129,14 @@ export async function getProducts(filters: ProductFilters = {}): Promise<Product
   let items = await readAllProducts();
   const allReviews = await getStore().read<Review>(COL.reviews);
   items = attachReviewStatsToProducts(items, allReviews);
+
+  if (!filters.includeInactiveCategories) {
+    const categories = await readAllCategories();
+    const activeSlugs = new Set(
+      categories.filter((c) => c.isActive !== false).map((c) => c.slug)
+    );
+    items = items.filter((p) => activeSlugs.has(p.categorySlug));
+  }
 
   if (filters.slug) return items.filter((p) => p.slug === filters.slug);
 
@@ -164,14 +191,33 @@ export async function deleteProduct(id: string): Promise<boolean> {
 
 // ─── Categories ──────────────────────────────────────────────────────────────
 
-export async function getCategories(): Promise<Category[]> {
-  const [categories, products] = await Promise.all([readAllCategories(), readAllProducts()]);
+function normalizeCategory(category: Category): Category {
+  return {
+    ...category,
+    isActive: category.isActive !== false,
+  };
+}
+
+async function enrichCategories(categories: Category[]): Promise<Category[]> {
+  const products = await readAllProducts();
   return categories
+    .map(normalizeCategory)
     .map((cat) => ({
       ...cat,
       productCount: products.filter((p) => p.categorySlug === cat.slug).length,
     }))
     .sort((a, b) => a.sortOrder - b.sortOrder);
+}
+
+/** All categories including inactive — for admin. */
+export async function getAllCategories(): Promise<Category[]> {
+  return enrichCategories(await readAllCategories());
+}
+
+/** Active categories only — for storefront and public API. */
+export async function getCategories(): Promise<Category[]> {
+  const all = await getAllCategories();
+  return all.filter((cat) => cat.isActive);
 }
 
 export async function getCategoryById(id: string): Promise<Category | null> {
@@ -464,11 +510,28 @@ export async function deleteOrder(id: string): Promise<boolean> {
 
 // ─── Settings ────────────────────────────────────────────────────────────────
 
+export interface StoreContactPerson {
+  name: string;
+  phones: string[];
+}
+
 export interface StoreSettings {
   id: string;
   storeName: string;
+  shortName: string;
+  tagline: string;
+  description: string;
   supportEmail: string;
   supportPhone: string;
+  whatsapp: string;
+  orderPrefix: string;
+  businessHours: string;
+  announcementText: string;
+  address: string;
+  addressCity: string;
+  addressProvince: string;
+  addressCountry: string;
+  contactPersons: StoreContactPerson[];
   standardShipping: number;
   expressShipping: number;
   freeShippingThreshold: number;
@@ -476,30 +539,61 @@ export interface StoreSettings {
   cmsPages: { slug: string; title: string; content: string }[];
 }
 
+export const DEFAULT_STORE_SETTINGS: StoreSettings = {
+  id: "settings-1",
+  storeName: "Shahzad Poshish House",
+  shortName: "SPH",
+  tagline: "Premium car poshish & upholstery",
+  description:
+    "Shahzad Poshish House offers premium car poshish, seat covers, interior upholstery and automotive accessories in Lahore.",
+  supportEmail: "shahzadahmed6626@gmail.com",
+  supportPhone: "03224123414",
+  whatsapp: "923224123414",
+  orderPrefix: "SHP",
+  businessHours: "Monday – Saturday: 10:00 AM – 8:00 PM",
+  announcementText: "Premium poshish & seat covers",
+  address: "Office # 15, 2nd Floor, Moeen Center, 20 Abbot Road, Lahore",
+  addressCity: "Lahore",
+  addressProvince: "Punjab",
+  addressCountry: "Pakistan",
+  contactPersons: [
+    { name: "Shahzad Ahmed", phones: ["03224123414", "033014140440"] },
+    { name: "Muhammad Azaan", phones: ["03259422044"] },
+  ],
+  standardShipping: 100,
+  expressShipping: 250,
+  freeShippingThreshold: 1500,
+  currency: "PKR",
+  cmsPages: [],
+};
+
+function normalizeStoreSettings(raw?: Partial<StoreSettings> | null): StoreSettings {
+  if (!raw) return { ...DEFAULT_STORE_SETTINGS };
+  return {
+    ...DEFAULT_STORE_SETTINGS,
+    ...raw,
+    contactPersons:
+      raw.contactPersons?.length ? raw.contactPersons : DEFAULT_STORE_SETTINGS.contactPersons,
+    cmsPages: raw.cmsPages ?? DEFAULT_STORE_SETTINGS.cmsPages,
+  };
+}
+
 export async function getStoreSettings(): Promise<StoreSettings> {
   const items = await getStore().read<StoreSettings>("settings");
-  return items[0] ?? {
-    id: "settings-1",
-    storeName: "Shahzad Poshish House",
-    supportEmail: "shahzadahmed6626@gmail.com",
-    supportPhone: "03224123414",
-    standardShipping: 100,
-    expressShipping: 250,
-    freeShippingThreshold: 1500,
-    currency: "PKR",
-    cmsPages: [],
-  };
+  return normalizeStoreSettings(items[0]);
 }
 
 export async function updateStoreSettings(data: Partial<StoreSettings>): Promise<StoreSettings> {
   const current = await getStoreSettings();
-  const updated = { ...current, ...data };
+  const updated = normalizeStoreSettings({ ...current, ...data });
   const items = await getStore().read<StoreSettings>("settings");
   if (items.length === 0) {
     await getStore().create("settings", updated);
   } else {
     await getStore().update("settings", current.id, updated);
   }
+  const { revalidateStoreSettings } = await import("@/lib/brand/get-brand-config");
+  revalidateStoreSettings();
   return updated;
 }
 
@@ -562,6 +656,122 @@ export async function getBannerById(id: string): Promise<Banner | null> {
 
 export async function deleteBanner(id: string): Promise<boolean> {
   return getStore().delete(COL.banners, id);
+}
+
+// ─── Bundle Offers ───────────────────────────────────────────────────────────
+
+export async function getAllBundleOffers(): Promise<BundleOffer[]> {
+  return readAllBundleOffers();
+}
+
+export async function getBundleOffers(): Promise<BundleOffer[]> {
+  const offers = await readAllBundleOffers();
+  return offers.filter((b) => b.isActive).sort((a, b) => a.sortOrder - b.sortOrder);
+}
+
+export async function createBundleOffer(offer: BundleOffer): Promise<BundleOffer> {
+  return getStore().create(COL.bundleOffers, offer);
+}
+
+export async function updateBundleOffer(id: string, data: Partial<BundleOffer>): Promise<BundleOffer | null> {
+  return getStore().update(COL.bundleOffers, id, data);
+}
+
+export async function getBundleOfferById(id: string): Promise<BundleOffer | null> {
+  return getStore().readOne<BundleOffer>(COL.bundleOffers, id);
+}
+
+export async function deleteBundleOffer(id: string): Promise<boolean> {
+  return getStore().delete(COL.bundleOffers, id);
+}
+
+// ─── About Page Content ──────────────────────────────────────────────────────
+
+export async function getAllAboutTeamMembers(): Promise<AboutTeamMember[]> {
+  return readAllAboutTeam();
+}
+
+export async function getAboutTeamMembers(): Promise<AboutTeamMember[]> {
+  const members = await readAllAboutTeam();
+  return members.filter((m) => m.isActive).sort((a, b) => a.sortOrder - b.sortOrder);
+}
+
+export async function getAboutTeamMemberById(id: string): Promise<AboutTeamMember | null> {
+  return getStore().readOne<AboutTeamMember>(COL.aboutTeam, id);
+}
+
+export async function createAboutTeamMember(member: AboutTeamMember): Promise<AboutTeamMember> {
+  return getStore().create(COL.aboutTeam, member);
+}
+
+export async function updateAboutTeamMember(
+  id: string,
+  data: Partial<AboutTeamMember>
+): Promise<AboutTeamMember | null> {
+  return getStore().update(COL.aboutTeam, id, data);
+}
+
+export async function deleteAboutTeamMember(id: string): Promise<boolean> {
+  return getStore().delete(COL.aboutTeam, id);
+}
+
+export async function getAllAboutMilestones(): Promise<AboutMilestone[]> {
+  return readAllAboutMilestones();
+}
+
+export async function getAboutMilestones(): Promise<AboutMilestone[]> {
+  const items = await readAllAboutMilestones();
+  return items.filter((m) => m.isActive).sort((a, b) => a.sortOrder - b.sortOrder);
+}
+
+export async function getAboutMilestoneById(id: string): Promise<AboutMilestone | null> {
+  return getStore().readOne<AboutMilestone>(COL.aboutMilestones, id);
+}
+
+export async function createAboutMilestone(milestone: AboutMilestone): Promise<AboutMilestone> {
+  return getStore().create(COL.aboutMilestones, milestone);
+}
+
+export async function updateAboutMilestone(
+  id: string,
+  data: Partial<AboutMilestone>
+): Promise<AboutMilestone | null> {
+  return getStore().update(COL.aboutMilestones, id, data);
+}
+
+export async function deleteAboutMilestone(id: string): Promise<boolean> {
+  return getStore().delete(COL.aboutMilestones, id);
+}
+
+// ─── Hero Slides ─────────────────────────────────────────────────────────────
+
+export async function getAllHeroSlides(): Promise<HeroSlide[]> {
+  return readAllHeroSlides();
+}
+
+export async function getHeroSlides(): Promise<HeroSlide[]> {
+  const slides = await readAllHeroSlides();
+  if (slides.length === 0) {
+    const { DEFAULT_HERO_SLIDES } = await import("@/lib/hero-slides/defaults");
+    return DEFAULT_HERO_SLIDES;
+  }
+  return slides.filter((s) => s.isActive).sort((a, b) => a.sortOrder - b.sortOrder);
+}
+
+export async function getHeroSlideById(id: string): Promise<HeroSlide | null> {
+  return getStore().readOne<HeroSlide>(COL.heroSlides, id);
+}
+
+export async function createHeroSlide(slide: HeroSlide): Promise<HeroSlide> {
+  return getStore().create(COL.heroSlides, slide);
+}
+
+export async function updateHeroSlide(id: string, data: Partial<HeroSlide>): Promise<HeroSlide | null> {
+  return getStore().update(COL.heroSlides, id, data);
+}
+
+export async function deleteHeroSlide(id: string): Promise<boolean> {
+  return getStore().delete(COL.heroSlides, id);
 }
 
 // ─── Bookings ────────────────────────────────────────────────────────────────
@@ -877,5 +1087,69 @@ export async function deletePushSubscription(endpoint: string): Promise<boolean>
 export async function deletePushSubscriptionsByUser(userId: string): Promise<void> {
   const subs = await getPushSubscriptions(userId);
   await Promise.all(subs.map((s) => getStore().delete(COL.pushSubscriptions, s.id)));
+}
+
+// ─── Activity Logs ───────────────────────────────────────────────────────────
+
+export type { ActivityLog, ActivityLogQuery, ActivityLogPage };
+
+export async function createActivityLog(log: ActivityLog): Promise<ActivityLog> {
+  const store = getStore();
+  const created = await store.create(COL.activityLogs, log);
+
+  const all = await store.read<ActivityLog>(COL.activityLogs);
+  if (all.length > MAX_ACTIVITY_LOGS) {
+    const sorted = [...all].sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+    const excess = sorted.slice(MAX_ACTIVITY_LOGS);
+    await Promise.all(excess.map((entry) => store.delete(COL.activityLogs, entry.id)));
+  }
+
+  return created;
+}
+
+export async function queryActivityLogs(query: ActivityLogQuery = {}): Promise<ActivityLogPage> {
+  let items = await getStore().read<ActivityLog>(COL.activityLogs);
+  items.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+  if (query.category) {
+    items = items.filter((l) => l.category === query.category);
+  }
+  if (query.status) {
+    items = items.filter((l) => l.status === query.status);
+  }
+  if (query.dateFrom) {
+    const from = new Date(query.dateFrom).getTime();
+    items = items.filter((l) => new Date(l.createdAt).getTime() >= from);
+  }
+  if (query.dateTo) {
+    const to = new Date(query.dateTo).getTime();
+    items = items.filter((l) => new Date(l.createdAt).getTime() <= to);
+  }
+  if (query.search?.trim()) {
+    const q = query.search.trim().toLowerCase();
+    items = items.filter(
+      (l) =>
+        l.message.toLowerCase().includes(q) ||
+        l.action.toLowerCase().includes(q) ||
+        l.actorEmail?.toLowerCase().includes(q) ||
+        l.actorName?.toLowerCase().includes(q) ||
+        l.entityType?.toLowerCase().includes(q) ||
+        l.entityId?.toLowerCase().includes(q) ||
+        l.path?.toLowerCase().includes(q)
+    );
+  }
+
+  const total = items.length;
+  const offset = Math.max(0, query.offset ?? 0);
+  const limit = Math.min(Math.max(1, query.limit ?? 50), 200);
+
+  return {
+    items: items.slice(offset, offset + limit),
+    total,
+    limit,
+    offset,
+  };
 }
 

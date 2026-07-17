@@ -26,5 +26,8 @@ export {
   getServices,
   getStores,
   getBanners,
+  getBundleOffers,
   getReviews,
 } from "@/lib/data/repositories";
+export { getBundleOffersSection } from "@/lib/bundles/config";
+export { getHomeBundleOffersData } from "@/lib/bundles";

@@ -43,7 +43,7 @@ function rowToForm(row: Row, fields: AdminFieldDef[]): Record<string, unknown> {
   const form: Record<string, unknown> = {};
   for (const f of fields) {
     const v = row[f.key];
-    if (f.type === "checkbox") form[f.key] = Boolean(v);
+    if (f.type === "checkbox") form[f.key] = v === undefined ? (f.defaultChecked ?? false) : Boolean(v);
     else if (f.type === "json") form[f.key] = typeof v === "object" ? JSON.stringify(v, null, 2) : v ?? "";
     else if (f.type === "specList") form[f.key] = Array.isArray(v) ? v : [];
     else if (f.type === "vehicleFitList") form[f.key] = Array.isArray(v) ? v : [];
@@ -60,7 +60,7 @@ function rowToForm(row: Row, fields: AdminFieldDef[]): Record<string, unknown> {
 function emptyForm(fields: AdminFieldDef[]): Record<string, unknown> {
   const form: Record<string, unknown> = {};
   for (const f of fields) {
-    if (f.type === "checkbox") form[f.key] = false;
+    if (f.type === "checkbox") form[f.key] = f.defaultChecked ?? false;
     else if (f.type === "number") form[f.key] = 0;
     else if (f.type === "specList" || f.type === "vehicleFitList") form[f.key] = [];
     else form[f.key] = "";
@@ -126,8 +126,8 @@ export function AdminCrudPanel({ config, filterFn }: AdminCrudPanelProps) {
         if (res.success && res.data) setBrandOptions(res.data);
       }
       if (needsCategories) {
-        const res = await api.categories();
-        if (res.success && res.data) setCategoryOptions(res.data);
+        const res = await api.adminList("categories");
+        if (res.success && res.data) setCategoryOptions(res.data as unknown as Category[]);
       }
       if (needsProducts) {
         const res = await api.products();
@@ -491,17 +491,17 @@ export function AdminCrudPanel({ config, filterFn }: AdminCrudPanelProps) {
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1">
                         {canView && (
-                          <button onClick={() => openView(row)} className="p-1.5 rounded-lg hover:bg-surface text-gray-400 hover:text-primary" title="View">
+                          <button onClick={() => openView(row)} className="p-2 min-h-10 min-w-10 flex items-center justify-center rounded-lg hover:bg-surface text-gray-400 hover:text-primary" title="View">
                             <Eye className="h-4 w-4" />
                           </button>
                         )}
                         {canEdit && (
-                          <button onClick={() => openEdit(row)} className="p-1.5 rounded-lg hover:bg-surface text-gray-400 hover:text-blue-500" title="Edit">
+                          <button onClick={() => openEdit(row)} className="p-2 min-h-10 min-w-10 flex items-center justify-center rounded-lg hover:bg-surface text-gray-400 hover:text-blue-500" title="Edit">
                             <Pencil className="h-4 w-4" />
                           </button>
                         )}
                         {canDelete && (
-                          <button onClick={() => handleDelete(row)} className="p-1.5 rounded-lg hover:bg-surface text-gray-400 hover:text-red-500" title="Delete">
+                          <button onClick={() => handleDelete(row)} className="p-2 min-h-10 min-w-10 flex items-center justify-center rounded-lg hover:bg-surface text-gray-400 hover:text-red-500" title="Delete">
                             <Trash2 className="h-4 w-4" />
                           </button>
                         )}

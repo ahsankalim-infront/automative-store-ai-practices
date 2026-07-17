@@ -7,7 +7,7 @@ import {
   getContactMessages,
 } from "@/lib/data/repositories";
 import { formatPrice } from "@/lib/utils";
-import { BRAND } from "@/lib/brand/config";
+import { getBrandConfig } from "@/lib/brand/get-brand-config";
 import type { ReportQuery, ReportResult, ReportType } from "./types";
 
 function parseRange(dateFrom?: string, dateTo?: string): { from: Date | null; to: Date | null } {
@@ -64,6 +64,7 @@ export async function generateAdminReport(query: ReportQuery): Promise<ReportRes
   const { type, dateFrom, dateTo, status } = query;
   const { from, to } = parseRange(dateFrom, dateTo);
   const generatedAt = new Date().toISOString();
+  const brand = await getBrandConfig();
 
   const baseMeta = {
     type,
@@ -73,6 +74,9 @@ export async function generateAdminReport(query: ReportQuery): Promise<ReportRes
     dateTo: dateTo || "—",
     statusFilter: status || undefined,
     rowCount: 0,
+    storeName: brand.name,
+    storeEmail: brand.email,
+    orderPrefix: brand.orderPrefix,
   };
 
   switch (type) {
@@ -180,7 +184,7 @@ async function buildOrdersReport(
       { label: "Orders", value: String(orders.length) },
       { label: "Total Revenue", value: formatPrice(totalRevenue) },
       { label: "Status Filter", value: status ? status.replace(/_/g, " ") : "All" },
-      { label: "Store", value: BRAND.name },
+      { label: "Store", value: meta.storeName },
     ],
     columns: [
       { key: "orderNumber", label: "Order #" },
@@ -307,7 +311,7 @@ async function buildCustomersReport(
       { label: "New Customers", value: String(users.length) },
       { label: "Verified", value: String(users.filter((u) => u.isVerified).length) },
       { label: "Period", value: `${meta.dateFrom} → ${meta.dateTo}` },
-      { label: "Store", value: BRAND.name },
+      { label: "Store", value: meta.storeName },
     ],
     columns: [
       { key: "name", label: "Name" },
@@ -467,7 +471,7 @@ async function buildContactsReport(
     summary: [
       { label: "Messages", value: String(messages.length) },
       { label: "Period", value: `${meta.dateFrom} → ${meta.dateTo}` },
-      { label: "Store Email", value: BRAND.email },
+      { label: "Store Email", value: meta.storeEmail },
       { label: "Generated", value: fmtDateTime(meta.generatedAt) },
     ],
     columns: [

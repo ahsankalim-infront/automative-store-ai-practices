@@ -20,4 +20,6 @@ export interface ProductFilters {
   make?: string;
   model?: string;
   year?: number;
+  /** Admin-only: include products in inactive categories */
+  includeInactiveCategories?: boolean;
 }

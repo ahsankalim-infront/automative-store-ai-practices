@@ -6,13 +6,15 @@ import { CheckCircle, Package, Truck, ArrowRight, FileDown, Loader2 } from "luci
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { BrandLogo } from "@/components/brand/logo";
-import { BRAND, formatPhoneDisplay, phoneTelHref } from "@/lib/brand/config";
+import { useBrand } from "@/lib/brand/brand-context";
+import { formatPhoneDisplay, phoneTelHref } from "@/lib/brand/config";
 import { downloadOrderSummaryPdf } from "@/lib/orders/download-order-summary-pdf";
 import toast from "react-hot-toast";
 
 function OrderSuccessContent() {
+  const brand = useBrand();
   const params = useSearchParams();
-  const orderNumber = params.get("order") || `${BRAND.orderPrefix}-2026-000000`;
+  const orderNumber = params.get("order") || `${brand.orderPrefix}-2026-000000`;
   const orderId = params.get("id");
   const [pdfLoading, setPdfLoading] = useState(false);
   const [pdfReady, setPdfReady] = useState(false);
@@ -141,7 +143,7 @@ function OrderSuccessContent() {
         <div className="mt-6 p-4 bg-primary/5 rounded-xl text-sm text-gray-500">
           <p>📧 Order confirmation email includes the PDF attachment.</p>
           <p className="mt-1">📱 You&apos;ll receive SMS/WhatsApp updates on your order.</p>
-          <p className="mt-1">📞 Questions? Call <a href={phoneTelHref(BRAND.primaryPhone)} className="text-primary font-semibold">{formatPhoneDisplay(BRAND.primaryPhone)}</a></p>
+          <p className="mt-1">📞 Questions? Call <a href={phoneTelHref(brand.primaryPhone)} className="text-primary font-semibold">{formatPhoneDisplay(brand.primaryPhone)}</a></p>
         </div>
       </motion.div>
     </div>

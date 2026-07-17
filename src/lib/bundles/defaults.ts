@@ -1,0 +1,60 @@
+import type { BundleOffer, BundleOffersSectionConfig } from "@/types";
+
+export const DEFAULT_BUNDLE_OFFERS_SECTION: BundleOffersSectionConfig = {
+  id: "bundle-section-1",
+  badge: "Save More",
+  title: "Bundle Offers",
+  subtitle: "Curated product bundles with exclusive savings",
+  viewAllHref: "/products",
+  isEnabled: true,
+  updatedAt: new Date().toISOString(),
+};
+
+export const DEFAULT_BUNDLE_OFFERS: BundleOffer[] = [
+  {
+    id: "bundle-1",
+    title: "LED + Installation Bundle",
+    description: "H4 LED headlights with free professional installation at any branch",
+    price: 16500,
+    originalPrice: 19500,
+    image:
+      "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=500&h=300&q=80",
+    href: "/products?category=led-lighting",
+    tag: "Save 15%",
+    sortOrder: 0,
+    isActive: true,
+  },
+  {
+    id: "bundle-2",
+    title: "Interior Upgrade Pack",
+    description: "Seat covers + floor mats + steering cover — complete interior refresh",
+    price: 22000,
+    originalPrice: 28000,
+    image:
+      "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=500&h=300&q=80",
+    href: "/products?category=interior",
+    tag: "Best Value",
+    sortOrder: 1,
+    isActive: true,
+  },
+  {
+    id: "bundle-3",
+    title: "Car Care Starter Kit",
+    description: "Shampoo, wax, microfiber cloths & glass cleaner — everything you need",
+    price: 3500,
+    originalPrice: 4800,
+    image:
+      "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&w=500&h=300&q=80",
+    href: "/products?category=car-care",
+    tag: "Popular",
+    sortOrder: 2,
+    isActive: true,
+  },
+];
+
+export function resolveBundleTag(offer: Pick<BundleOffer, "tag" | "price" | "originalPrice">): string {
+  if (offer.tag?.trim()) return offer.tag.trim();
+  if (offer.originalPrice <= offer.price) return "Bundle Deal";
+  const pct = Math.round((1 - offer.price / offer.originalPrice) * 100);
+  return pct > 0 ? `Save ${pct}%` : "Bundle Deal";
+}

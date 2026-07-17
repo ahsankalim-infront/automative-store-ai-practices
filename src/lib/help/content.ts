@@ -1,4 +1,5 @@
-import { BRAND } from "@/lib/brand/config";
+import type { BrandConfig } from "@/lib/brand/types";
+import { DEFAULT_BRAND } from "@/lib/brand/config";
 
 export interface PolicySection {
   id: string;
@@ -17,7 +18,8 @@ export interface FaqItem {
 
 export const HELP_LAST_UPDATED = "July 14, 2026";
 
-export const FAQ_ITEMS: FaqItem[] = [
+export function buildFaqItems(brand: BrandConfig = DEFAULT_BRAND): FaqItem[] {
+  return [
   {
     id: "faq-orders-1",
     category: "Orders & Payment",
@@ -106,23 +108,27 @@ export const FAQ_ITEMS: FaqItem[] = [
     id: "faq-store-1",
     category: "Store & Contact",
     question: "Where is your shop located?",
-    answer: `Visit us at ${BRAND.address.full}. We are open ${BRAND.businessHours}. Walk-ins are welcome for colour samples, measurements, and consultations.`,
+    answer: `Visit us at ${brand.address.full}. We are open ${brand.businessHours}. Walk-ins are welcome for colour samples, measurements, and consultations.`,
   },
   {
     id: "faq-store-2",
     category: "Store & Contact",
     question: "How can I get a quote for custom poshish?",
     answer:
-      `WhatsApp us at ${BRAND.primaryPhone}, call our team, or use the contact form on this website. Share your car model, preferred material (PU/PVC), colour, and photos of your interior for the fastest quote.`,
+      `WhatsApp us at ${brand.primaryPhone}, call our team, or use the contact form on this website. Share your car model, preferred material (PU/PVC), colour, and photos of your interior for the fastest quote.`,
   },
 ];
+}
 
-export const SHIPPING_SECTIONS: PolicySection[] = [
+export const FAQ_ITEMS = buildFaqItems();
+
+export function buildShippingSections(brand: BrandConfig = DEFAULT_BRAND): PolicySection[] {
+  return [
   {
     id: "coverage",
     title: "Delivery Coverage",
     paragraphs: [
-      `${BRAND.name} delivers premium car poshish products across Pakistan. Lahore customers enjoy priority dispatch from our Abbot Road studio. Nationwide orders are shipped via reliable courier partners including TCS, Leopards, and M&P.`,
+      `${brand.name} delivers premium car poshish products across Pakistan. Lahore customers enjoy priority dispatch from our Abbot Road studio. Nationwide orders are shipped via reliable courier partners including TCS, Leopards, and M&P.`,
     ],
     bullets: [
       "Lahore — same-city delivery in 1–3 business days",
@@ -187,13 +193,17 @@ export const SHIPPING_SECTIONS: PolicySection[] = [
     ],
   },
 ];
+}
 
-export const RETURNS_SECTIONS: PolicySection[] = [
+export const SHIPPING_SECTIONS = buildShippingSections();
+
+export function buildReturnsSections(brand: BrandConfig = DEFAULT_BRAND): PolicySection[] {
+  return [
   {
     id: "overview",
     title: "Returns Overview",
     paragraphs: [
-      `At ${BRAND.name}, customer satisfaction is our priority. We want you to love your car poshish products. If something is not right, please review the policy below before initiating a return.`,
+      `At ${brand.name}, customer satisfaction is our priority. We want you to love your car poshish products. If something is not right, please review the policy below before initiating a return.`,
     ],
     note: "Custom-made and installed products have special conditions — see Custom Products below.",
   },
@@ -225,7 +235,7 @@ export const RETURNS_SECTIONS: PolicySection[] = [
     title: "How to Request a Return",
     paragraphs: ["Follow these steps to start a return or exchange:"],
     bullets: [
-      `Contact us on WhatsApp ${BRAND.primaryPhone} or email ${BRAND.email} within 7 days`,
+      `Contact us on WhatsApp ${brand.primaryPhone} or email ${brand.email} within 7 days`,
       "Provide your order number, reason for return, and clear photos",
       "Wait for return authorization (RMA) and instructions",
       "Ship the item back in original packaging or drop off at our Lahore office",
@@ -261,6 +271,9 @@ export const RETURNS_SECTIONS: PolicySection[] = [
     ],
   },
 ];
+}
+
+export const RETURNS_SECTIONS = buildReturnsSections();
 
 export const TRACK_ORDER_STEPS = [
   {

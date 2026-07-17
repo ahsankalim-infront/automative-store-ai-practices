@@ -183,6 +183,29 @@ class ApiClient {
     return this.get<import("@/types").AdminNavCounts>("/admin/nav-counts");
   }
 
+  adminActivityLogs(params?: {
+    category?: string;
+    status?: string;
+    search?: string;
+    dateFrom?: string;
+    dateTo?: string;
+    limit?: number;
+    offset?: number;
+  }) {
+    const qs = new URLSearchParams();
+    if (params?.category) qs.set("category", params.category);
+    if (params?.status) qs.set("status", params.status);
+    if (params?.search) qs.set("search", params.search);
+    if (params?.dateFrom) qs.set("dateFrom", params.dateFrom);
+    if (params?.dateTo) qs.set("dateTo", params.dateTo);
+    if (params?.limit != null) qs.set("limit", String(params.limit));
+    if (params?.offset != null) qs.set("offset", String(params.offset));
+    const query = qs.toString();
+    return this.get<import("@/lib/activity-log/types").ActivityLogPage>(
+      `/admin/activity-logs${query ? `?${query}` : ""}`
+    );
+  }
+
   adminProducts() {
     return this.get<import("@/types").Product[]>("/admin/products");
   }
@@ -292,6 +315,30 @@ class ApiClient {
 
   adminUpdateHomeLayout(data: unknown) {
     return this.put<import("@/lib/home-layout/types").HomeLayoutConfig>("/admin/home-layout", data);
+  }
+
+  adminGetBundleOffersSection() {
+    return this.get<import("@/types").BundleOffersSectionConfig>("/admin/bundle-offers/section");
+  }
+
+  adminUpdateBundleOffersSection(data: unknown) {
+    return this.put<import("@/types").BundleOffersSectionConfig>("/admin/bundle-offers/section", data);
+  }
+
+  adminGetAboutJourneySection() {
+    return this.get<import("@/types").AboutSectionConfig>("/admin/about-content/journey-section");
+  }
+
+  adminUpdateAboutJourneySection(data: unknown) {
+    return this.put<import("@/types").AboutSectionConfig>("/admin/about-content/journey-section", data);
+  }
+
+  adminGetAboutLeadershipSection() {
+    return this.get<import("@/types").AboutSectionConfig>("/admin/about-content/leadership-section");
+  }
+
+  adminUpdateAboutLeadershipSection(data: unknown) {
+    return this.put<import("@/types").AboutSectionConfig>("/admin/about-content/leadership-section", data);
   }
 
   // ─── Admin file uploads ────────────────────────────────────────────────────

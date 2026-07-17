@@ -13,6 +13,14 @@ import { blogPosts } from "../src/lib/mock-data/blogs";
 import { services, stores, mockBookings } from "../src/lib/mock-data/services";
 import { mockOrders, mockReviews, salesData, topProducts } from "../src/lib/mock-data/orders";
 import { DEFAULT_HOME_LAYOUT } from "../src/lib/home-layout/defaults";
+import { DEFAULT_BUNDLE_OFFERS, DEFAULT_BUNDLE_OFFERS_SECTION } from "../src/lib/bundles/defaults";
+import {
+  DEFAULT_ABOUT_JOURNEY_SECTION,
+  DEFAULT_ABOUT_LEADERSHIP_SECTION,
+  DEFAULT_ABOUT_TEAM,
+  DEFAULT_ABOUT_MILESTONES,
+} from "../src/lib/about-content/defaults";
+import { DEFAULT_HERO_SLIDES } from "../src/lib/hero-slides/defaults";
 
 const DATA_DIR = join(process.cwd(), "data", "json");
 
@@ -155,11 +163,19 @@ async function main() {
   write("coupons", coupons);
   write("banners", banners);
   write("home-layout", [DEFAULT_HOME_LAYOUT]);
+  write("bundle-offers", DEFAULT_BUNDLE_OFFERS);
+  write("bundle-offers-section", [DEFAULT_BUNDLE_OFFERS_SECTION]);
+  write("about-journey-section", [DEFAULT_ABOUT_JOURNEY_SECTION]);
+  write("about-leadership-section", [DEFAULT_ABOUT_LEADERSHIP_SECTION]);
+  write("about-team", DEFAULT_ABOUT_TEAM);
+  write("about-milestones", DEFAULT_ABOUT_MILESTONES);
+  write("hero-slides", DEFAULT_HERO_SLIDES);
   write("contact-messages", []);
   write("notifications", []);
   write("newsletter-subscribers", []);
   write("analytics", { salesData, topProducts });
   write("push-subscriptions", []);
+  write("activity-logs", []);
   console.log("\nDone! Default credentials:");
   console.log("  Admin:    admin@autozone.pk / Admin@123");
   console.log("  Customer: ahmed@email.com / Customer@123");

@@ -83,7 +83,7 @@ export function AdminHeader({ title, onMenuToggle }: AdminHeaderProps) {
       <button
         type="button"
         onClick={onMenuToggle}
-        className="lg:hidden text-muted-foreground hover:text-foreground p-1"
+        className="lg:hidden h-11 w-11 flex items-center justify-center rounded-xl text-muted-foreground hover:text-foreground hover:bg-surface transition-colors"
         aria-label="Open menu"
       >
         <Menu className="h-5 w-5" />

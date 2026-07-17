@@ -1,5 +1,5 @@
 import {
-  getCategories, getCategoryById, createCategory, updateCategory, deleteCategory,
+  getCategories, getAllCategories, getCategoryById, createCategory, updateCategory, deleteCategory,
   getBrands, getBrandById, createBrand, updateBrand, deleteBrand,
   getProducts, getProductById, createProduct, updateProduct, deleteProduct,
   getOrders, getOrderById, updateOrder, deleteOrder,
@@ -10,6 +10,10 @@ import {
   getContactMessages, getContactMessageById, deleteContactMessage,
   getCoupons, getCouponById, createCoupon, updateCoupon, deleteCoupon,
   getAllBanners, getBannerById, createBanner, updateBanner, deleteBanner,
+  getAllBundleOffers, getBundleOfferById, createBundleOffer, updateBundleOffer, deleteBundleOffer,
+  getAllAboutTeamMembers, getAboutTeamMemberById, createAboutTeamMember, updateAboutTeamMember, deleteAboutTeamMember,
+  getAllAboutMilestones, getAboutMilestoneById, createAboutMilestone, updateAboutMilestone, deleteAboutMilestone,
+  getAllHeroSlides, getHeroSlideById, createHeroSlide, updateHeroSlide, deleteHeroSlide,
   getBlogPosts, getBlogById, createBlogPost, updateBlogPost, deleteBlogPost,
   getVehicleMakes, getVehicleMakeById, createVehicleMake, updateVehicleMake, deleteVehicleMake,
   getStores, getStoreById, createStore, updateStore, deleteStore,
@@ -21,17 +25,17 @@ import { parseSpecifications, parseVehicleCompatibility } from "@/lib/products/s
 import { readAllVehicleMakes } from "@/lib/data/cached-reads";
 import type {
   Category, Brand, Product, Order, Review, Service, ServiceBooking,
-  Coupon, Banner, BlogPost, VehicleMake, Store, UserRole,
+  Coupon, Banner, BlogPost, VehicleMake, Store, UserRole, BundleOffer, AboutTeamMember, AboutMilestone, HeroSlide,
 } from "@/types";
 
 export type AdminResource =
   | "categories" | "brands" | "products" | "orders" | "customers" | "reviews"
-  | "services" | "bookings" | "contactMessages" | "coupons" | "banners" | "blogs" | "vehicles"
+  | "services" | "bookings" | "contactMessages" | "coupons" | "banners" | "bundleOffers" | "aboutTeam" | "aboutMilestones" | "heroSlides" | "blogs" | "vehicles"
   | "stores" | "users";
 
 export const ADMIN_RESOURCE_KEYS: AdminResource[] = [
   "categories", "brands", "products", "orders", "customers", "reviews",
-  "services", "bookings", "contactMessages", "coupons", "banners", "blogs", "vehicles", "stores", "users",
+  "services", "bookings", "contactMessages", "coupons", "banners", "bundleOffers", "aboutTeam", "aboutMilestones", "heroSlides", "blogs", "vehicles", "stores", "users",
 ];
 
 type CrudOps = {
@@ -121,7 +125,7 @@ export function getAdminResource(name: string): CrudOps | null {
   switch (name as AdminResource) {
     case "categories":
       return {
-        list: getCategories,
+        list: getAllCategories,
         get: getCategoryById,
         create: (b) => createCategory({
           id: crypto.randomUUID(),
@@ -132,8 +136,12 @@ export function getAdminResource(name: string): CrudOps | null {
           description: b.description as string,
           productCount: Number(b.productCount) || 0,
           sortOrder: Number(b.sortOrder) || 0,
+          isActive: bool(b.isActive ?? true),
         } as Category),
-        update: (id, b) => updateCategory(id, b as Partial<Category>),
+        update: (id, b) => updateCategory(id, {
+          ...(b as Partial<Category>),
+          ...(b.isActive !== undefined ? { isActive: bool(b.isActive) } : {}),
+        }),
         delete: deleteCategory,
       };
     case "brands":
@@ -155,7 +163,7 @@ export function getAdminResource(name: string): CrudOps | null {
       };
     case "products":
       return {
-        list: getProducts,
+        list: () => getProducts({ includeInactiveCategories: true }),
         get: async (id) => {
           const p = await getProductById(id);
           if (!p) return null;
@@ -328,6 +336,109 @@ export function getAdminResource(name: string): CrudOps | null {
         } as Banner),
         update: (id, b) => updateBanner(id, b as Partial<Banner>),
         delete: deleteBanner,
+      };
+    case "bundleOffers":
+      return {
+        list: getAllBundleOffers,
+        get: getBundleOfferById,
+        create: (b) => createBundleOffer({
+          id: crypto.randomUUID(),
+          title: b.title as string,
+          description: b.description as string,
+          price: Number(b.price) || 0,
+          originalPrice: Number(b.originalPrice) || 0,
+          image: b.image as string,
+          href: (b.href as string) || "/products",
+          tag: b.tag as string,
+          productIds: parseJsonField(b.productIds, []) as string[],
+          sortOrder: Number(b.sortOrder) || 0,
+          isActive: bool(b.isActive ?? true),
+        } as BundleOffer),
+        update: (id, b) => updateBundleOffer(id, {
+          ...b,
+          price: b.price !== undefined ? Number(b.price) : undefined,
+          originalPrice: b.originalPrice !== undefined ? Number(b.originalPrice) : undefined,
+          sortOrder: b.sortOrder !== undefined ? Number(b.sortOrder) : undefined,
+          productIds: b.productIds ? parseJsonField(b.productIds) : undefined,
+        } as Partial<BundleOffer>),
+        delete: deleteBundleOffer,
+      };
+    case "aboutTeam":
+      return {
+        list: getAllAboutTeamMembers,
+        get: getAboutTeamMemberById,
+        create: (b) => createAboutTeamMember({
+          id: crypto.randomUUID(),
+          name: b.name as string,
+          role: b.role as string,
+          bio: b.bio as string,
+          image: b.image as string,
+          sortOrder: Number(b.sortOrder) || 0,
+          isActive: bool(b.isActive ?? true),
+        } as AboutTeamMember),
+        update: (id, b) => updateAboutTeamMember(id, {
+          ...b,
+          sortOrder: b.sortOrder !== undefined ? Number(b.sortOrder) : undefined,
+        } as Partial<AboutTeamMember>),
+        delete: deleteAboutTeamMember,
+      };
+    case "aboutMilestones":
+      return {
+        list: getAllAboutMilestones,
+        get: getAboutMilestoneById,
+        create: (b) => createAboutMilestone({
+          id: crypto.randomUUID(),
+          year: b.year as string,
+          title: b.title as string,
+          description: b.description as string,
+          sortOrder: Number(b.sortOrder) || 0,
+          isActive: bool(b.isActive ?? true),
+        } as AboutMilestone),
+        update: (id, b) => updateAboutMilestone(id, {
+          ...b,
+          sortOrder: b.sortOrder !== undefined ? Number(b.sortOrder) : undefined,
+        } as Partial<AboutMilestone>),
+        delete: deleteAboutMilestone,
+      };
+    case "heroSlides":
+      return {
+        list: getAllHeroSlides,
+        get: getHeroSlideById,
+        create: (b) => createHeroSlide({
+          id: crypto.randomUUID(),
+          tag: b.tag as string,
+          title: b.title as string,
+          mobileTitle: b.mobileTitle as string,
+          highlight: b.highlight as string,
+          mobileCta: b.mobileCta as string,
+          description: b.description as string,
+          ctaLabel: b.ctaLabel as string,
+          ctaHref: (b.ctaHref as string) || "/products",
+          secondaryLabel: b.secondaryLabel as string,
+          secondaryHref: (b.secondaryHref as string) || "/about",
+          productImage: b.productImage as string,
+          productLabel: b.productLabel as string,
+          productPrice: b.productPrice as string,
+          badgeIcon: (b.badgeIcon as string) || "Star",
+          badgeText: b.badgeText as string,
+          stat1Value: b.stat1Value as string,
+          stat1Label: b.stat1Label as string,
+          stat2Value: b.stat2Value as string,
+          stat2Label: b.stat2Label as string,
+          stat3Value: b.stat3Value as string,
+          stat3Label: b.stat3Label as string,
+          leftBg: (b.leftBg as string) || "from-[#0d0d0d] via-[#1a0a00] to-[#0d0d0d]",
+          rightBg: (b.rightBg as string) || "from-[#f5f0eb] to-[#ede8e0]",
+          accent: (b.accent as string) || "#D50000",
+          accentLight: (b.accentLight as string) || "#ff5252",
+          sortOrder: Number(b.sortOrder) || 0,
+          isActive: bool(b.isActive ?? true),
+        } as HeroSlide),
+        update: (id, b) => updateHeroSlide(id, {
+          ...b,
+          sortOrder: b.sortOrder !== undefined ? Number(b.sortOrder) : undefined,
+        } as Partial<HeroSlide>),
+        delete: deleteHeroSlide,
       };
     case "blogs":
       return {
