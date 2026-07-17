@@ -360,6 +360,34 @@ export interface Banner {
   sortOrder: number;
 }
 
+// ─── Promotion Popup (landing page) ───────────────────────────────────────────
+
+export interface PromotionPopup {
+  id: string;
+  title: string;
+  subtitle?: string;
+  description?: string;
+  badgeText?: string;
+  couponCode?: string;
+  image: string;
+  mobileImage?: string;
+  ctaLabel: string;
+  ctaHref: string;
+  secondaryLabel?: string;
+  secondaryHref?: string;
+  accentColor?: string;
+  isActive: boolean;
+  sortOrder: number;
+  /** Delay in ms before popup appears after page load */
+  showDelayMs: number;
+  /** Hide popup for N days after user dismisses */
+  dismissDays: number;
+  validFrom?: string;
+  validTo?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 // ─── Hero Carousel Slides ─────────────────────────────────────────────────────
 
 export interface HeroSlide {

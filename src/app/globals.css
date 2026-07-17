@@ -155,13 +155,26 @@ html.dark {
 
   .announcement-marquee {
     overflow: hidden;
-    mask-image: linear-gradient(to right, transparent, black 1.5rem, black calc(100% - 1.5rem), transparent);
+    mask-image: linear-gradient(to right, transparent, black 0.5rem, black calc(100% - 0.5rem), transparent);
+  }
+
+  @media (min-width: 640px) {
+    .announcement-marquee {
+      mask-image: linear-gradient(to right, transparent, black 1.5rem, black calc(100% - 1.5rem), transparent);
+    }
   }
 
   .announcement-marquee-track {
     display: flex;
     width: max-content;
-    animation: announcement-marquee 28s linear infinite;
+    align-items: center;
+    animation: announcement-marquee 20s linear infinite;
+  }
+
+  @media (min-width: 640px) {
+    .announcement-marquee-track {
+      animation-duration: 28s;
+    }
   }
 
   .announcement-marquee:hover .announcement-marquee-track {
@@ -169,11 +182,20 @@ html.dark {
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .announcement-marquee {
+      overflow-x: auto;
+      mask-image: none;
+      scrollbar-width: none;
+    }
+
+    .announcement-marquee::-webkit-scrollbar {
+      display: none;
+    }
+
     .announcement-marquee-track {
       animation: none;
-      width: auto;
-      flex-wrap: wrap;
-      gap: 0.75rem;
+      width: max-content;
+      flex-wrap: nowrap;
     }
 
     .announcement-marquee-track > :last-child {

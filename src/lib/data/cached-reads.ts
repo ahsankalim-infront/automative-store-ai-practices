@@ -1,7 +1,7 @@
 import { cache } from "react";
 import { unstable_cache, revalidateTag } from "next/cache";
 import { getStore } from "./store";
-import type { Product, Category, Brand, VehicleMake, BlogPost, Service, Store, Banner, BundleOffer, AboutTeamMember, AboutMilestone, HeroSlide } from "@/types";
+import type { Product, Category, Brand, VehicleMake, BlogPost, Service, Store, Banner, BundleOffer, AboutTeamMember, AboutMilestone, HeroSlide, PromotionPopup } from "@/types";
 
 const REVALIDATE_SECONDS = 60;
 
@@ -27,6 +27,7 @@ export const readAllBundleOffers = cachedRead<BundleOffer>("bundle-offers", "bun
 export const readAllAboutTeam = cachedRead<AboutTeamMember>("about-team", "about-team");
 export const readAllAboutMilestones = cachedRead<AboutMilestone>("about-milestones", "about-milestones");
 export const readAllHeroSlides = cachedRead<HeroSlide>("hero-slides", "hero-slides");
+export const readAllPromotionPopups = cachedRead<PromotionPopup>("promotion-popups", "promotion-popups");
 
 export function revalidateCatalogTag(resource: string) {
   const tags: Record<string, string> = {
@@ -47,6 +48,8 @@ export function revalidateCatalogTag(resource: string) {
     "about-milestones": "about-milestones",
     heroSlides: "hero-slides",
     "hero-slides": "hero-slides",
+    promotionPopups: "promotion-popups",
+    "promotion-popups": "promotion-popups",
     reviews: "products",
   };
   const tag = tags[resource];

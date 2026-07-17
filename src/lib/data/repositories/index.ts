@@ -17,6 +17,7 @@ import type {
   AboutTeamMember,
   AboutMilestone,
   HeroSlide,
+  PromotionPopup,
   OrderStatusBreakdown,
   TopProduct,
   SalesDataPoint,
@@ -39,6 +40,7 @@ import {
   readAllAboutTeam,
   readAllAboutMilestones,
   readAllHeroSlides,
+  readAllPromotionPopups,
 } from "../cached-reads";
 import { ORDER_STATUS_CHART_COLORS } from "@/lib/order-status";
 import {
@@ -78,6 +80,7 @@ const COL = {
   aboutTeam: "about-team",
   aboutMilestones: "about-milestones",
   heroSlides: "hero-slides",
+  promotionPopups: "promotion-popups",
   bookings: "bookings",
   contactMessages: "contact-messages",
   newsletter: "newsletter-subscribers",
@@ -772,6 +775,55 @@ export async function updateHeroSlide(id: string, data: Partial<HeroSlide>): Pro
 
 export async function deleteHeroSlide(id: string): Promise<boolean> {
   return getStore().delete(COL.heroSlides, id);
+}
+
+// ─── Promotion Popups ────────────────────────────────────────────────────────
+
+function isPromotionPopupActive(popup: PromotionPopup, now = Date.now()): boolean {
+  if (popup.isActive === false) return false;
+  if (popup.validFrom && new Date(popup.validFrom).getTime() > now) return false;
+  if (popup.validTo && new Date(popup.validTo).getTime() < now) return false;
+  return true;
+}
+
+export async function getAllPromotionPopups(): Promise<PromotionPopup[]> {
+  return readAllPromotionPopups();
+}
+
+/** Active popup with lowest sortOrder for landing page display */
+export async function getPromotionPopup(): Promise<PromotionPopup | null> {
+  const popups = await readAllPromotionPopups();
+  if (popups.length === 0) {
+    const { DEFAULT_PROMOTION_POPUPS } = await import("@/lib/promotion-popup/defaults");
+    const fallback = DEFAULT_PROMOTION_POPUPS.find((p) => isPromotionPopupActive(p));
+    return fallback ?? null;
+  }
+  const active = popups
+    .filter((p) => isPromotionPopupActive(p))
+    .sort((a, b) => a.sortOrder - b.sortOrder);
+  return active[0] ?? null;
+}
+
+export async function getPromotionPopupById(id: string): Promise<PromotionPopup | null> {
+  return getStore().readOne<PromotionPopup>(COL.promotionPopups, id);
+}
+
+export async function createPromotionPopup(popup: PromotionPopup): Promise<PromotionPopup> {
+  return getStore().create(COL.promotionPopups, popup);
+}
+
+export async function updatePromotionPopup(
+  id: string,
+  data: Partial<PromotionPopup>
+): Promise<PromotionPopup | null> {
+  return getStore().update(COL.promotionPopups, id, {
+    ...data,
+    updatedAt: new Date().toISOString(),
+  });
+}
+
+export async function deletePromotionPopup(id: string): Promise<boolean> {
+  return getStore().delete(COL.promotionPopups, id);
 }
 
 // ─── Bookings ────────────────────────────────────────────────────────────────

@@ -1,5 +1,7 @@
 import { JsonLdOrganization } from "@/components/seo/json-ld-organization";
 import { HomePageContent } from "@/components/home/home-page-content";
+import { PromotionPopupModal } from "@/components/promotion/promotion-popup-modal";
+import { CarGameLauncher } from "@/components/game/car-game-launcher";
 import { SIGNATURE_CATEGORY_SLUGS } from "@/lib/brand/signature-categories";
 import { getHomeLayout } from "@/lib/home-layout/config";
 import { getHomeBundleOffersData } from "@/lib/bundles";
@@ -10,6 +12,7 @@ import {
   getBrands,
   getVehicleMakes,
   getBlogPosts,
+  getPromotionPopup,
 } from "@/lib/api/server";
 import { buildPageMetadata } from "@/lib/seo/metadata";
 import type { Metadata } from "next";
@@ -21,7 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const [layout, allProducts, categories, brands, vehicleMakes, blogPosts, bundleData, heroSlides] = await Promise.all([
+  const [layout, allProducts, categories, brands, vehicleMakes, blogPosts, bundleData, heroSlides, promotionPopup] = await Promise.all([
     getHomeLayout(),
     getProducts(),
     getCategories(),
@@ -30,6 +33,7 @@ export default async function HomePage() {
     getBlogPosts(),
     getHomeBundleOffersData(),
     getHeroSlides(),
+    getPromotionPopup(),
   ]);
 
   const signatureProducts = allProducts.filter((p) =>
@@ -47,6 +51,8 @@ export default async function HomePage() {
   return (
     <>
       <JsonLdOrganization />
+      {promotionPopup && <PromotionPopupModal popup={promotionPopup} />}
+      <CarGameLauncher />
       <HomePageContent
         layout={layout}
         data={{

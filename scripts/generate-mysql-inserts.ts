@@ -368,13 +368,21 @@ function buildNormalizedSql(): string {
     }
   }
 
-  // hero slides
   const slides = loadCollectionItems("hero-slides");
   if (slides.length) {
     sql += sectionHeader("hero_slides");
     sql += "DELETE FROM hero_slides;\n";
     for (const { data } of slides) {
       sql += `INSERT INTO hero_slides (id, tag, title, mobile_title, highlight, mobile_cta, description, cta_label, cta_href, secondary_label, secondary_href, product_image, product_label, product_price, badge_icon, badge_text, stat1_value, stat1_label, stat2_value, stat2_label, stat3_value, stat3_label, left_bg, right_bg, accent, accent_light, sort_order, is_active, data) VALUES (${sqlStr(String(data.id))}, ${sqlStr(String(data.tag ?? ""))}, ${sqlStr(String(data.title ?? ""))}, ${sqlStr(String(data.mobileTitle ?? ""))}, ${sqlStr(String(data.highlight ?? ""))}, ${sqlStr(String(data.mobileCta ?? ""))}, ${sqlStr(String(data.description ?? ""))}, ${sqlStr(String(data.ctaLabel ?? ""))}, ${sqlStr(String(data.ctaHref ?? "/products"))}, ${sqlStr(String(data.secondaryLabel ?? ""))}, ${sqlStr(String(data.secondaryHref ?? "/about"))}, ${sqlStr(String(data.productImage ?? ""))}, ${sqlStr(String(data.productLabel ?? ""))}, ${sqlStr(String(data.productPrice ?? ""))}, ${sqlStr(String(data.badgeIcon ?? "Star"))}, ${sqlStr(String(data.badgeText ?? ""))}, ${sqlStr(String(data.stat1Value ?? ""))}, ${sqlStr(String(data.stat1Label ?? ""))}, ${sqlStr(String(data.stat2Value ?? ""))}, ${sqlStr(String(data.stat2Label ?? ""))}, ${sqlStr(String(data.stat3Value ?? ""))}, ${sqlStr(String(data.stat3Label ?? ""))}, ${sqlStr(String(data.leftBg ?? ""))}, ${sqlStr(String(data.rightBg ?? ""))}, ${sqlStr(String(data.accent ?? "#D50000"))}, ${sqlStr(String(data.accentLight ?? "#ff5252"))}, ${sqlNum(Number(data.sortOrder ?? 0))}, ${sqlBool(data.isActive as boolean | undefined, 1)}, ${sqlJson(data)});\n`;
+    }
+  }
+
+  const popups = loadCollectionItems("promotion-popups");
+  if (popups.length) {
+    sql += sectionHeader("promotion_popups");
+    sql += "DELETE FROM promotion_popups;\n";
+    for (const { data } of popups) {
+      sql += `INSERT INTO promotion_popups (id, title, subtitle, description, badge_text, coupon_code, image, mobile_image, cta_label, cta_href, secondary_label, secondary_href, accent_color, show_delay_ms, dismiss_days, valid_from, valid_to, sort_order, is_active, data) VALUES (${sqlStr(String(data.id))}, ${sqlStr(String(data.title ?? ""))}, ${sqlStr(String(data.subtitle ?? ""))}, ${sqlStr(String(data.description ?? ""))}, ${sqlStr(String(data.badgeText ?? ""))}, ${sqlStr(String(data.couponCode ?? ""))}, ${sqlStr(String(data.image ?? ""))}, ${sqlStr(String(data.mobileImage ?? ""))}, ${sqlStr(String(data.ctaLabel ?? "Shop Now"))}, ${sqlStr(String(data.ctaHref ?? "/products"))}, ${sqlStr(String(data.secondaryLabel ?? ""))}, ${sqlStr(String(data.secondaryHref ?? ""))}, ${sqlStr(String(data.accentColor ?? "#D50000"))}, ${sqlNum(Number(data.showDelayMs ?? 1200))}, ${sqlNum(Number(data.dismissDays ?? 3))}, ${sqlDateTime(data.validFrom as string | undefined)}, ${sqlDateTime(data.validTo as string | undefined)}, ${sqlNum(Number(data.sortOrder ?? 0))}, ${sqlBool(data.isActive as boolean | undefined, 1)}, ${sqlJson(data)});\n`;
     }
   }
 
@@ -405,7 +413,7 @@ function main() {
 -- Generated: ${new Date().toISOString()}
 -- Regenerate: npm run mysql:seed-sql
 --
--- Run AFTER schema migrations (000–015):
+-- Run AFTER schema migrations (000–017):
 --   mysql -u root -p autozone_store < database/mysql/016_seed_from_json.sql
 -- =============================================================================
 

@@ -21,6 +21,7 @@ import {
   DEFAULT_ABOUT_MILESTONES,
 } from "../src/lib/about-content/defaults";
 import { DEFAULT_HERO_SLIDES } from "../src/lib/hero-slides/defaults";
+import { DEFAULT_PROMOTION_POPUPS } from "../src/lib/promotion-popup/defaults";
 
 const DATA_DIR = join(process.cwd(), "data", "json");
 
@@ -170,6 +171,7 @@ async function main() {
   write("about-team", DEFAULT_ABOUT_TEAM);
   write("about-milestones", DEFAULT_ABOUT_MILESTONES);
   write("hero-slides", DEFAULT_HERO_SLIDES);
+  write("promotion-popups", DEFAULT_PROMOTION_POPUPS);
   write("contact-messages", []);
   write("notifications", []);
   write("newsletter-subscribers", []);

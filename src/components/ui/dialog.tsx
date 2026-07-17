@@ -27,8 +27,8 @@ DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, children, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & { showMobileHandle?: boolean }
+>(({ className, children, showMobileHandle = true, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay />
     <DialogPrimitive.Content
@@ -54,9 +54,11 @@ const DialogContent = React.forwardRef<
       {...props}
     >
       {/* Mobile drag handle */}
-      <div className="sm:hidden shrink-0 flex justify-center pt-3 pb-1">
-        <span className="h-1 w-10 rounded-full bg-gray-300 dark:bg-gray-600" aria-hidden />
-      </div>
+      {showMobileHandle && (
+        <div className="sm:hidden shrink-0 flex justify-center pt-3 pb-1">
+          <span className="h-1 w-10 rounded-full bg-gray-300 dark:bg-gray-600" aria-hidden />
+        </div>
+      )}
       {children}
       <DialogPrimitive.Close
         className={cn(

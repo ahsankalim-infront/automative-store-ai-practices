@@ -28,6 +28,7 @@ export {
   getBanners,
   getBundleOffers,
   getReviews,
+  getPromotionPopup,
 } from "@/lib/data/repositories";
 export { getBundleOffersSection } from "@/lib/bundles/config";
 export { getHomeBundleOffersData } from "@/lib/bundles";

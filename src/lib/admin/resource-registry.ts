@@ -14,6 +14,7 @@ import {
   getAllAboutTeamMembers, getAboutTeamMemberById, createAboutTeamMember, updateAboutTeamMember, deleteAboutTeamMember,
   getAllAboutMilestones, getAboutMilestoneById, createAboutMilestone, updateAboutMilestone, deleteAboutMilestone,
   getAllHeroSlides, getHeroSlideById, createHeroSlide, updateHeroSlide, deleteHeroSlide,
+  getAllPromotionPopups, getPromotionPopupById, createPromotionPopup, updatePromotionPopup, deletePromotionPopup,
   getBlogPosts, getBlogById, createBlogPost, updateBlogPost, deleteBlogPost,
   getVehicleMakes, getVehicleMakeById, createVehicleMake, updateVehicleMake, deleteVehicleMake,
   getStores, getStoreById, createStore, updateStore, deleteStore,
@@ -25,17 +26,17 @@ import { parseSpecifications, parseVehicleCompatibility } from "@/lib/products/s
 import { readAllVehicleMakes } from "@/lib/data/cached-reads";
 import type {
   Category, Brand, Product, Order, Review, Service, ServiceBooking,
-  Coupon, Banner, BlogPost, VehicleMake, Store, UserRole, BundleOffer, AboutTeamMember, AboutMilestone, HeroSlide,
+  Coupon, Banner, BlogPost, VehicleMake, Store, UserRole, BundleOffer, AboutTeamMember, AboutMilestone, HeroSlide, PromotionPopup,
 } from "@/types";
 
 export type AdminResource =
   | "categories" | "brands" | "products" | "orders" | "customers" | "reviews"
-  | "services" | "bookings" | "contactMessages" | "coupons" | "banners" | "bundleOffers" | "aboutTeam" | "aboutMilestones" | "heroSlides" | "blogs" | "vehicles"
+  | "services" | "bookings" | "contactMessages" | "coupons" | "banners" | "bundleOffers" | "aboutTeam" | "aboutMilestones" | "heroSlides" | "promotionPopups" | "blogs" | "vehicles"
   | "stores" | "users";
 
 export const ADMIN_RESOURCE_KEYS: AdminResource[] = [
   "categories", "brands", "products", "orders", "customers", "reviews",
-  "services", "bookings", "contactMessages", "coupons", "banners", "bundleOffers", "aboutTeam", "aboutMilestones", "heroSlides", "blogs", "vehicles", "stores", "users",
+  "services", "bookings", "contactMessages", "coupons", "banners", "bundleOffers", "aboutTeam", "aboutMilestones", "heroSlides", "promotionPopups", "blogs", "vehicles", "stores", "users",
 ];
 
 type CrudOps = {
@@ -439,6 +440,42 @@ export function getAdminResource(name: string): CrudOps | null {
           sortOrder: b.sortOrder !== undefined ? Number(b.sortOrder) : undefined,
         } as Partial<HeroSlide>),
         delete: deleteHeroSlide,
+      };
+    case "promotionPopups":
+      return {
+        list: getAllPromotionPopups,
+        get: getPromotionPopupById,
+        create: (b) => createPromotionPopup({
+          id: crypto.randomUUID(),
+          title: b.title as string,
+          subtitle: b.subtitle as string,
+          description: b.description as string,
+          badgeText: b.badgeText as string,
+          couponCode: b.couponCode as string,
+          image: b.image as string,
+          mobileImage: b.mobileImage as string,
+          ctaLabel: (b.ctaLabel as string) || "Shop Now",
+          ctaHref: (b.ctaHref as string) || "/products",
+          secondaryLabel: b.secondaryLabel as string,
+          secondaryHref: b.secondaryHref as string,
+          accentColor: (b.accentColor as string) || "#D50000",
+          isActive: bool(b.isActive ?? true),
+          sortOrder: Number(b.sortOrder) || 0,
+          showDelayMs: Number(b.showDelayMs) || 1200,
+          dismissDays: Number(b.dismissDays) || 3,
+          validFrom: b.validFrom as string | undefined,
+          validTo: b.validTo as string | undefined,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        } as PromotionPopup),
+        update: (id, b) => updatePromotionPopup(id, {
+          ...(b as Partial<PromotionPopup>),
+          ...(b.isActive !== undefined ? { isActive: bool(b.isActive) } : {}),
+          ...(b.showDelayMs !== undefined ? { showDelayMs: Number(b.showDelayMs) } : {}),
+          ...(b.dismissDays !== undefined ? { dismissDays: Number(b.dismissDays) } : {}),
+          ...(b.sortOrder !== undefined ? { sortOrder: Number(b.sortOrder) } : {}),
+        }),
+        delete: deletePromotionPopup,
       };
     case "blogs":
       return {

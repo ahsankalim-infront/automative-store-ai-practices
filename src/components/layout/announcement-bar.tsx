@@ -19,28 +19,45 @@ function AnnouncementContent() {
           <strong>{brand.name}</strong> · {brand.announcementText}
         </span>
       </span>
-      <span className="text-gray-600 text-xs hidden sm:inline" aria-hidden>
+      <span className="text-gray-500 text-xs" aria-hidden>
         |
       </span>
       <Link
         href={whatsappHref(brand.whatsapp)}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-1.5 text-xs whitespace-nowrap hover:text-primary transition-colors min-h-11 sm:min-h-0 py-1"
+        className="inline-flex items-center gap-1.5 text-xs whitespace-nowrap hover:text-primary transition-colors"
       >
         <MessageCircle className="h-3.5 w-3.5 text-green-400 shrink-0" />
-        <span>WhatsApp for orders & quotes</span>
+        <span className="hidden xs:inline">WhatsApp for orders & quotes</span>
+        <span className="xs:hidden">WhatsApp</span>
       </Link>
-      <span className="text-gray-600 text-xs hidden sm:inline" aria-hidden>
+      <span className="text-gray-500 text-xs" aria-hidden>
         |
       </span>
       <Link
         href={phoneTelHref(brand.primaryPhone)}
-        className="inline-flex items-center gap-1.5 text-xs whitespace-nowrap hover:text-primary transition-colors min-h-11 sm:min-h-0 py-1"
+        className="inline-flex items-center gap-1.5 text-xs whitespace-nowrap hover:text-primary transition-colors"
       >
         <Phone className="h-3.5 w-3.5 shrink-0" />
         <span>{formatPhoneDisplay(brand.primaryPhone)}</span>
       </Link>
+    </>
+  );
+}
+
+function MarqueeTrack() {
+  return (
+    <>
+      <div className="flex items-center gap-4 sm:gap-6 pr-4 sm:pr-6 shrink-0">
+        <AnnouncementContent />
+      </div>
+      <div
+        className="flex items-center gap-4 sm:gap-6 pr-4 sm:pr-6 shrink-0 pointer-events-none select-none"
+        aria-hidden="true"
+      >
+        <AnnouncementContent />
+      </div>
     </>
   );
 }
@@ -52,31 +69,20 @@ export function AnnouncementBar() {
   return (
     <div className="bg-secondary text-white relative overflow-hidden">
       <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(213,0,0,0.15)_0%,transparent_50%,rgba(213,0,0,0.15)_100%)]" />
-      <div className="relative flex items-center gap-3 py-2 pl-4 pr-2 sm:pr-4">
-        {/* Mobile: static layout for easier tapping */}
-        <div className="sm:hidden flex-1 min-w-0 flex flex-col gap-0.5 py-0.5">
-          <AnnouncementContent />
-        </div>
-
-        {/* Desktop: scrolling marquee */}
+      <div className="relative flex items-center gap-2 py-2 pl-3 pr-1 sm:pl-4 sm:pr-2 sm:gap-3">
         <div
-          className="announcement-marquee hidden sm:flex flex-1 min-w-0"
+          className="announcement-marquee flex flex-1 min-w-0"
           role="marquee"
           aria-label="Store announcements"
         >
           <div className="announcement-marquee-track">
-            <div className="flex items-center gap-6 pr-6 shrink-0">
-              <AnnouncementContent />
-            </div>
-            <div className="flex items-center gap-6 pr-6 shrink-0 pointer-events-none select-none" aria-hidden="true">
-              <AnnouncementContent />
-            </div>
+            <MarqueeTrack />
           </div>
         </div>
 
         <button
           onClick={() => setVisible(false)}
-          className="shrink-0 text-gray-400 hover:text-white transition-colors min-h-11 min-w-11 flex items-center justify-center rounded-md hover:bg-white/10"
+          className="shrink-0 text-gray-400 hover:text-white transition-colors h-8 w-8 sm:min-h-11 sm:min-w-11 flex items-center justify-center rounded-md hover:bg-white/10"
           aria-label="Close announcement"
         >
           <X className="h-4 w-4" />
