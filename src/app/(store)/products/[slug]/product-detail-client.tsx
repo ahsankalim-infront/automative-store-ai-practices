@@ -55,11 +55,19 @@ export default function ProductDetailClient({ product, reviews, related }: Produ
   };
 
   const handleAddToCart = () => {
+    if (!product.inStock || product.stock <= 0) {
+      toast.error("This product is sold out");
+      return;
+    }
     for (let i = 0; i < quantity; i++) addItem(cartPayload);
     toast.success(`Added ${quantity}x to cart!`);
   };
 
   const handleBuyNow = () => {
+    if (!product.inStock || product.stock <= 0) {
+      toast.error("This product is sold out");
+      return;
+    }
     for (let i = 0; i < quantity; i++) addItem(cartPayload);
     router.push("/checkout");
   };
@@ -155,7 +163,7 @@ export default function ProductDetailClient({ product, reviews, related }: Produ
                   <span className="text-xs text-gray-400">({product.stock} available)</span>
                 </>
               ) : (
-                <span className="text-sm font-medium text-red-500">Out of Stock</span>
+                  <span className="text-sm font-medium text-red-500">Sold Out</span>
               )}
             </div>
 

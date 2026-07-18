@@ -160,8 +160,9 @@ function columnMap(collection: string, item: Row): { id: string; table: string; 
           category_slug: data.categorySlug ?? null,
           price: asNum(data.price),
           original_price: data.originalPrice ?? null,
-          stock: asNum(data.stock),
-          in_stock: asBool(data.inStock, true),
+          stock: Math.max(0, asNum(data.stock)),
+          // Keep DB flag in sync: stock <= 0 means sold out
+          in_stock: asNum(data.stock) > 0 && asBool(data.inStock, true) ? 1 : 0,
           rating: asNum(data.rating),
           review_count: asNum(data.reviewCount),
           is_featured: asBool(data.isFeatured),

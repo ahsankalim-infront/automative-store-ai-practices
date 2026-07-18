@@ -36,12 +36,20 @@ export function QuickViewModal({ product, onClose }: QuickViewModalProps) {
   };
 
   const handleAddToCart = () => {
+    if (!product.inStock || product.stock <= 0) {
+      toast.error("This product is sold out");
+      return;
+    }
     for (let i = 0; i < qty; i++) addItem(cartPayload);
     toast.success(`${qty}x added to cart!`);
     onClose();
   };
 
   const handleBuyNow = () => {
+    if (!product.inStock || product.stock <= 0) {
+      toast.error("This product is sold out");
+      return;
+    }
     for (let i = 0; i < qty; i++) addItem(cartPayload);
     onClose();
     router.push("/checkout");
@@ -140,7 +148,7 @@ export function QuickViewModal({ product, onClose }: QuickViewModalProps) {
                       <span className="h-1.5 w-1.5 rounded-full bg-green-500" />In Stock ({product.stock})
                     </span>
                   ) : (
-                    <span className="text-xs text-red-500 font-medium">Out of Stock</span>
+                    <span className="text-xs text-red-500 font-medium">Sold Out</span>
                   )}
                 </div>
 

@@ -45,6 +45,10 @@ export function ProductCard({ product, view = "grid", onQuickView }: ProductCard
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (!product.inStock || product.stock <= 0) {
+      toast.error("This product is sold out");
+      return;
+    }
     addItem({
       productId: product.id,
       name: product.name,
@@ -61,6 +65,10 @@ export function ProductCard({ product, view = "grid", onQuickView }: ProductCard
   const handleBuyNow = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (!product.inStock || product.stock <= 0) {
+      toast.error("This product is sold out");
+      return;
+    }
     addItem({
       productId: product.id,
       name: product.name,
@@ -118,7 +126,7 @@ export function ProductCard({ product, view = "grid", onQuickView }: ProductCard
             )}
             {!product.inStock && (
               <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                <span className="bg-white text-secondary text-[10px] font-bold px-2 py-0.5 rounded-full">Out of Stock</span>
+                <span className="bg-white text-secondary text-[10px] font-bold px-2 py-0.5 rounded-full">Sold Out</span>
               </div>
             )}
           </div>
@@ -236,7 +244,7 @@ export function ProductCard({ product, view = "grid", onQuickView }: ProductCard
         {/* Out of stock overlay */}
         {!product.inStock && (
           <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-10">
-            <span className="bg-white text-secondary text-[10px] font-bold px-3 py-1 rounded-full">Out of Stock</span>
+            <span className="bg-white text-secondary text-[10px] font-bold px-3 py-1 rounded-full">Sold Out</span>
           </div>
         )}
       </Link>

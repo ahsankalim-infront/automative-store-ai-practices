@@ -1,4 +1,12 @@
-import { createOrder as saveOrder, getCouponByCode, updateCoupon, getStoreSettings } from "@/lib/data/repositories";
+import {
+  createOrder as saveOrder,
+  getCouponByCode,
+  updateCoupon,
+  getStoreSettings,
+  getProductById,
+  updateProduct,
+} from "@/lib/data/repositories";
+import { isProductSellable } from "@/lib/products/stock";
 import type { CartItem } from "@/types";
 import type { Order, OrderItem, ShippingAddress } from "@/types";
 
@@ -13,6 +21,16 @@ export interface CreateOrderInput {
 }
 
 export async function createOrderFromCart(input: CreateOrderInput): Promise<Order> {
+  for (const item of input.items) {
+    const product = await getProductById(item.productId);
+    if (!product || !isProductSellable(product)) {
+      throw new Error(`${item.name} is sold out`);
+    }
+    if (item.quantity > product.stock) {
+      throw new Error(`Only ${product.stock} unit(s) of ${item.name} available`);
+    }
+  }
+
   const orderItems: OrderItem[] = input.items.map((item) => ({
     id: crypto.randomUUID(),
     productId: item.productId,
@@ -77,7 +95,20 @@ export async function createOrderFromCart(input: CreateOrderInput): Promise<Orde
     updatedAt: new Date().toISOString(),
   };
 
-  return saveOrder(order);
+  const saved = await saveOrder(order);
+
+  // Decrement stock; products with stock <= 0 become sold out via normalizeProductAvailability
+  for (const item of input.items) {
+    const product = await getProductById(item.productId);
+    if (!product) continue;
+    const nextStock = Math.max(0, product.stock - item.quantity);
+    await updateProduct(product.id, {
+      stock: nextStock,
+      inStock: nextStock > 0,
+    });
+  }
+
+  return saved;
 }
 
 export async function validateCoupon(code: string, subtotal: number) {

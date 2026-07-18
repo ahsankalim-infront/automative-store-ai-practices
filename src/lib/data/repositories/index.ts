@@ -44,6 +44,7 @@ import {
 } from "../cached-reads";
 import { revalidateEntityCache } from "@/lib/cache/entity-cache";
 import { ORDER_STATUS_CHART_COLORS } from "@/lib/order-status";
+import { normalizeProductAvailability } from "@/lib/products/stock";
 import {
   syncProductRelations,
   deleteProductRelations,
@@ -135,7 +136,7 @@ export interface AnalyticsData {
 // ─── Products ────────────────────────────────────────────────────────────────
 
 export async function getProducts(filters: ProductFilters = {}): Promise<Product[]> {
-  let items = await readAllProducts();
+  let items = (await readAllProducts()).map(normalizeProductAvailability);
   const allReviews = await getStore().read<Review>(COL.reviews);
   items = attachReviewStatsToProducts(items, allReviews);
 
@@ -175,25 +176,37 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
 export async function getProductById(id: string): Promise<Product | null> {
   const product = await getStore().readOne<Product>(COL.products, id);
   if (!product) return null;
-  const reviews = await getReviews(product.id);
-  const withStats = attachReviewStatsToProduct(product, reviews);
+  const normalized = normalizeProductAvailability(product);
+  const reviews = await getReviews(normalized.id);
+  const withStats = attachReviewStatsToProduct(normalized, reviews);
   return mergeProductRelations(withStats);
 }
 
 export async function createProduct(product: Product): Promise<Product> {
-  const created = await getStore().create(COL.products, product);
+  const payload = normalizeProductAvailability(product);
+  const created = await getStore().create(COL.products, payload);
   await syncProductRelations(created);
   touchCache(COL.products);
-  return created;
+  return normalizeProductAvailability(created);
 }
 
 export async function updateProduct(id: string, data: Partial<Product>): Promise<Product | null> {
-  const updated = await getStore().update(COL.products, id, { ...data, updatedAt: new Date().toISOString() });
+  const existing = await getStore().readOne<Product>(COL.products, id);
+  if (!existing) return null;
+  const merged = normalizeProductAvailability({
+    ...existing,
+    ...data,
+    stock: data.stock !== undefined ? Number(data.stock) : existing.stock,
+    inStock: data.inStock !== undefined ? data.inStock : existing.inStock,
+    updatedAt: new Date().toISOString(),
+  });
+  const updated = await getStore().update(COL.products, id, merged);
   if (updated) {
     await syncProductRelations(updated);
     touchCache(COL.products);
+    return normalizeProductAvailability(updated);
   }
-  return updated;
+  return null;
 }
 
 export async function deleteProduct(id: string): Promise<boolean> {
@@ -1076,19 +1089,54 @@ export async function getAdminNavCounts(): Promise<AdminNavCounts> {
   };
 }
 
-export async function getAdminDashboardData(options?: { periodDays?: number }) {
-  const [orders, products, users, bookings] = await Promise.all([
-    getOrders(),
-    getProducts(),
-    getUsers("customer"),
-    getBookings(),
-  ]);
+export async function getAdminDashboardData(options?: {
+  periodDays?: number;
+  status?: string;
+  paymentMethod?: string;
+  categorySlug?: string;
+}) {
+  const [orders, products, users, bookings, categories, reviews, contactMessages] =
+    await Promise.all([
+      getOrders(),
+      getProducts({ includeInactiveCategories: true }),
+      getUsers("customer"),
+      getBookings(),
+      getAllCategories(),
+      getReviews(),
+      getContactMessages(),
+    ]);
 
   const periodDays = options?.periodDays;
   const cutoff = periodDays ? new Date(Date.now() - periodDays * 86400000) : null;
-  const periodOrders = cutoff
+  let periodOrders = cutoff
     ? orders.filter((o) => new Date(o.createdAt) >= cutoff)
     : orders;
+
+  if (options?.status) {
+    periodOrders = periodOrders.filter((o) => o.status === options.status);
+  }
+  if (options?.paymentMethod) {
+    periodOrders = periodOrders.filter((o) => o.paymentMethod === options.paymentMethod);
+  }
+  if (options?.categorySlug) {
+    const slug = options.categorySlug;
+    periodOrders = periodOrders.filter((o) =>
+      o.items.some((item) => {
+        const prod = products.find((p) => p.id === item.productId);
+        return prod?.categorySlug === slug || item.productSlug?.includes(slug);
+      })
+    );
+  }
+
+  const periodBookings = cutoff
+    ? bookings.filter((b) => new Date(b.createdAt) >= cutoff)
+    : bookings;
+  const periodReviews = cutoff
+    ? reviews.filter((r) => new Date(r.createdAt) >= cutoff)
+    : reviews;
+  const periodContacts = cutoff
+    ? contactMessages.filter((m) => new Date(m.createdAt) >= cutoff)
+    : contactMessages;
 
   const now = new Date();
   const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -1168,40 +1216,184 @@ export async function getAdminDashboardData(options?: { periodDays?: number }) {
     .sort((a, b) => b.revenue - a.revenue)
     .slice(0, 10);
 
-  if (topProducts.length === 0) {
+  if (options?.categorySlug) {
+    topProducts = topProducts.filter((tp) => {
+      const prod = products.find((p) => p.id === tp.id);
+      return prod?.categorySlug === options.categorySlug;
+    });
+  }
+
+  if (topProducts.length === 0 && !options?.status && !options?.paymentMethod && !options?.categorySlug) {
     const analytics = await getAnalytics();
     topProducts = analytics.topProducts.slice(0, 10);
   }
 
-  if (salesData.length === 0) {
+  const PAYMENT_COLORS: Record<string, string> = {
+    cod: "#F59E0B",
+    card: "#3B82F6",
+    bank_transfer: "#8B5CF6",
+    wallet: "#10B981",
+  };
+  const paymentMap = new Map<string, { count: number; revenue: number }>();
+  for (const o of periodOrders) {
+    const cur = paymentMap.get(o.paymentMethod) || { count: 0, revenue: 0 };
+    cur.count += 1;
+    cur.revenue += o.total;
+    paymentMap.set(o.paymentMethod, cur);
+  }
+  const paymentMethodBreakdown = Array.from(paymentMap.entries())
+    .map(([key, v]) => ({
+      key,
+      name: formatStatusLabel(key),
+      value: v.count,
+      revenue: Math.round(v.revenue),
+      color: PAYMENT_COLORS[key] || "#6B7280",
+    }))
+    .sort((a, b) => b.revenue! - a.revenue!);
+
+  const categoryMap = new Map<string, { name: string; units: number; revenue: number }>();
+  for (const o of periodOrders) {
+    for (const item of o.items) {
+      const prod = products.find((p) => p.id === item.productId);
+      const slug = prod?.categorySlug || "uncategorized";
+      const name = prod?.category || categories.find((c) => c.slug === slug)?.name || "Uncategorized";
+      const cur = categoryMap.get(slug) || { name, units: 0, revenue: 0 };
+      cur.units += item.quantity;
+      cur.revenue += item.price * item.quantity;
+      categoryMap.set(slug, cur);
+    }
+  }
+  const categorySales = Array.from(categoryMap.entries())
+    .map(([key, v]) => ({
+      key,
+      name: v.name,
+      value: v.units,
+      revenue: Math.round(v.revenue),
+    }))
+    .sort((a, b) => (b.revenue ?? 0) - (a.revenue ?? 0))
+    .slice(0, 12);
+
+  const cityMap = new Map<string, { count: number; revenue: number }>();
+  for (const o of periodOrders) {
+    const city = o.shippingAddress?.city?.trim() || "Unknown";
+    const cur = cityMap.get(city) || { count: 0, revenue: 0 };
+    cur.count += 1;
+    cur.revenue += o.total;
+    cityMap.set(city, cur);
+  }
+  const citySales = Array.from(cityMap.entries())
+    .map(([key, v]) => ({
+      key,
+      name: key,
+      value: v.count,
+      revenue: Math.round(v.revenue),
+    }))
+    .sort((a, b) => (b.revenue ?? 0) - (a.revenue ?? 0))
+    .slice(0, 10);
+
+  const bookingStatusMap = new Map<string, number>();
+  for (const b of periodBookings) {
+    bookingStatusMap.set(b.status, (bookingStatusMap.get(b.status) || 0) + 1);
+  }
+  const BOOKING_COLORS: Record<string, string> = {
+    pending: "#F59E0B",
+    confirmed: "#3B82F6",
+    in_progress: "#8B5CF6",
+    completed: "#10B981",
+    cancelled: "#EF4444",
+  };
+  const bookingStatusBreakdown = Array.from(bookingStatusMap.entries())
+    .map(([key, value]) => ({
+      key,
+      name: formatStatusLabel(key),
+      value,
+      color: BOOKING_COLORS[key] || "#6B7280",
+    }))
+    .sort((a, b) => b.value - a.value);
+
+  const filterOptions = {
+    categories: categories
+      .filter((c) => !c.parentId)
+      .map((c) => ({ slug: c.slug, name: c.name }))
+      .sort((a, b) => a.name.localeCompare(b.name)),
+    paymentMethods: [
+      { value: "cod", label: "Cash on Delivery" },
+      { value: "card", label: "Card" },
+      { value: "bank_transfer", label: "Bank Transfer" },
+      { value: "wallet", label: "Wallet" },
+    ],
+    statuses: [
+      { value: "pending", label: "Pending" },
+      { value: "confirmed", label: "Confirmed" },
+      { value: "processing", label: "Processing" },
+      { value: "shipped", label: "Shipped" },
+      { value: "out_for_delivery", label: "Out for Delivery" },
+      { value: "delivered", label: "Delivered" },
+      { value: "cancelled", label: "Cancelled" },
+      { value: "returned", label: "Returned" },
+      { value: "refunded", label: "Refunded" },
+    ],
+  };
+
+  const extras = {
+    averageOrderValue:
+      periodOrders.length > 0
+        ? Math.round(periodOrders.reduce((s, o) => s + o.total, 0) / periodOrders.length)
+        : 0,
+    paidOrders: periodOrders.filter((o) => o.paymentStatus === "paid").length,
+    cancelledOrders: periodOrders.filter(
+      (o) => o.status === "cancelled" || o.status === "refunded"
+    ).length,
+    totalDiscount: Math.round(periodOrders.reduce((s, o) => s + (o.discount || 0), 0)),
+    totalShipping: Math.round(periodOrders.reduce((s, o) => s + (o.shippingCost || 0), 0)),
+    totalBookings: periodBookings.length,
+    completedBookings: periodBookings.filter((b) => b.status === "completed").length,
+    totalReviews: periodReviews.length,
+    averageRating:
+      periodReviews.length > 0
+        ? Math.round(
+            (periodReviews.reduce((s, r) => s + r.rating, 0) / periodReviews.length) * 10
+          ) / 10
+        : 0,
+    contactMessages: periodContacts.length,
+  };
+
+  let finalSalesData = salesData;
+  if (finalSalesData.length === 0 && !options?.status && !options?.paymentMethod && !options?.categorySlug) {
     const analytics = await getAnalytics();
-    return {
-      stats: buildDashboardStats(periodOrders, orders, products, users, bookings, revenueGrowth, ordersGrowth, customersGrowth),
-      salesData: analytics.salesData,
-      topProducts,
-      orderStatusBreakdown,
-      recentOrders: [...orders].sort(
-        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      ),
-      navCounts: {
-        orders: orders.length,
-        pendingBookings: bookings.filter((b) => b.status === "pending").length,
-      },
-    };
+    finalSalesData = analytics.salesData;
   }
 
+  const stats = buildDashboardStats(
+    periodOrders,
+    orders,
+    products,
+    users,
+    bookings,
+    revenueGrowth,
+    ordersGrowth,
+    customersGrowth,
+    extras
+  );
+
   return {
-    stats: buildDashboardStats(periodOrders, orders, products, users, bookings, revenueGrowth, ordersGrowth, customersGrowth),
-    salesData,
+    stats,
+    salesData: finalSalesData,
     topProducts,
     orderStatusBreakdown,
-    recentOrders: [...orders].sort(
-      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    ),
+    recentOrders: [...periodOrders]
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .slice(0, 50),
     navCounts: {
       orders: orders.length,
       pendingBookings: bookings.filter((b) => b.status === "pending").length,
+      contactMessages: contactMessages.length,
     },
+    paymentMethodBreakdown,
+    categorySales,
+    citySales,
+    bookingStatusBreakdown,
+    filterOptions,
   };
 }
 
@@ -1213,7 +1405,8 @@ function buildDashboardStats(
   bookings: ServiceBooking[],
   revenueGrowth: number,
   ordersGrowth: number,
-  customersGrowth: number
+  customersGrowth: number,
+  extras?: Partial<DashboardStats>
 ): DashboardStats {
   return {
     totalRevenue: periodOrders.reduce((s, o) => s + o.total, 0),
@@ -1226,6 +1419,7 @@ function buildDashboardStats(
     lowStockProducts: products.filter((p) => p.stock < 10).length,
     pendingOrders: allOrders.filter((o) => o.status === "pending" || o.status === "processing").length,
     pendingBookings: bookings.filter((b) => b.status === "pending").length,
+    ...extras,
   };
 }
 

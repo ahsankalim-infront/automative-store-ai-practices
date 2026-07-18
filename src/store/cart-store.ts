@@ -47,6 +47,10 @@ export const useCartStore = create<CartStore>()(
 
       addItem: (item) =>
         set((state) => {
+          const maxStock = Math.max(0, Number(item.maxStock) || 0);
+          // Sold out — do not add to cart
+          if (maxStock <= 0) return state;
+
           const existing = state.items.find(
             (i) => i.productId === item.productId && i.variant === item.variant
           );
@@ -54,7 +58,7 @@ export const useCartStore = create<CartStore>()(
             return {
               items: state.items.map((i) =>
                 i.productId === item.productId && i.variant === item.variant
-                  ? { ...i, quantity: Math.min(i.quantity + item.quantity, i.maxStock) }
+                  ? { ...i, quantity: Math.min(i.quantity + item.quantity, maxStock), maxStock }
                   : i
               ),
             };
@@ -62,7 +66,12 @@ export const useCartStore = create<CartStore>()(
           return {
             items: [
               ...state.items,
-              { ...item, id: `${item.productId}-${item.variant || "default"}-${Date.now()}` },
+              {
+                ...item,
+                maxStock,
+                quantity: Math.min(item.quantity, maxStock),
+                id: `${item.productId}-${item.variant || "default"}-${Date.now()}`,
+              },
             ],
           };
         }),

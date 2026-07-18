@@ -106,8 +106,9 @@ async function buildProductPayload(b: Record<string, unknown>) {
     categorySlug: (b.categorySlug as string) || slugify(b.category as string),
     price: Number(b.price) || 0,
     originalPrice: b.originalPrice ? Number(b.originalPrice) : undefined,
-    stock: Number(b.stock) || 0,
-    inStock: bool(b.inStock ?? true),
+    stock: Math.max(0, Number(b.stock) || 0),
+    // Sold out when stock is 0 or below; otherwise respect admin toggle
+    inStock: Math.max(0, Number(b.stock) || 0) > 0 && bool(b.inStock ?? true),
     description: (b.description as string) || "",
     shortDescription: (b.shortDescription as string) || "",
     specifications: parseSpecifications(b.specifications),

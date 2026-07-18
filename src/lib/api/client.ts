@@ -166,9 +166,29 @@ class ApiClient {
   }
 
   // ─── Admin ─────────────────────────────────────────────────────────────────
-  adminStats(period?: string) {
-    const qs = period ? `?period=${period}` : "";
-    return this.get<import("@/types").AdminDashboardData>(`/admin/stats${qs}`);
+  adminStats(
+    periodOrOpts?:
+      | string
+      | {
+          period?: string;
+          status?: string;
+          paymentMethod?: string;
+          category?: string;
+        }
+  ) {
+    const opts =
+      typeof periodOrOpts === "string" || periodOrOpts == null
+        ? { period: periodOrOpts }
+        : periodOrOpts;
+    const qs = new URLSearchParams();
+    if (opts.period && opts.period !== "all") qs.set("period", opts.period);
+    if (opts.status && opts.status !== "all") qs.set("status", opts.status);
+    if (opts.paymentMethod && opts.paymentMethod !== "all") {
+      qs.set("paymentMethod", opts.paymentMethod);
+    }
+    if (opts.category && opts.category !== "all") qs.set("category", opts.category);
+    const q = qs.toString();
+    return this.get<import("@/types").AdminDashboardData>(`/admin/stats${q ? `?${q}` : ""}`);
   }
 
   adminReport(params: {

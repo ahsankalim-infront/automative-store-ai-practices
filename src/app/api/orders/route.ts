@@ -66,6 +66,8 @@ export async function POST(request: Request) {
       ...actorFromJwt(auth),
       entityType: "order",
     });
-    return fail(e instanceof Error ? e.message : "Order failed", 500);
+    const message = e instanceof Error ? e.message : "Order failed";
+    const soldOut = /sold out|available/i.test(message);
+    return fail(message, soldOut ? 400 : 500);
   }
 }

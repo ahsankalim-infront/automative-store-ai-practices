@@ -497,6 +497,25 @@ export interface DashboardStats {
   lowStockProducts: number;
   pendingOrders: number;
   pendingBookings: number;
+  /** Period-scoped extras (analytics page) */
+  averageOrderValue?: number;
+  paidOrders?: number;
+  cancelledOrders?: number;
+  totalDiscount?: number;
+  totalShipping?: number;
+  totalBookings?: number;
+  completedBookings?: number;
+  totalReviews?: number;
+  averageRating?: number;
+  contactMessages?: number;
+}
+
+export interface AnalyticsBreakdownItem {
+  key: string;
+  name: string;
+  value: number;
+  revenue?: number;
+  color?: string;
 }
 
 export interface SalesDataPoint {
@@ -565,6 +584,15 @@ export interface AdminDashboardData {
   orderStatusBreakdown: OrderStatusBreakdown[];
   recentOrders: Order[];
   navCounts: AdminNavCounts;
+  paymentMethodBreakdown?: AnalyticsBreakdownItem[];
+  categorySales?: AnalyticsBreakdownItem[];
+  citySales?: AnalyticsBreakdownItem[];
+  bookingStatusBreakdown?: AnalyticsBreakdownItem[];
+  filterOptions?: {
+    categories: { slug: string; name: string }[];
+    paymentMethods: { value: string; label: string }[];
+    statuses: { value: string; label: string }[];
+  };
 }
 
 // ─── Filter Types ─────────────────────────────────────────────────────────────
