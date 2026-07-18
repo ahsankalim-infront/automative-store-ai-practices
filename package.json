@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "seed": "tsx scripts/seed-json.ts",
-    "mysql:seed-sql": "tsx scripts/generate-mysql-inserts.ts"
+    "mysql:seed-sql": "tsx scripts/generate-mysql-inserts.ts",
+    "mysql:verify": "node scripts/verify-mysql-entity-tables.mjs"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.16",

@@ -1,5 +1,5 @@
--- Normalized tables (optional — for direct SQL queries / reporting)
--- The app uses collections table by default; these are for future migration or BI tools.
+-- Entity tables used by MysqlStore when DATA_SOURCE=mysql.
+-- Each entity has its own table (users, products, categories, …).
 
 USE autozone_store;
 
@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS users (
   addresses       JSON,
   loyalty_points  INT DEFAULT 0,
   is_verified     TINYINT(1) DEFAULT 0,
+  data            JSON NULL,
   created_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   INDEX idx_role (role),
   INDEX idx_email (email)

@@ -1,4 +1,4 @@
--- Homepage section layout (desktop + mobile order); runtime uses collections/home-layout.json via MysqlStore
+-- Homepage section layout (MysqlStore: home-layout → home_layout)
 USE autozone_store;
 
 CREATE TABLE IF NOT EXISTS home_layout (

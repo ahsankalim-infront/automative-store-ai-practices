@@ -224,15 +224,17 @@ export async function getCategories(): Promise<Category[]> {
 }
 
 export async function getCategoryById(id: string): Promise<Category | null> {
-  return getStore().readOne<Category>(COL.categories, id);
+  const category = await getStore().readOne<Category>(COL.categories, id);
+  return category ? normalizeCategory(category) : null;
 }
 
 export async function createCategory(category: Category): Promise<Category> {
-  return getStore().create(COL.categories, category);
+  return getStore().create(COL.categories, normalizeCategory(category));
 }
 
 export async function updateCategory(id: string, data: Partial<Category>): Promise<Category | null> {
-  return getStore().update(COL.categories, id, data);
+  const updated = await getStore().update(COL.categories, id, data);
+  return updated ? normalizeCategory(updated) : null;
 }
 
 export async function deleteCategory(id: string): Promise<boolean> {

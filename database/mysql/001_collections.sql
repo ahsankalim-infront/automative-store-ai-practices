@@ -1,5 +1,5 @@
--- Generic JSON collection store (works with JsonStore-compatible MysqlStore adapter)
--- Each entity row stores full JSON document — same shape as data/json/*.json items
+-- Legacy generic JSON collection store (optional backup / migration only).
+-- App runtime uses entity tables (categories, products, …) via MysqlStore.
 
 USE autozone_store;
 

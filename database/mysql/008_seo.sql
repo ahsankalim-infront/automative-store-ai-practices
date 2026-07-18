@@ -1,4 +1,4 @@
--- SEO configuration tables (normalized; runtime uses collections/seo.json via MysqlStore)
+-- SEO configuration tables (MysqlStore collection "seo" → seo_global + seo_pages)
 USE autozone_store;
 
 CREATE TABLE IF NOT EXISTS seo_global (

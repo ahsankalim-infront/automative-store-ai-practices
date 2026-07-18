@@ -1,4 +1,4 @@
--- Website activity / audit logs (runtime uses collections/activity-logs.json via MysqlStore)
+-- Website activity / audit logs (MysqlStore collection "activity-logs" → this table)
 USE autozone_store;
 
 CREATE TABLE IF NOT EXISTS activity_logs (

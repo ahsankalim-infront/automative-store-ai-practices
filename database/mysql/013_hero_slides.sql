@@ -1,4 +1,4 @@
--- Homepage hero carousel slides (runtime uses collections/hero-slides.json via MysqlStore)
+-- Homepage hero carousel slides (MysqlStore: hero-slides → hero_slides)
 USE autozone_store;
 
 CREATE TABLE IF NOT EXISTS hero_slides (

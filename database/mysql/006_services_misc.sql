@@ -66,13 +66,16 @@ CREATE TABLE IF NOT EXISTS contact_messages (
   id          VARCHAR(36) PRIMARY KEY,
   name        VARCHAR(255) NOT NULL,
   email       VARCHAR(255) NOT NULL,
+  phone       VARCHAR(32),
   subject     VARCHAR(255),
   message     TEXT NOT NULL,
+  data        JSON NULL,
   created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS newsletter_subscribers (
   id              VARCHAR(36) PRIMARY KEY,
   email           VARCHAR(255) NOT NULL UNIQUE,
+  data            JSON NULL,
   subscribed_at   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

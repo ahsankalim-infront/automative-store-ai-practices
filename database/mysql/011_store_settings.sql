@@ -1,4 +1,4 @@
--- Store settings / business profile (normalized; runtime uses collections/settings.json via MysqlStore)
+-- Store settings / business profile (MysqlStore collection "settings" → this table)
 USE autozone_store;
 
 CREATE TABLE IF NOT EXISTS store_settings (

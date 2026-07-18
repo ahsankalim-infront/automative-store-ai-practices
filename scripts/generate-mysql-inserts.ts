@@ -85,7 +85,9 @@ function sectionHeader(title: string): string {
 }
 
 function buildCollectionsSql(allItems: { collection: string; id: string; data: Row }[]): string {
-  let sql = sectionHeader("collections (app runtime — MysqlStore)");
+  // Legacy document store — kept for optional backup / migration only.
+  // App runtime (DATA_SOURCE=mysql) uses entity tables via MysqlStore.
+  let sql = sectionHeader("collections (legacy backup — not used by app runtime)");
   sql += "DELETE FROM collections;\n";
 
   if (allItems.length === 0) {
@@ -118,7 +120,7 @@ function buildNormalizedSql(): string {
     sql += sectionHeader("users");
     sql += "DELETE FROM users;\n";
     for (const { data } of users) {
-      sql += `INSERT INTO users (id, name, email, phone, password_hash, role, avatar, addresses, loyalty_points, is_verified, created_at) VALUES (${sqlStr(String(data.id))}, ${sqlStr(String(data.name))}, ${sqlStr(String(data.email))}, ${sqlStr(data.phone as string | undefined)}, ${sqlStr(String(data.passwordHash))}, ${sqlStr(String(data.role ?? "customer"))}, ${sqlStr(data.avatar as string | undefined)}, ${sqlJson(data.addresses ?? [])}, ${sqlNum(Number(data.loyaltyPoints ?? 0))}, ${sqlBool(data.isVerified as boolean | undefined)}, ${sqlDateTime(data.createdAt as string | undefined)});\n`;
+      sql += `INSERT INTO users (id, name, email, phone, password_hash, role, avatar, addresses, loyalty_points, is_verified, data, created_at) VALUES (${sqlStr(String(data.id))}, ${sqlStr(String(data.name))}, ${sqlStr(String(data.email))}, ${sqlStr(data.phone as string | undefined)}, ${sqlStr(String(data.passwordHash))}, ${sqlStr(String(data.role ?? "customer"))}, ${sqlStr(data.avatar as string | undefined)}, ${sqlJson(data.addresses ?? [])}, ${sqlNum(Number(data.loyaltyPoints ?? 0))}, ${sqlBool(data.isVerified as boolean | undefined)}, ${sqlJson(data)}, ${sqlDateTime(data.createdAt as string | undefined)});\n`;
     }
   }
 
@@ -269,7 +271,7 @@ function buildNormalizedSql(): string {
     sql += sectionHeader("contact_messages");
     sql += "DELETE FROM contact_messages;\n";
     for (const { data } of contacts) {
-      sql += `INSERT INTO contact_messages (id, name, email, subject, message, created_at) VALUES (${sqlStr(String(data.id))}, ${sqlStr(String(data.name))}, ${sqlStr(String(data.email ?? ""))}, ${sqlStr(String(data.subject ?? ""))}, ${sqlStr(String(data.message))}, ${sqlDateTime(data.createdAt as string | undefined)});\n`;
+      sql += `INSERT INTO contact_messages (id, name, email, phone, subject, message, data, created_at) VALUES (${sqlStr(String(data.id))}, ${sqlStr(String(data.name))}, ${sqlStr(String(data.email ?? ""))}, ${sqlStr(data.phone as string | undefined)}, ${sqlStr(String(data.subject ?? ""))}, ${sqlStr(String(data.message))}, ${sqlJson(data)}, ${sqlDateTime(data.createdAt as string | undefined)});\n`;
     }
   }
 
@@ -279,7 +281,7 @@ function buildNormalizedSql(): string {
     sql += sectionHeader("newsletter_subscribers");
     sql += "DELETE FROM newsletter_subscribers;\n";
     for (const { data } of subs) {
-      sql += `INSERT INTO newsletter_subscribers (id, email, subscribed_at) VALUES (${sqlStr(String(data.id))}, ${sqlStr(String(data.email))}, ${sqlDateTime((data.subscribedAt ?? data.createdAt) as string | undefined)});\n`;
+      sql += `INSERT INTO newsletter_subscribers (id, email, data, subscribed_at) VALUES (${sqlStr(String(data.id))}, ${sqlStr(String(data.email))}, ${sqlJson(data)}, ${sqlDateTime((data.subscribedAt ?? data.createdAt) as string | undefined)});\n`;
     }
   }
 
@@ -406,6 +408,47 @@ function buildNormalizedSql(): string {
     }
   }
 
+  // vehicle makes
+  const vehicleMakes = loadCollectionItems("vehicle-makes");
+  if (vehicleMakes.length) {
+    sql += sectionHeader("vehicle_makes");
+    sql += "DELETE FROM vehicle_makes;\n";
+    for (const { data } of vehicleMakes) {
+      sql += `INSERT INTO vehicle_makes (id, slug, name, logo, country, data) VALUES (${sqlStr(String(data.id))}, ${sqlStr(String(data.slug))}, ${sqlStr(String(data.name))}, ${sqlStr(data.logo as string | undefined)}, ${sqlStr(data.country as string | undefined)}, ${sqlJson(data)});\n`;
+    }
+  }
+
+  // notifications
+  const notifications = loadCollectionItems("notifications");
+  if (notifications.length) {
+    sql += sectionHeader("notifications");
+    sql += "DELETE FROM notifications;\n";
+    for (const { data } of notifications) {
+      sql += `INSERT INTO notifications (id, user_id, audience, type, title, body, order_id, order_number, link, is_read, email_sent, push_sent, data, created_at) VALUES (${sqlStr(String(data.id))}, ${sqlStr(String(data.userId))}, ${sqlStr(String(data.audience ?? "customer"))}, ${sqlStr(String(data.type ?? "info"))}, ${sqlStr(String(data.title ?? ""))}, ${sqlStr(String(data.body ?? ""))}, ${sqlStr(data.orderId as string | undefined)}, ${sqlStr(data.orderNumber as string | undefined)}, ${sqlStr(data.link as string | undefined)}, ${sqlBool(data.read as boolean | undefined)}, ${sqlBool(data.emailSent as boolean | undefined)}, ${sqlBool(data.pushSent as boolean | undefined)}, ${sqlJson(data)}, ${sqlDateTime(data.createdAt as string | undefined)});\n`;
+    }
+  }
+
+  // push subscriptions
+  const pushSubs = loadCollectionItems("push-subscriptions");
+  if (pushSubs.length) {
+    sql += sectionHeader("push_subscriptions");
+    sql += "DELETE FROM push_subscriptions;\n";
+    for (const { data } of pushSubs) {
+      sql += `INSERT INTO push_subscriptions (id, user_id, user_email, endpoint, keys_json, user_agent, device_label, data, created_at) VALUES (${sqlStr(String(data.id))}, ${sqlStr(String(data.userId))}, ${sqlStr(String(data.userEmail ?? ""))}, ${sqlStr(String(data.endpoint ?? ""))}, ${sqlJson(data.keys ?? {})}, ${sqlStr(data.userAgent as string | undefined)}, ${sqlStr(data.deviceLabel as string | undefined)}, ${sqlJson(data)}, ${sqlDateTime(data.createdAt as string | undefined)});\n`;
+    }
+  }
+
+  // analytics (singleton object in JSON)
+  const analytics = loadCollectionItems("analytics");
+  if (analytics.length) {
+    sql += sectionHeader("analytics");
+    sql += "DELETE FROM analytics;\n";
+    for (const { id, data } of analytics) {
+      const withId = { ...data, id };
+      sql += `INSERT INTO analytics (id, data) VALUES (${sqlStr(id)}, ${sqlJson(withId)});\n`;
+    }
+  }
+
   return sql;
 }
 
@@ -423,7 +466,7 @@ function main() {
 -- Generated: ${new Date().toISOString()}
 -- Regenerate: npm run mysql:seed-sql
 --
--- Run AFTER schema migrations (000–017):
+-- Run AFTER schema migrations (000–019):
 --   mysql -u root -p autozone_store < database/mysql/016_seed_from_json.sql
 -- =============================================================================
 
@@ -436,8 +479,9 @@ SET NAMES utf8mb4;
   const footer = `
 SET FOREIGN_KEY_CHECKS = 1;
 
--- Done. Collections table powers the app (DATA_SOURCE=mysql + MysqlStore).
--- Normalized tables are populated for reporting / direct SQL queries.
+-- Done. Entity tables power the app (DATA_SOURCE=mysql + MysqlStore).
+-- categories → categories, products → products, orders → orders, etc.
+-- Reports use the same repository layer and therefore the same entity tables.
 `;
 
   const body = buildCollectionsSql(allCollectionItems) + buildNormalizedSql();

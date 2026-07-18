@@ -1,4 +1,4 @@
--- About page content tables (normalized; runtime uses collections/*.json via MysqlStore)
+-- About page content (MysqlStore maps about-* collections to these tables)
 USE autozone_store;
 
 CREATE TABLE IF NOT EXISTS about_journey_section (

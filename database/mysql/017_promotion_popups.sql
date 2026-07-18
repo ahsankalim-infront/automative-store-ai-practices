@@ -1,4 +1,4 @@
--- Landing page promotion popups (runtime uses collections/promotion-popups.json via MysqlStore)
+-- Landing page promotion popups (MysqlStore: promotion-popups → promotion_popups)
 USE autozone_store;
 
 CREATE TABLE IF NOT EXISTS promotion_popups (

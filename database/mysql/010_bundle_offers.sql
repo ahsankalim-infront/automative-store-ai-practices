@@ -1,4 +1,4 @@
--- Bundle offers + section header config; runtime uses collections/bundle-offers.json via MysqlStore
+-- Bundle offers + section header (MysqlStore: bundle-offers → bundle_offers)
 USE autozone_store;
 
 CREATE TABLE IF NOT EXISTS bundle_offers (
