@@ -28,7 +28,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ reso
     const body = await request.json();
     const item = await ops.update(id, body);
     if (!item) return notFound("Record not found");
-    revalidateCatalogTag(resource);
+    revalidateEntityCache(resource);
     await logAdminResourceAction(request, auth, resource, "update", id);
     return ok(item);
   } catch (e) {
