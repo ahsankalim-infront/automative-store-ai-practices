@@ -1,71 +1,65 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, ShoppingBag, Users, Package, FolderTree, Tag, Warehouse, Car, Wrench, Calendar, Ticket, Megaphone, Image, Star, FileText, BarChart3, Bell, Shield, Settings, ChevronLeft, ChevronRight, LogOut, Globe, FolderOpen, Mail, Search, LayoutTemplate, Milestone, Presentation, ScrollText, Layers,
+  type LucideIcon,
 } from "lucide-react";
 import { LogoMark } from "@/components/brand/logo";
 import { useBrand } from "@/lib/brand/brand-context";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/auth-store";
 import { api } from "@/lib/api/client";
+import { ADMIN_NAV_GROUPS } from "@/lib/admin/nav";
+import {
+  canAccessAdminPath,
+  getPermissionsForRole,
+  type RolePermissionsConfig,
+} from "@/lib/admin/role-permissions-defaults";
 import type { AdminNavCounts } from "@/types";
 
-const navItems = [
-  { group: "Overview", items: [
-    { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
-    { label: "Analytics", href: "/admin/analytics", icon: BarChart3 },
-  ]},
-  { group: "Commerce", items: [
-    { label: "Orders", href: "/admin/orders", icon: ShoppingBag, countKey: "orders" as const },
-    { label: "Products", href: "/admin/products", icon: Package },
-    { label: "Categories", href: "/admin/categories", icon: FolderTree },
-    { label: "Brands", href: "/admin/brands", icon: Tag },
-    { label: "Inventory", href: "/admin/inventory", icon: Warehouse },
-  ]},
-  { group: "Customers", items: [
-    { label: "Customers", href: "/admin/customers", icon: Users },
-    { label: "Contact Messages", href: "/admin/contact-messages", icon: Mail, countKey: "contactMessages" as const },
-    { label: "Reviews", href: "/admin/reviews", icon: Star },
-  ]},
-  { group: "Services", items: [
-    { label: "Vehicle Database", href: "/admin/vehicles", icon: Car },
-    { label: "Services", href: "/admin/services", icon: Wrench },
-    { label: "Store Branches", href: "/admin/stores", icon: Globe },
-    { label: "Bookings", href: "/admin/bookings", icon: Calendar, countKey: "pendingBookings" as const },
-  ]},
-  { group: "Marketing", items: [
-    { label: "Coupons", href: "/admin/coupons", icon: Ticket },
-    { label: "Promotions", href: "/admin/promotions", icon: Megaphone },
-    { label: "Banners", href: "/admin/banners", icon: Image },
-    { label: "Hero Slides", href: "/admin/hero-slides", icon: Presentation },
-    { label: "Bundle Offers", href: "/admin/bundle-offers", icon: Package },
-  ]},
-  { group: "Content", items: [
-    { label: "Blog Posts", href: "/admin/blogs", icon: FileText },
-    { label: "About Page", href: "/admin/about-content", icon: Milestone },
-    { label: "Homepage Layout", href: "/admin/home-layout", icon: LayoutTemplate },
-    { label: "SEO", href: "/admin/seo", icon: Search },
-    { label: "Media Library", href: "/admin/media", icon: FolderOpen },
-    { label: "CMS Pages", href: "/admin/cms", icon: Globe },
-  ]},
-  { group: "System", items: [
-    { label: "Activity Logs", href: "/admin/activity-logs", icon: ScrollText },
-    { label: "Cache", href: "/admin/cache", icon: Layers },
-    { label: "Reports", href: "/admin/reports", icon: BarChart3 },
-    { label: "Notifications", href: "/admin/notifications", icon: Bell },
-    { label: "Roles & Permissions", href: "/admin/roles", icon: Shield },
-    { label: "Settings", href: "/admin/settings", icon: Settings },
-  ]},
-];
+const ICON_BY_HREF: Record<string, LucideIcon> = {
+  "/admin": LayoutDashboard,
+  "/admin/analytics": BarChart3,
+  "/admin/orders": ShoppingBag,
+  "/admin/products": Package,
+  "/admin/categories": FolderTree,
+  "/admin/brands": Tag,
+  "/admin/inventory": Warehouse,
+  "/admin/customers": Users,
+  "/admin/contact-messages": Mail,
+  "/admin/reviews": Star,
+  "/admin/vehicles": Car,
+  "/admin/services": Wrench,
+  "/admin/stores": Globe,
+  "/admin/bookings": Calendar,
+  "/admin/coupons": Ticket,
+  "/admin/promotions": Megaphone,
+  "/admin/banners": Image,
+  "/admin/hero-slides": Presentation,
+  "/admin/bundle-offers": Package,
+  "/admin/blogs": FileText,
+  "/admin/about-content": Milestone,
+  "/admin/home-layout": LayoutTemplate,
+  "/admin/seo": Search,
+  "/admin/media": FolderOpen,
+  "/admin/cms": Globe,
+  "/admin/activity-logs": ScrollText,
+  "/admin/cache": Layers,
+  "/admin/reports": BarChart3,
+  "/admin/notifications": Bell,
+  "/admin/roles": Shield,
+  "/admin/settings": Settings,
+};
 
 interface AdminSidebarProps {
   mobile?: boolean;
   onNavigate?: () => void;
+  permissions?: RolePermissionsConfig | null;
 }
 
-export function AdminSidebar({ mobile = false, onNavigate }: AdminSidebarProps) {
+export function AdminSidebar({ mobile = false, onNavigate, permissions }: AdminSidebarProps) {
   const brand = useBrand();
   const pathname = usePathname();
   const user = useAuthStore((s) => s.user);
@@ -73,6 +67,22 @@ export function AdminSidebar({ mobile = false, onNavigate }: AdminSidebarProps) 
   const [collapsedDesktop, setCollapsedDesktop] = useState(false);
   const [navCounts, setNavCounts] = useState<AdminNavCounts>({ orders: 0, pendingBookings: 0, contactMessages: 0 });
   const collapsed = mobile ? false : collapsedDesktop;
+
+  const allowed = useMemo(
+    () => (permissions ? getPermissionsForRole(permissions, user?.role) : null),
+    [permissions, user?.role]
+  );
+
+  const visibleGroups = useMemo(() => {
+    // Wait for permissions so staff never briefly sees System links.
+    if (!allowed) return [];
+    return ADMIN_NAV_GROUPS
+      .map((group) => ({
+        ...group,
+        items: group.items.filter((item) => allowed.includes(item.href)),
+      }))
+      .filter((group) => group.items.length > 0);
+  }, [allowed]);
 
   useEffect(() => {
     api.adminNavCounts().then((res) => {
@@ -92,7 +102,7 @@ export function AdminSidebar({ mobile = false, onNavigate }: AdminSidebarProps) 
       {/* Logo */}
       <div className={cn("flex items-center h-16 px-4 border-b border-white/10 shrink-0", collapsed ? "justify-center" : "justify-between")}>
         {!collapsed && (
-          <Link href="/admin" className="flex items-center gap-2 min-w-0">
+          <Link href={allowed?.includes("/admin") ? "/admin" : (allowed?.[0] || "/admin")} className="flex items-center gap-2 min-w-0">
             <LogoMark size="sm" />
             <div className="min-w-0">
               <p className="text-white font-black text-xs leading-tight truncate">{brand.name}</p>
@@ -111,15 +121,18 @@ export function AdminSidebar({ mobile = false, onNavigate }: AdminSidebarProps) 
 
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto scrollbar-hide py-3 px-2 space-y-4">
-        {navItems.map(group => (
+        {visibleGroups.map(group => (
           <div key={group.group}>
             {!collapsed && (
               <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-3 mb-1">{group.group}</p>
             )}
             <div className="space-y-0.5">
               {group.items.map(item => {
-                const active = pathname === item.href;
-                const Icon = item.icon;
+                const active =
+                  item.href === "/admin"
+                    ? pathname === "/admin"
+                    : canAccessAdminPath(pathname, [item.href]);
+                const Icon = ICON_BY_HREF[item.href] || Package;
                 return (
                   <Link
                     key={item.href}
@@ -136,7 +149,7 @@ export function AdminSidebar({ mobile = false, onNavigate }: AdminSidebarProps) 
                   >
                     <Icon className="h-4 w-4 shrink-0" />
                     {!collapsed && <span className="flex-1">{item.label}</span>}
-                    {!collapsed && "countKey" in item && item.countKey && navCounts[item.countKey] > 0 && (
+                    {!collapsed && item.countKey && navCounts[item.countKey] > 0 && (
                       <span className={cn("text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[1.25rem] text-center", active ? "bg-white/20 text-white" : "bg-primary text-white")}>
                         {navCounts[item.countKey]}
                       </span>
@@ -158,7 +171,9 @@ export function AdminSidebar({ mobile = false, onNavigate }: AdminSidebarProps) 
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-white text-sm font-semibold truncate">{user?.name || "Admin"}</p>
-              <p className="text-gray-400 text-xs truncate">{user?.email || "admin@autozone.pk"}</p>
+              <p className="text-gray-400 text-xs truncate">
+                {user?.role ? `${user.role}` : ""}{user?.email ? ` · ${user.email}` : ""}
+              </p>
             </div>
             <button type="button" onClick={handleLogout} className="text-gray-400 hover:text-white p-1 rounded transition-colors" title="Sign out">
               <LogOut className="h-4 w-4" />

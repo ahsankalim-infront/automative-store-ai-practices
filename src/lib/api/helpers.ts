@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import { verifyToken, extractBearerToken, type JwtPayload } from "@/lib/auth/jwt";
 import { ADMIN_ROLES } from "@/lib/data/config";
+import {
+  permissionHrefForApiPath,
+  roleCanAccessPath,
+  roleCanAccessResource,
+} from "@/lib/admin/role-permissions";
 import type { UserRole } from "@/types";
 
 export type ApiSuccess<T> = { success: true; data: T };
@@ -53,8 +58,60 @@ export async function requireAuth(request: Request, roles?: UserRole[]): Promise
   return user;
 }
 
+/**
+ * Require an admin-portal role. Also enforces dynamic nav permissions
+ * for known admin API paths (except shared utilities like nav-counts).
+ */
 export async function requireAdmin(request: Request): Promise<JwtPayload | NextResponse> {
-  return requireAuth(request, [...ADMIN_ROLES]);
+  const auth = await requireAuth(request, [...ADMIN_ROLES]);
+  if (auth instanceof Response) return auth;
+
+  const url = new URL(request.url);
+  const path = url.pathname;
+
+  // Shared shell endpoints — any portal role may call these.
+  if (
+    path === "/api/admin/nav-counts" ||
+    path.startsWith("/api/admin/nav-counts/") ||
+    path === "/api/admin/role-permissions" ||
+    path.startsWith("/api/admin/role-permissions/")
+  ) {
+    return auth;
+  }
+
+  const href = permissionHrefForApiPath(path);
+  if (href) {
+    const allowed = await roleCanAccessPath(auth.role, href);
+    if (!allowed) return forbidden("You do not have permission for this section");
+  }
+
+  return auth;
+}
+
+/**
+ * Require admin role + permission for a nav path (e.g. `/admin/products`)
+ * or a generic resource key (e.g. `products`).
+ */
+export async function requireAdminPermission(
+  request: Request,
+  permission: { path?: string; resource?: string }
+): Promise<JwtPayload | NextResponse> {
+  const auth = await requireAuth(request, [...ADMIN_ROLES]);
+  if (auth instanceof Response) return auth;
+
+  let allowed = true;
+  if (permission.resource) {
+    allowed = await roleCanAccessResource(auth.role, permission.resource);
+  } else if (permission.path) {
+    allowed = await roleCanAccessPath(auth.role, permission.path);
+  } else {
+    const url = new URL(request.url);
+    const href = permissionHrefForApiPath(url.pathname);
+    if (href) allowed = await roleCanAccessPath(auth.role, href);
+  }
+
+  if (!allowed) return forbidden("You do not have permission for this section");
+  return auth;
 }
 
 export function isAdminRole(role: UserRole): boolean {

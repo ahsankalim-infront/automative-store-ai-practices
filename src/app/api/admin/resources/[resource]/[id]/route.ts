@@ -1,13 +1,13 @@
 import { getAdminResource } from "@/lib/admin/resource-registry";
 import { revalidateEntityCache } from "@/lib/cache/entity-cache";
-import { ok, fail, notFound, requireAdmin } from "@/lib/api/helpers";
+import { ok, fail, notFound, requireAdminPermission } from "@/lib/api/helpers";
 import { logAdminResourceAction } from "@/lib/activity-log/admin-crud";
 
 export async function GET(_: Request, { params }: { params: Promise<{ resource: string; id: string }> }) {
-  const auth = await requireAdmin(_);
+  const { resource, id } = await params;
+  const auth = await requireAdminPermission(_, { resource });
   if (auth instanceof Response) return auth;
 
-  const { resource, id } = await params;
   const ops = getAdminResource(resource);
   if (!ops) return notFound("Unknown resource");
 
@@ -17,10 +17,10 @@ export async function GET(_: Request, { params }: { params: Promise<{ resource: 
 }
 
 export async function PUT(request: Request, { params }: { params: Promise<{ resource: string; id: string }> }) {
-  const auth = await requireAdmin(request);
+  const { resource, id } = await params;
+  const auth = await requireAdminPermission(request, { resource });
   if (auth instanceof Response) return auth;
 
-  const { resource, id } = await params;
   const ops = getAdminResource(resource);
   if (!ops) return notFound("Unknown resource");
 
@@ -42,10 +42,10 @@ export async function PATCH(request: Request, ctx: { params: Promise<{ resource:
 }
 
 export async function DELETE(request: Request, { params }: { params: Promise<{ resource: string; id: string }> }) {
-  const auth = await requireAdmin(request);
+  const { resource, id } = await params;
+  const auth = await requireAdminPermission(request, { resource });
   if (auth instanceof Response) return auth;
 
-  const { resource, id } = await params;
   const ops = getAdminResource(resource);
   if (!ops?.delete) return fail("Delete not allowed for this resource", 405);
 

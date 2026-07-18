@@ -69,6 +69,7 @@ export const COLLECTION_TABLE: Record<string, string> = {
   "activity-logs": "activity_logs",
   settings: "store_settings",
   "home-layout": "home_layout",
+  "role-permissions": "role_permissions",
   "bundle-offers-section": "bundle_offers_section",
   "about-journey-section": "about_journey_section",
   "about-leadership-section": "about_leadership_section",
@@ -375,6 +376,16 @@ function columnMap(collection: string, item: Row): { id: string; table: string; 
           id,
           desktop: asJson(data.desktop ?? []),
           mobile: asJson(data.mobile ?? []),
+          data: json,
+        },
+      };
+    case "role-permissions":
+      return {
+        id,
+        table,
+        cols: {
+          id,
+          roles: asJson(data.roles ?? {}),
           data: json,
         },
       };

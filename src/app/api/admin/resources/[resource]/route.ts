@@ -1,14 +1,14 @@
 import { getAdminResource, ADMIN_RESOURCE_KEYS } from "@/lib/admin/resource-registry";
 import { revalidateEntityCache } from "@/lib/cache/entity-cache";
-import { ok, fail, notFound, requireAdmin } from "@/lib/api/helpers";
+import { ok, fail, notFound, requireAdminPermission } from "@/lib/api/helpers";
 import { logAdminResourceAction } from "@/lib/activity-log/admin-crud";
 
 export async function GET(_: Request, { params }: { params: Promise<{ resource: string }> }) {
-  const auth = await requireAdmin(_);
-  if (auth instanceof Response) return auth;
-
   const { resource } = await params;
   if (!ADMIN_RESOURCE_KEYS.includes(resource as never)) return notFound("Unknown resource");
+
+  const auth = await requireAdminPermission(_, { resource });
+  if (auth instanceof Response) return auth;
 
   const ops = getAdminResource(resource);
   if (!ops) return notFound("Unknown resource");
@@ -18,10 +18,10 @@ export async function GET(_: Request, { params }: { params: Promise<{ resource: 
 }
 
 export async function POST(request: Request, { params }: { params: Promise<{ resource: string }> }) {
-  const auth = await requireAdmin(request);
+  const { resource } = await params;
+  const auth = await requireAdminPermission(request, { resource });
   if (auth instanceof Response) return auth;
 
-  const { resource } = await params;
   const ops = getAdminResource(resource);
   if (!ops?.create) return fail("Create not allowed for this resource", 405);
 

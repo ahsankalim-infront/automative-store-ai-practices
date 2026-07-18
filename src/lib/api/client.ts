@@ -326,6 +326,21 @@ class ApiClient {
     return this.put<Record<string, unknown>>("/admin/settings", data);
   }
 
+  adminGetRolePermissions() {
+    return this.get<import("@/lib/admin/role-permissions-defaults").RolePermissionsConfig>(
+      "/admin/role-permissions"
+    );
+  }
+
+  adminUpdateRolePermissions(
+    roles: import("@/lib/admin/role-permissions-defaults").RolePermissionsConfig["roles"]
+  ) {
+    return this.put<import("@/lib/admin/role-permissions-defaults").RolePermissionsConfig>(
+      "/admin/role-permissions",
+      { roles }
+    );
+  }
+
   adminGetSeo() {
     return this.get<import("@/lib/seo/types").SeoConfig>("/admin/seo");
   }
