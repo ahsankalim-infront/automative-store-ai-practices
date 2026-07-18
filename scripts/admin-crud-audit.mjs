@@ -25,6 +25,7 @@ const CUSTOM_ROUTES = [
   ["GET", "/api/admin/about-content/leadership-section"],
   ["GET", "/api/admin/files"],
   ["GET", "/api/admin/activity-logs"],
+  ["GET", "/api/admin/cache"],
   ["GET", "/api/admin/reports?type=orders"],
   ["GET", "/api/admin/notifications/list"],
 ];

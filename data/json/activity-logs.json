@@ -1983,5 +1983,60 @@
     "ip": "::1",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
     "path": "/api/admin/resources/categories/d2b27f64-5d8c-4d80-a6c1-2ad11e4d398c"
+  },
+  {
+    "id": "def2fe93-964c-4f0f-8d0b-9d5325994d69",
+    "status": "success",
+    "createdAt": "2026-07-18T10:35:35.907Z",
+    "action": "logout",
+    "category": "auth",
+    "message": "admin@autozone.pk signed out",
+    "actorId": "u-admin",
+    "actorEmail": "admin@autozone.pk",
+    "actorName": "Admin User",
+    "actorRole": "admin",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "path": "/api/auth/logout"
+  },
+  {
+    "id": "ae248429-3fc4-46e5-b35f-d42a19dde33d",
+    "status": "success",
+    "createdAt": "2026-07-18T10:45:26.249Z",
+    "action": "admin.login",
+    "category": "auth",
+    "message": "admin@autozone.pk signed in to admin",
+    "actorId": "u-admin",
+    "actorEmail": "admin@autozone.pk",
+    "actorName": "Admin User",
+    "actorRole": "admin",
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "path": "/api/auth/admin/login"
+  },
+  {
+    "id": "c50bdc0f-d495-4e1a-b31d-5d9a1c9da4e0",
+    "status": "success",
+    "createdAt": "2026-07-18T10:46:33.176Z",
+    "action": "cache.clear_group",
+    "category": "admin",
+    "message": "Cleared cache group: catalog",
+    "actorId": "u-admin",
+    "actorEmail": "admin@autozone.pk",
+    "actorName": "Admin User",
+    "actorRole": "admin",
+    "entityType": "cache",
+    "entityId": "catalog",
+    "metadata": {
+      "tags": [
+        "products",
+        "categories",
+        "brands",
+        "vehicles"
+      ]
+    },
+    "ip": "::1",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+    "path": "/api/admin/cache"
   }
 ]

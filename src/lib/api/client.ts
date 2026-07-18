@@ -346,6 +346,20 @@ class ApiClient {
     return this.put<import("@/types").AboutSectionConfig>("/admin/about-content/leadership-section", data);
   }
 
+  adminGetCacheGroups() {
+    return this.get<{
+      groups: { id: string; label: string; description: string; tags: string[] }[];
+    }>("/admin/cache");
+  }
+
+  adminClearCache(scope: string = "all") {
+    return this.post<{
+      scope: string;
+      clearedTags: string[];
+      revalidatedPaths?: string[];
+    }>("/admin/cache", { scope });
+  }
+
   // ─── Admin file uploads ────────────────────────────────────────────────────
   adminListFiles() {
     return this.get<import("@/types").UploadedFile[]>("/admin/files");

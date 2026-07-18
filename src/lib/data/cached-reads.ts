@@ -1,6 +1,7 @@
 import { cache } from "react";
-import { unstable_cache, revalidateTag } from "next/cache";
+import { unstable_cache } from "next/cache";
 import { getStore } from "./store";
+import { revalidateEntityCache } from "@/lib/cache/entity-cache";
 import type { Product, Category, Brand, VehicleMake, BlogPost, Service, Store, Banner, BundleOffer, AboutTeamMember, AboutMilestone, HeroSlide, PromotionPopup } from "@/types";
 
 const REVALIDATE_SECONDS = 60;
@@ -29,29 +30,7 @@ export const readAllAboutMilestones = cachedRead<AboutMilestone>("about-mileston
 export const readAllHeroSlides = cachedRead<HeroSlide>("hero-slides", "hero-slides");
 export const readAllPromotionPopups = cachedRead<PromotionPopup>("promotion-popups", "promotion-popups");
 
+/** @deprecated Prefer revalidateEntityCache — kept for existing admin route imports */
 export function revalidateCatalogTag(resource: string) {
-  const tags: Record<string, string> = {
-    products: "products",
-    categories: "categories",
-    brands: "brands",
-    "vehicle-makes": "vehicles",
-    vehicles: "vehicles",
-    blogs: "blogs",
-    services: "services",
-    stores: "stores",
-    banners: "banners",
-    bundleOffers: "bundle-offers",
-    "bundle-offers": "bundle-offers",
-    aboutTeam: "about-team",
-    "about-team": "about-team",
-    aboutMilestones: "about-milestones",
-    "about-milestones": "about-milestones",
-    heroSlides: "hero-slides",
-    "hero-slides": "hero-slides",
-    promotionPopups: "promotion-popups",
-    "promotion-popups": "promotion-popups",
-    reviews: "products",
-  };
-  const tag = tags[resource];
-  if (tag) revalidateTag(tag, "default");
+  revalidateEntityCache(resource);
 }

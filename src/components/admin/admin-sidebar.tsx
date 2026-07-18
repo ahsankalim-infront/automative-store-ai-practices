@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard, ShoppingBag, Users, Package, FolderTree, Tag, Warehouse, Car, Wrench, Calendar, Ticket, Megaphone, Image, Star, FileText, BarChart3, Bell, Shield, Settings, ChevronLeft, ChevronRight, LogOut, Globe, FolderOpen, Mail, Search, LayoutTemplate, Milestone, Presentation, ScrollText,
+  LayoutDashboard, ShoppingBag, Users, Package, FolderTree, Tag, Warehouse, Car, Wrench, Calendar, Ticket, Megaphone, Image, Star, FileText, BarChart3, Bell, Shield, Settings, ChevronLeft, ChevronRight, LogOut, Globe, FolderOpen, Mail, Search, LayoutTemplate, Milestone, Presentation, ScrollText, Layers,
 } from "lucide-react";
 import { LogoMark } from "@/components/brand/logo";
 import { useBrand } from "@/lib/brand/brand-context";
@@ -52,6 +52,7 @@ const navItems = [
   ]},
   { group: "System", items: [
     { label: "Activity Logs", href: "/admin/activity-logs", icon: ScrollText },
+    { label: "Cache", href: "/admin/cache", icon: Layers },
     { label: "Reports", href: "/admin/reports", icon: BarChart3 },
     { label: "Notifications", href: "/admin/notifications", icon: Bell },
     { label: "Roles & Permissions", href: "/admin/roles", icon: Shield },

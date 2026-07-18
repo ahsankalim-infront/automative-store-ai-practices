@@ -1,5 +1,5 @@
 import { getAdminResource, ADMIN_RESOURCE_KEYS } from "@/lib/admin/resource-registry";
-import { revalidateCatalogTag } from "@/lib/data/cached-reads";
+import { revalidateEntityCache } from "@/lib/cache/entity-cache";
 import { ok, fail, notFound, requireAdmin } from "@/lib/api/helpers";
 import { logAdminResourceAction } from "@/lib/activity-log/admin-crud";
 
@@ -28,7 +28,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ res
   try {
     const body = await request.json();
     const item = await ops.create(body);
-    revalidateCatalogTag(resource);
+    revalidateEntityCache(resource);
     const entityId = typeof item === "object" && item && "id" in item ? String(item.id) : undefined;
     await logAdminResourceAction(request, auth, resource, "create", entityId);
     return ok(item, 201);

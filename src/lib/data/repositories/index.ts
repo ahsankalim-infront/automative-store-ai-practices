@@ -42,6 +42,7 @@ import {
   readAllHeroSlides,
   readAllPromotionPopups,
 } from "../cached-reads";
+import { revalidateEntityCache } from "@/lib/cache/entity-cache";
 import { ORDER_STATUS_CHART_COLORS } from "@/lib/order-status";
 import {
   syncProductRelations,
@@ -89,6 +90,11 @@ const COL = {
   notifications: "notifications",
   activityLogs: "activity-logs",
 } as const;
+
+/** Clear Next.js cache tags for a collection after write. */
+function touchCache(resource: string) {
+  revalidateEntityCache(resource);
+}
 
 export interface PushSubscriptionRecord {
   id: string;
@@ -177,18 +183,25 @@ export async function getProductById(id: string): Promise<Product | null> {
 export async function createProduct(product: Product): Promise<Product> {
   const created = await getStore().create(COL.products, product);
   await syncProductRelations(created);
+  touchCache(COL.products);
   return created;
 }
 
 export async function updateProduct(id: string, data: Partial<Product>): Promise<Product | null> {
   const updated = await getStore().update(COL.products, id, { ...data, updatedAt: new Date().toISOString() });
-  if (updated) await syncProductRelations(updated);
+  if (updated) {
+    await syncProductRelations(updated);
+    touchCache(COL.products);
+  }
   return updated;
 }
 
 export async function deleteProduct(id: string): Promise<boolean> {
   const deleted = await getStore().delete(COL.products, id);
-  if (deleted) await deleteProductRelations(id);
+  if (deleted) {
+    await deleteProductRelations(id);
+    touchCache(COL.products);
+  }
   return deleted;
 }
 
@@ -229,16 +242,21 @@ export async function getCategoryById(id: string): Promise<Category | null> {
 }
 
 export async function createCategory(category: Category): Promise<Category> {
-  return getStore().create(COL.categories, normalizeCategory(category));
+  const created = await getStore().create(COL.categories, normalizeCategory(category));
+  touchCache(COL.categories);
+  return created;
 }
 
 export async function updateCategory(id: string, data: Partial<Category>): Promise<Category | null> {
   const updated = await getStore().update(COL.categories, id, data);
+  if (updated) touchCache(COL.categories);
   return updated ? normalizeCategory(updated) : null;
 }
 
 export async function deleteCategory(id: string): Promise<boolean> {
-  return getStore().delete(COL.categories, id);
+  const deleted = await getStore().delete(COL.categories, id);
+  if (deleted) touchCache(COL.categories);
+  return deleted;
 }
 
 // ─── Brands ──────────────────────────────────────────────────────────────────
@@ -248,15 +266,21 @@ export async function getBrands(): Promise<Brand[]> {
 }
 
 export async function createBrand(brand: Brand): Promise<Brand> {
-  return getStore().create(COL.brands, brand);
+  const created = await getStore().create(COL.brands, brand);
+  touchCache(COL.brands);
+  return created;
 }
 
 export async function updateBrand(id: string, data: Partial<Brand>): Promise<Brand | null> {
-  return getStore().update(COL.brands, id, data);
+  const updated = await getStore().update(COL.brands, id, data);
+  if (updated) touchCache(COL.brands);
+  return updated;
 }
 
 export async function deleteBrand(id: string): Promise<boolean> {
-  return getStore().delete(COL.brands, id);
+  const deleted = await getStore().delete(COL.brands, id);
+  if (deleted) touchCache(COL.brands);
+  return deleted;
 }
 
 export async function getBrandById(id: string): Promise<Brand | null> {
@@ -270,7 +294,8 @@ export async function getVehicleMakes(): Promise<VehicleMake[]> {
 }
 
 export async function updateVehicleMakes(makes: VehicleMake[]): Promise<void> {
-  return getStore().write(COL.vehicleMakes, makes);
+  await getStore().write(COL.vehicleMakes, makes);
+  touchCache(COL.vehicleMakes);
 }
 
 export async function getVehicleMakeById(id: string): Promise<VehicleMake | null> {
@@ -278,15 +303,21 @@ export async function getVehicleMakeById(id: string): Promise<VehicleMake | null
 }
 
 export async function createVehicleMake(make: VehicleMake): Promise<VehicleMake> {
-  return getStore().create(COL.vehicleMakes, make);
+  const created = await getStore().create(COL.vehicleMakes, make);
+  touchCache(COL.vehicleMakes);
+  return created;
 }
 
 export async function updateVehicleMake(id: string, data: Partial<VehicleMake>): Promise<VehicleMake | null> {
-  return getStore().update(COL.vehicleMakes, id, data);
+  const updated = await getStore().update(COL.vehicleMakes, id, data);
+  if (updated) touchCache(COL.vehicleMakes);
+  return updated;
 }
 
 export async function deleteVehicleMake(id: string): Promise<boolean> {
-  return getStore().delete(COL.vehicleMakes, id);
+  const deleted = await getStore().delete(COL.vehicleMakes, id);
+  if (deleted) touchCache(COL.vehicleMakes);
+  return deleted;
 }
 
 // ─── Blogs ───────────────────────────────────────────────────────────────────
@@ -305,15 +336,21 @@ export async function getBlogBySlug(slug: string): Promise<BlogPost | null> {
 }
 
 export async function createBlogPost(post: BlogPost): Promise<BlogPost> {
-  return getStore().create(COL.blogs, post);
+  const created = await getStore().create(COL.blogs, post);
+  touchCache(COL.blogs);
+  return created;
 }
 
 export async function updateBlogPost(id: string, data: Partial<BlogPost>): Promise<BlogPost | null> {
-  return getStore().update(COL.blogs, id, data);
+  const updated = await getStore().update(COL.blogs, id, data);
+  if (updated) touchCache(COL.blogs);
+  return updated;
 }
 
 export async function deleteBlogPost(id: string): Promise<boolean> {
-  return getStore().delete(COL.blogs, id);
+  const deleted = await getStore().delete(COL.blogs, id);
+  if (deleted) touchCache(COL.blogs);
+  return deleted;
 }
 
 // ─── Services & Stores ───────────────────────────────────────────────────────
@@ -327,11 +364,15 @@ export async function getStores(): Promise<Store[]> {
 }
 
 export async function createService(service: Service): Promise<Service> {
-  return getStore().create(COL.services, service);
+  const created = await getStore().create(COL.services, service);
+  touchCache(COL.services);
+  return created;
 }
 
 export async function updateService(id: string, data: Partial<Service>): Promise<Service | null> {
-  return getStore().update(COL.services, id, data);
+  const updated = await getStore().update(COL.services, id, data);
+  if (updated) touchCache(COL.services);
+  return updated;
 }
 
 export async function getServiceById(id: string): Promise<Service | null> {
@@ -339,15 +380,21 @@ export async function getServiceById(id: string): Promise<Service | null> {
 }
 
 export async function deleteService(id: string): Promise<boolean> {
-  return getStore().delete(COL.services, id);
+  const deleted = await getStore().delete(COL.services, id);
+  if (deleted) touchCache(COL.services);
+  return deleted;
 }
 
 export async function createStore(store: Store): Promise<Store> {
-  return getStore().create(COL.stores, store);
+  const created = await getStore().create(COL.stores, store);
+  touchCache(COL.stores);
+  return created;
 }
 
 export async function updateStore(id: string, data: Partial<Store>): Promise<Store | null> {
-  return getStore().update(COL.stores, id, data);
+  const updated = await getStore().update(COL.stores, id, data);
+  if (updated) touchCache(COL.stores);
+  return updated;
 }
 
 export async function getStoreById(id: string): Promise<Store | null> {
@@ -355,7 +402,9 @@ export async function getStoreById(id: string): Promise<Store | null> {
 }
 
 export async function deleteStore(id: string): Promise<boolean> {
-  return getStore().delete(COL.stores, id);
+  const deleted = await getStore().delete(COL.stores, id);
+  if (deleted) touchCache(COL.stores);
+  return deleted;
 }
 
 // ─── Orders ──────────────────────────────────────────────────────────────────
@@ -421,11 +470,15 @@ export async function trackOrderByNumberAndPhone(
 }
 
 export async function createOrder(order: Order): Promise<Order> {
-  return getStore().create(COL.orders, order);
+  const created = await getStore().create(COL.orders, order);
+  touchCache(COL.orders);
+  return created;
 }
 
 export async function updateOrder(id: string, data: Partial<Order>): Promise<Order | null> {
-  return getStore().update(COL.orders, id, { ...data, updatedAt: new Date().toISOString() });
+  const updated = await getStore().update(COL.orders, id, { ...data, updatedAt: new Date().toISOString() });
+  if (updated) touchCache(COL.orders);
+  return updated;
 }
 
 // ─── Reviews ─────────────────────────────────────────────────────────────────
@@ -448,11 +501,13 @@ async function syncProductReviewStats(productId: string): Promise<void> {
     reviewCount,
     updatedAt: new Date().toISOString(),
   });
+  touchCache(COL.products);
 }
 
 export async function createReview(review: Review): Promise<Review> {
   const created = await getStore().create(COL.reviews, review);
   await syncProductReviewStats(review.productId);
+  touchCache(COL.reviews);
   return created;
 }
 
@@ -465,6 +520,7 @@ export async function updateReview(id: string, data: Partial<Review>): Promise<R
     if (data.productId && data.productId !== existing.productId) {
       await syncProductReviewStats(existing.productId);
     }
+    touchCache(COL.reviews);
   }
   return updated;
 }
@@ -472,7 +528,10 @@ export async function updateReview(id: string, data: Partial<Review>): Promise<R
 export async function deleteReview(id: string): Promise<boolean> {
   const existing = await getStore().readOne<Review>(COL.reviews, id);
   const deleted = await getStore().delete(COL.reviews, id);
-  if (deleted && existing) await syncProductReviewStats(existing.productId);
+  if (deleted && existing) {
+    await syncProductReviewStats(existing.productId);
+    touchCache(COL.reviews);
+  }
   return deleted;
 }
 
@@ -494,15 +553,21 @@ export async function getUserByEmail(email: string): Promise<UserRecord | null> 
 }
 
 export async function createUser(user: UserRecord): Promise<UserRecord> {
-  return getStore().create(COL.users, user);
+  const created = await getStore().create(COL.users, user);
+  touchCache(COL.users);
+  return created;
 }
 
 export async function updateUser(id: string, data: Partial<UserRecord>): Promise<UserRecord | null> {
-  return getStore().update(COL.users, id, data);
+  const updated = await getStore().update(COL.users, id, data);
+  if (updated) touchCache(COL.users);
+  return updated;
 }
 
 export async function deleteUser(id: string): Promise<boolean> {
-  return getStore().delete(COL.users, id);
+  const deleted = await getStore().delete(COL.users, id);
+  if (deleted) touchCache(COL.users);
+  return deleted;
 }
 
 export async function getReviewById(id: string): Promise<Review | null> {
@@ -510,7 +575,9 @@ export async function getReviewById(id: string): Promise<Review | null> {
 }
 
 export async function deleteOrder(id: string): Promise<boolean> {
-  return getStore().delete(COL.orders, id);
+  const deleted = await getStore().delete(COL.orders, id);
+  if (deleted) touchCache(COL.orders);
+  return deleted;
 }
 
 // ─── Settings ────────────────────────────────────────────────────────────────
@@ -597,8 +664,7 @@ export async function updateStoreSettings(data: Partial<StoreSettings>): Promise
   } else {
     await getStore().update("settings", current.id, updated);
   }
-  const { revalidateStoreSettings } = await import("@/lib/brand/get-brand-config");
-  revalidateStoreSettings();
+  touchCache("settings");
   return updated;
 }
 
@@ -619,11 +685,15 @@ export async function getCouponByCode(code: string): Promise<Coupon | null> {
 }
 
 export async function createCoupon(coupon: Coupon): Promise<Coupon> {
-  return getStore().create(COL.coupons, coupon);
+  const created = await getStore().create(COL.coupons, coupon);
+  touchCache(COL.coupons);
+  return created;
 }
 
 export async function updateCoupon(id: string, data: Partial<Coupon>): Promise<Coupon | null> {
-  return getStore().update(COL.coupons, id, data);
+  const updated = await getStore().update(COL.coupons, id, data);
+  if (updated) touchCache(COL.coupons);
+  return updated;
 }
 
 export async function getCouponById(id: string): Promise<Coupon | null> {
@@ -631,7 +701,9 @@ export async function getCouponById(id: string): Promise<Coupon | null> {
 }
 
 export async function deleteCoupon(id: string): Promise<boolean> {
-  return getStore().delete(COL.coupons, id);
+  const deleted = await getStore().delete(COL.coupons, id);
+  if (deleted) touchCache(COL.coupons);
+  return deleted;
 }
 
 // ─── Banners ─────────────────────────────────────────────────────────────────
@@ -648,11 +720,15 @@ export async function getBanners(position?: Banner["position"]): Promise<Banner[
 }
 
 export async function createBanner(banner: Banner): Promise<Banner> {
-  return getStore().create(COL.banners, banner);
+  const created = await getStore().create(COL.banners, banner);
+  touchCache(COL.banners);
+  return created;
 }
 
 export async function updateBanner(id: string, data: Partial<Banner>): Promise<Banner | null> {
-  return getStore().update(COL.banners, id, data);
+  const updated = await getStore().update(COL.banners, id, data);
+  if (updated) touchCache(COL.banners);
+  return updated;
 }
 
 export async function getBannerById(id: string): Promise<Banner | null> {
@@ -660,7 +736,9 @@ export async function getBannerById(id: string): Promise<Banner | null> {
 }
 
 export async function deleteBanner(id: string): Promise<boolean> {
-  return getStore().delete(COL.banners, id);
+  const deleted = await getStore().delete(COL.banners, id);
+  if (deleted) touchCache(COL.banners);
+  return deleted;
 }
 
 // ─── Bundle Offers ───────────────────────────────────────────────────────────
@@ -675,11 +753,15 @@ export async function getBundleOffers(): Promise<BundleOffer[]> {
 }
 
 export async function createBundleOffer(offer: BundleOffer): Promise<BundleOffer> {
-  return getStore().create(COL.bundleOffers, offer);
+  const created = await getStore().create(COL.bundleOffers, offer);
+  touchCache(COL.bundleOffers);
+  return created;
 }
 
 export async function updateBundleOffer(id: string, data: Partial<BundleOffer>): Promise<BundleOffer | null> {
-  return getStore().update(COL.bundleOffers, id, data);
+  const updated = await getStore().update(COL.bundleOffers, id, data);
+  if (updated) touchCache(COL.bundleOffers);
+  return updated;
 }
 
 export async function getBundleOfferById(id: string): Promise<BundleOffer | null> {
@@ -687,7 +769,9 @@ export async function getBundleOfferById(id: string): Promise<BundleOffer | null
 }
 
 export async function deleteBundleOffer(id: string): Promise<boolean> {
-  return getStore().delete(COL.bundleOffers, id);
+  const deleted = await getStore().delete(COL.bundleOffers, id);
+  if (deleted) touchCache(COL.bundleOffers);
+  return deleted;
 }
 
 // ─── About Page Content ──────────────────────────────────────────────────────
@@ -706,18 +790,24 @@ export async function getAboutTeamMemberById(id: string): Promise<AboutTeamMembe
 }
 
 export async function createAboutTeamMember(member: AboutTeamMember): Promise<AboutTeamMember> {
-  return getStore().create(COL.aboutTeam, member);
+  const created = await getStore().create(COL.aboutTeam, member);
+  touchCache(COL.aboutTeam);
+  return created;
 }
 
 export async function updateAboutTeamMember(
   id: string,
   data: Partial<AboutTeamMember>
 ): Promise<AboutTeamMember | null> {
-  return getStore().update(COL.aboutTeam, id, data);
+  const updated = await getStore().update(COL.aboutTeam, id, data);
+  if (updated) touchCache(COL.aboutTeam);
+  return updated;
 }
 
 export async function deleteAboutTeamMember(id: string): Promise<boolean> {
-  return getStore().delete(COL.aboutTeam, id);
+  const deleted = await getStore().delete(COL.aboutTeam, id);
+  if (deleted) touchCache(COL.aboutTeam);
+  return deleted;
 }
 
 export async function getAllAboutMilestones(): Promise<AboutMilestone[]> {
@@ -734,18 +824,24 @@ export async function getAboutMilestoneById(id: string): Promise<AboutMilestone 
 }
 
 export async function createAboutMilestone(milestone: AboutMilestone): Promise<AboutMilestone> {
-  return getStore().create(COL.aboutMilestones, milestone);
+  const created = await getStore().create(COL.aboutMilestones, milestone);
+  touchCache(COL.aboutMilestones);
+  return created;
 }
 
 export async function updateAboutMilestone(
   id: string,
   data: Partial<AboutMilestone>
 ): Promise<AboutMilestone | null> {
-  return getStore().update(COL.aboutMilestones, id, data);
+  const updated = await getStore().update(COL.aboutMilestones, id, data);
+  if (updated) touchCache(COL.aboutMilestones);
+  return updated;
 }
 
 export async function deleteAboutMilestone(id: string): Promise<boolean> {
-  return getStore().delete(COL.aboutMilestones, id);
+  const deleted = await getStore().delete(COL.aboutMilestones, id);
+  if (deleted) touchCache(COL.aboutMilestones);
+  return deleted;
 }
 
 // ─── Hero Slides ─────────────────────────────────────────────────────────────
@@ -768,15 +864,21 @@ export async function getHeroSlideById(id: string): Promise<HeroSlide | null> {
 }
 
 export async function createHeroSlide(slide: HeroSlide): Promise<HeroSlide> {
-  return getStore().create(COL.heroSlides, slide);
+  const created = await getStore().create(COL.heroSlides, slide);
+  touchCache(COL.heroSlides);
+  return created;
 }
 
 export async function updateHeroSlide(id: string, data: Partial<HeroSlide>): Promise<HeroSlide | null> {
-  return getStore().update(COL.heroSlides, id, data);
+  const updated = await getStore().update(COL.heroSlides, id, data);
+  if (updated) touchCache(COL.heroSlides);
+  return updated;
 }
 
 export async function deleteHeroSlide(id: string): Promise<boolean> {
-  return getStore().delete(COL.heroSlides, id);
+  const deleted = await getStore().delete(COL.heroSlides, id);
+  if (deleted) touchCache(COL.heroSlides);
+  return deleted;
 }
 
 // ─── Promotion Popups ────────────────────────────────────────────────────────
@@ -811,21 +913,27 @@ export async function getPromotionPopupById(id: string): Promise<PromotionPopup 
 }
 
 export async function createPromotionPopup(popup: PromotionPopup): Promise<PromotionPopup> {
-  return getStore().create(COL.promotionPopups, popup);
+  const created = await getStore().create(COL.promotionPopups, popup);
+  touchCache(COL.promotionPopups);
+  return created;
 }
 
 export async function updatePromotionPopup(
   id: string,
   data: Partial<PromotionPopup>
 ): Promise<PromotionPopup | null> {
-  return getStore().update(COL.promotionPopups, id, {
+  const updated = await getStore().update(COL.promotionPopups, id, {
     ...data,
     updatedAt: new Date().toISOString(),
   });
+  if (updated) touchCache(COL.promotionPopups);
+  return updated;
 }
 
 export async function deletePromotionPopup(id: string): Promise<boolean> {
-  return getStore().delete(COL.promotionPopups, id);
+  const deleted = await getStore().delete(COL.promotionPopups, id);
+  if (deleted) touchCache(COL.promotionPopups);
+  return deleted;
 }
 
 // ─── Bookings ────────────────────────────────────────────────────────────────
@@ -837,11 +945,15 @@ export async function getBookings(userId?: string): Promise<ServiceBooking[]> {
 }
 
 export async function createBooking(booking: ServiceBooking): Promise<ServiceBooking> {
-  return getStore().create(COL.bookings, booking);
+  const created = await getStore().create(COL.bookings, booking);
+  touchCache(COL.bookings);
+  return created;
 }
 
 export async function updateBooking(id: string, data: Partial<ServiceBooking>): Promise<ServiceBooking | null> {
-  return getStore().update(COL.bookings, id, data);
+  const updated = await getStore().update(COL.bookings, id, data);
+  if (updated) touchCache(COL.bookings);
+  return updated;
 }
 
 export async function getBookingById(id: string): Promise<ServiceBooking | null> {
@@ -849,13 +961,17 @@ export async function getBookingById(id: string): Promise<ServiceBooking | null>
 }
 
 export async function deleteBooking(id: string): Promise<boolean> {
-  return getStore().delete(COL.bookings, id);
+  const deleted = await getStore().delete(COL.bookings, id);
+  if (deleted) touchCache(COL.bookings);
+  return deleted;
 }
 
 // ─── Contact & Newsletter ────────────────────────────────────────────────────
 
 export async function createContactMessage(msg: ContactMessage): Promise<ContactMessage> {
-  return getStore().create(COL.contactMessages, msg);
+  const created = await getStore().create(COL.contactMessages, msg);
+  touchCache(COL.contactMessages);
+  return created;
 }
 
 export async function getContactMessages(): Promise<ContactMessage[]> {
@@ -870,7 +986,9 @@ export async function getContactMessageById(id: string): Promise<ContactMessage 
 }
 
 export async function deleteContactMessage(id: string): Promise<boolean> {
-  return getStore().delete(COL.contactMessages, id);
+  const deleted = await getStore().delete(COL.contactMessages, id);
+  if (deleted) touchCache(COL.contactMessages);
+  return deleted;
 }
 
 // ─── In-app Notifications ────────────────────────────────────────────────────
@@ -888,14 +1006,18 @@ export async function getUnreadNotificationCount(userId: string): Promise<number
 }
 
 export async function createNotification(n: AppNotification): Promise<AppNotification> {
-  return getStore().create(COL.notifications, n);
+  const created = await getStore().create(COL.notifications, n);
+  touchCache(COL.notifications);
+  return created;
 }
 
 export async function updateNotification(
   id: string,
   data: Partial<AppNotification>
 ): Promise<AppNotification | null> {
-  return getStore().update(COL.notifications, id, data);
+  const updated = await getStore().update(COL.notifications, id, data);
+  if (updated) touchCache(COL.notifications);
+  return updated;
 }
 
 export async function markNotificationRead(id: string, userId: string): Promise<boolean> {
@@ -920,7 +1042,9 @@ export async function subscribeNewsletter(sub: NewsletterSubscriber): Promise<Ne
   if (subs.some((s) => s.email.toLowerCase() === sub.email.toLowerCase())) {
     throw new Error("Already subscribed");
   }
-  return getStore().create(COL.newsletter, sub);
+  const created = await getStore().create(COL.newsletter, sub);
+  touchCache(COL.newsletter);
+  return created;
 }
 
 // ─── Analytics & Admin Dashboard ─────────────────────────────────────────────
@@ -1126,21 +1250,28 @@ export async function getPushSubscriptionByEndpoint(endpoint: string): Promise<P
 export async function savePushSubscription(record: PushSubscriptionRecord): Promise<PushSubscriptionRecord> {
   const existing = await getPushSubscriptionByEndpoint(record.endpoint);
   if (existing) {
-    return (await getStore().update(COL.pushSubscriptions, existing.id, record)) ?? record;
+    const updated = (await getStore().update(COL.pushSubscriptions, existing.id, record)) ?? record;
+    touchCache(COL.pushSubscriptions);
+    return updated;
   }
-  return getStore().create(COL.pushSubscriptions, record);
+  const created = await getStore().create(COL.pushSubscriptions, record);
+  touchCache(COL.pushSubscriptions);
+  return created;
 }
 
 export async function deletePushSubscription(endpoint: string): Promise<boolean> {
   const subs = await getPushSubscriptions();
   const match = subs.find((s) => s.endpoint === endpoint);
   if (!match) return false;
-  return getStore().delete(COL.pushSubscriptions, match.id);
+  const deleted = await getStore().delete(COL.pushSubscriptions, match.id);
+  if (deleted) touchCache(COL.pushSubscriptions);
+  return deleted;
 }
 
 export async function deletePushSubscriptionsByUser(userId: string): Promise<void> {
   const subs = await getPushSubscriptions(userId);
   await Promise.all(subs.map((s) => getStore().delete(COL.pushSubscriptions, s.id)));
+  if (subs.length) touchCache(COL.pushSubscriptions);
 }
 
 // ─── Activity Logs ───────────────────────────────────────────────────────────

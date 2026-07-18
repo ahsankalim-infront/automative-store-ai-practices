@@ -1,5 +1,5 @@
 import { getAdminResource } from "@/lib/admin/resource-registry";
-import { revalidateCatalogTag } from "@/lib/data/cached-reads";
+import { revalidateEntityCache } from "@/lib/cache/entity-cache";
 import { ok, fail, notFound, requireAdmin } from "@/lib/api/helpers";
 import { logAdminResourceAction } from "@/lib/activity-log/admin-crud";
 
@@ -51,7 +51,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ r
 
   const deleted = await ops.delete(id);
   if (!deleted) return notFound("Record not found");
-  revalidateCatalogTag(resource);
+  revalidateEntityCache(resource);
   await logAdminResourceAction(request, auth, resource, "delete", id);
   return ok({ deleted: true });
 }
